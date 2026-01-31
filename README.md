@@ -134,23 +134,14 @@ The platform is expected to:
 
 Future enhancements may include:
 
-- ** AI-based trading recommendation system**
-- ** Advanced analytics dashboard**
-- ** Real market data integration**
-- ** Mobile application support**
-- ** Social trading and peer comparison features**
+- **AI-based trading recommendation system**
+- **Advanced analytics dashboard**
+- **Real market data integration**
+- **Mobile application support**
+- **Social trading and peer comparison features**
 
 ---
 
-##  Technology Stack
-
-*To be updated based on project implementation*
-
-##  Installation & Setup
-
-*To be updated based on project implementation*
-
-##  Contributing
 
 *To be updated based on project implementation*
 
