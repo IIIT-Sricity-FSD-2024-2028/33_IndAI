@@ -1,4 +1,3 @@
-# 33_IndAI
 Paper Trading and Financial Learning Platform
 A comprehensive educational platform bridging financial theory with practical trading experience through risk-free simulation.
 
