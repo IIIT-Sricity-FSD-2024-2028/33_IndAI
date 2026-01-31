@@ -143,8 +143,4 @@ Future enhancements may include:
 ---
 
 
-*To be updated based on project implementation*
 
-## 📄 License
-
-*To be updated based on project implementation*
