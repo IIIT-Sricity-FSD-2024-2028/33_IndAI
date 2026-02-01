@@ -24,7 +24,7 @@ The **Paper Trading and Financial Learning Platform** provides an integrated env
 -  **Instructor-guided trading practice**
 -  **Performance tracking and analytics**
 -  **Integrated learning and simulation ecosystem**
--  ### **Learner Assessment & Skill-Based Categorization**
+   **Learner Assessment & Skill-Based Categorization**
 - Conduct an initial diagnostic quiz when a user first installs or registers on the platform
 - Evaluate the learner’s existing knowledge of financial markets and trading concepts
 - Categorize learners into predefined skill levels (Beginner / Intermediate / Advanced)
