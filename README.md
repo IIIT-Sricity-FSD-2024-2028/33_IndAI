@@ -19,17 +19,19 @@ Currently, most learners either study theoretical financial concepts without pra
 The **Paper Trading and Financial Learning Platform** provides an integrated environment where students can learn financial concepts and practice trading using virtual money.
 
 ### **Key Platform Features:**
-- 1) **Risk-free simulated trading environment**
-- 2)**Structured financial education courses**
-- 3) **Instructor-guided trading practice**
-- 4) **Performance tracking and analytics**
-- 5) **Integrated learning and simulation ecosystem**
-- 6)  **Learner Assessment & Skill-Based Categorization**
--  (i)Conduct an initial diagnostic quiz when a user first installs or registers on the platform
--  (ii)Evaluate the learner’s existing knowledge of financial markets and trading concepts
--  (iii)Categorize learners into predefined skill levels (Beginner / Intermediate / Advanced)
--  (iv)Recommend appropriate courses, learning materials, and trading difficulty levels based on quiz results
--   (v)Personalize the learning and paper trading experience according to the learner’s proficiency
+- **Risk-free simulated trading environment**
+- **Structured financial education courses**
+- **Instructor-guided trading practice**
+- **Performance tracking and analytics**
+- **Integrated learning and simulation ecosystem**
+- **Learner Assessment & Skill-Based Categorization**
+  - Conduct an initial diagnostic quiz when a user first installs or registers on the platform
+  - Evaluate the learner’s existing knowledge of financial markets and trading concepts
+  - Categorize learners into predefined skill levels (Beginner / Intermediate / Advanced)
+  - Recommend appropriate courses, learning materials, and trading difficulty levels based on quiz results
+  - Personalize the learning and paper trading experience according to the learner’s proficiency
+
+
 
 ##  Identified Actors
 
