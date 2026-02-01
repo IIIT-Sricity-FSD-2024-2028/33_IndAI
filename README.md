@@ -1,5 +1,7 @@
 #  Paper Trading and Financial Learning Platform
 
+This document outlines the problem statement, identified system actors, and the planned functional features associated with each actor.
+
 ##  Problem Statement
 
 Many students are interested in financial markets and stock trading, but they face significant challenges while learning and practicing trading in real environments. The major problems include:
@@ -22,8 +24,12 @@ The **Paper Trading and Financial Learning Platform** provides an integrated env
 -  **Instructor-guided trading practice**
 -  **Performance tracking and analytics**
 -  **Integrated learning and simulation ecosystem**
-
-This platform bridges the gap between financial education and real market experience.
+-  ### **Learner Assessment & Skill-Based Categorization**
+- Conduct an initial diagnostic quiz when a user first installs or registers on the platform
+- Evaluate the learner’s existing knowledge of financial markets and trading concepts
+- Categorize learners into predefined skill levels (Beginner / Intermediate / Advanced)
+- Recommend appropriate courses, learning materials, and trading difficulty levels based on quiz results
+- Personalize the learning and paper trading experience according to the learner’s proficiency
 
 ##  Identified Actors
 
@@ -63,16 +69,14 @@ This platform bridges the gap between financial education and real market experi
 ####  **Trading Practice Management**
 - Assign simulated trading exercises
 - Monitor student trading activity
-- Evaluate student performance
 
 ####  **Session Scheduling**
 - Schedule trading classes or sessions
 - Modify existing schedules
-- Cancel scheduled sessions
 - Notify enrolled students
 
 ####  **Student Evaluation**
-- Provide performance feedback
+- Evaluate student performance
 - Review student trading reports
 
 ### **4.3 Course Provider Features**
@@ -80,6 +84,7 @@ This platform bridges the gap between financial education and real market experi
 - Upload financial courses
 - Update course modules
 - Maintain structured course content
+- Create trading assignments/challenges/quizzes
 
 ####  **Content Quality Contribution**
 - Provide professional trading education material
