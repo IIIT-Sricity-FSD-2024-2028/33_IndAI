@@ -92,57 +92,7 @@ The **Paper Trading and Financial Learning Platform** provides an integrated env
 - Provide professional trading education material
 - Support structured financial learning paths
 
-### **4.4 Platform Administrator Features**
-####  **Platform Management**
-- Manage platform access permissions
-- Monitor platform usage and activity
 
-####  **Academic Structure Management**
-- Assign instructors to courses
-- Manage course availability and access
-
-####  **Analytics and Reporting**
-- Generate student performance reports
-- Generate platform performance reports
-
-##  Key Domain Concepts
-
-- **Simulated Trade**
-- **Trading Portfolio**
-- **Virtual Balance**
-- **Trading Order**
-- **Trading Session**
-- **Course**
-- **Course Module**
-- **Learning Material**
-- **Trading Assignment**
-- **Performance Feedback**
-- **Performance Report**
-- **Enrollment**
-- **Financial Instrument**
-- **Market Price Feed**
-
-##  Expected Impact
-
-The platform is expected to:
-
-- **Reduce financial risk** during learning
-- **Improve financial literacy** among students
-- **Provide structured trading education**
-- **Enable performance-driven financial learning**
-- **Prepare students for real-world financial markets**
-
-##  Future Scope
-
-Future enhancements may include:
-
-- **AI-based trading recommendation system**
-- **Advanced analytics dashboard**
-- **Real market data integration**
-- **Mobile application support**
-- **Social trading and peer comparison features**
-
----
 
 
 
