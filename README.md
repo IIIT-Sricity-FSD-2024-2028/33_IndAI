@@ -1,5 +1,7 @@
 #  Paper Trading and Financial Learning Platform
 
+This document outlines the problem statement, identified system actors, and the planned functional features associated with each actor.
+
 ##  Problem Statement
 
 Many students are interested in financial markets and stock trading, but they face significant challenges while learning and practicing trading in real environments. The major problems include:
@@ -17,13 +19,19 @@ Currently, most learners either study theoretical financial concepts without pra
 The **Paper Trading and Financial Learning Platform** provides an integrated environment where students can learn financial concepts and practice trading using virtual money.
 
 ### **Key Platform Features:**
--  **Risk-free simulated trading environment**
--  **Structured financial education courses**
--  **Instructor-guided trading practice**
--  **Performance tracking and analytics**
--  **Integrated learning and simulation ecosystem**
+- **Risk-free simulated trading environment**
+- **Structured financial education courses**
+- **Instructor-guided trading practice**
+- **Performance tracking and analytics**
+- **Integrated learning and simulation ecosystem**
+- **Learner Assessment & Skill-Based Categorization**
+  - Conduct an initial diagnostic quiz when a user first installs or registers on the platform
+  - Evaluate the learner’s existing knowledge of financial markets and trading concepts
+  - Categorize learners into predefined skill levels (Beginner / Intermediate / Advanced)
+  - Recommend appropriate courses, learning materials, and trading difficulty levels based on quiz results
+  - Personalize the learning and paper trading experience according to the learner’s proficiency
 
-This platform bridges the gap between financial education and real market experience.
+
 
 ##  Identified Actors
 
@@ -59,25 +67,18 @@ This platform bridges the gap between financial education and real market experi
 - View performance reports
 
 ### **4.2 Instructor Features**
-####  **Course Management**
-- Create financial trading courses
-- Update course content
-- Upload learning materials
-- Manage course modules
 
 ####  **Trading Practice Management**
 - Assign simulated trading exercises
 - Monitor student trading activity
-- Evaluate student performance
 
 ####  **Session Scheduling**
 - Schedule trading classes or sessions
 - Modify existing schedules
-- Cancel scheduled sessions
 - Notify enrolled students
 
 ####  **Student Evaluation**
-- Provide performance feedback
+- Evaluate student performance
 - Review student trading reports
 
 ### **4.3 Course Provider Features**
@@ -85,6 +86,7 @@ This platform bridges the gap between financial education and real market experi
 - Upload financial courses
 - Update course modules
 - Maintain structured course content
+- Create trading assignments/challenges/quizzes
 
 ####  **Content Quality Contribution**
 - Provide professional trading education material
