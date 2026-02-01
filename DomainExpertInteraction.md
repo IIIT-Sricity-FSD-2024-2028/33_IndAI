@@ -4,7 +4,7 @@
 ## Basic Information
 - **Domain:** Financial Technology (FinTech) / Stock Market Simulation & Learning Systems  
 - **Problem Statement:** Design and implementation of a learning-focused paper trading simulation platform with a matching engine, order book, and realistic market constraints.  
-- **Date of Interaction:** (Add actual date)  
+- **Date of Interaction:** (31/01/2026)  
 - **Mode of Interaction:** Video call  
 - **Duration (in minutes):** ~40–50 minutes  
 - **Publicly Accessible Video Link:** Not available (private interaction)
