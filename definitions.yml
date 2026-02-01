@@ -100,13 +100,101 @@ definitions:
       - Generated using trading history and course performance
       - Accessible to instructors and administrators
 
-  Enrollment:
-    description: The association of a student trader with a course
-    business_rules:
-      - Required before accessing course modules and sessions
-
   MarketPriceFeed:
     description: Source of financial instrument price information used in trading simulation
     business_rules:
       - Must update periodically
       - Used for trade execution validation
+
+from the domain expert interaction:
+
+MatchingEngine: Matching Engine
+definition:
+  The core system component responsible for matching buy and sell trading orders based on defined rules such as price-time priority.
+examples:
+  - Matching a buy order at ₹105 with the lowest available sell order at ₹100.
+aliases:
+  - Order Matching Engine
+  - Trade Execution Engine
+
+OrderBook: Order Book
+definition:
+  An in-memory data structure that stores all active buy and sell orders for a financial instrument, organized by price and time.
+examples:
+  - A list of buy orders sorted by highest price and sell orders sorted by lowest price.
+aliases:
+  - Market Order Book
+  - Trade Book
+
+MarketOrder: Market Order
+definition:
+  A trading order that is executed immediately at the best available price in the order book.
+examples:
+  - Buying shares instantly at the current lowest selling price.
+aliases:
+  - Immediate Order
+  - At-Market Order
+
+LimitOrder: Limit Order
+definition:
+  A trading order that is executed only at a specified price or better and remains open until matched or cancelled.
+examples:
+  - Placing a buy order for a stock only if its price drops to ₹100.
+aliases:
+  - Price-Limited Order
+  - Pending Order
+
+StopLossOrder: Stop-Loss Order
+definition:
+  A conditional trading order that is triggered when the market price reaches a predefined level to limit potential losses.
+examples:
+  - Automatically selling a stock when its price falls below ₹90.
+aliases:
+  - Stop Order
+  - Risk Protection Order
+
+OrderBookSnapshot: Order Book Snapshot
+definition:
+  A saved copy of the current state of the order book and related balances, used for recovery in case of system failure.
+examples:
+  - Restoring active orders after a server restart using the last saved snapshot.
+aliases:
+  - Order Book State Backup
+  - Trading Snapshot
+
+CashCheck: Cash Check
+definition:
+  A validation process that ensures a trader has sufficient virtual balance before placing a buy order.
+examples:
+  - Rejecting a buy order because the user does not have enough virtual funds.
+aliases:
+  - Balance Check
+  - Funds Validation
+
+MarginTrading: Margin Trading
+definition:
+  A trading mechanism that allows users to place orders using borrowed virtual funds within a predefined limit.
+examples:
+  - Allowing a trader with ₹50,000 to trade stocks worth ₹1,00,000 using margin.
+aliases:
+  - Leveraged Trading
+  - Borrowed Capital Trading
+
+PriceTimePriority: Price-Time Priority
+definition:
+  A rule for order matching where orders with better prices are matched first, and among equal prices, earlier orders are matched before later ones.
+examples:
+  - Matching the highest buy price first, and if prices are equal, matching the earliest order.
+aliases:
+  - FIFO Price Matching
+  - Fair Matching Rule
+
+InMemoryDataStructure: In-Memory Data Structure
+definition:
+  A data structure stored in system memory (RAM) to allow fast access and updates during order matching and trade execution.
+examples:
+  - Using arrays or lists to store active buy and sell orders.
+aliases:
+  - Memory-Based Storage
+  - Runtime Data Structure
+
