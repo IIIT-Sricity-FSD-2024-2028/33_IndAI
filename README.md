@@ -59,11 +59,6 @@ This platform bridges the gap between financial education and real market experi
 - View performance reports
 
 ### **4.2 Instructor Features**
-####  **Course Management**
-- Create financial trading courses
-- Update course content
-- Upload learning materials
-- Manage course modules
 
 ####  **Trading Practice Management**
 - Assign simulated trading exercises
