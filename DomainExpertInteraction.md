@@ -7,7 +7,7 @@
 - **Date of Interaction:** (31/01/2026)  
 - **Mode of Interaction:** Video call  
 - **Duration (in minutes):** ~40–50 minutes  
-- **Publicly Accessible Video Link:** Not available (private interaction)
+- **Publicly Accessible Video Link:** https://drive.google.com/file/d/1Z28oHjuvJYpO2MDdK5suQavLZn-ZH0Qi/view?usp=sharing
 
 ---
 
