@@ -43,7 +43,7 @@ The problem statement reflects the design of a simplified trading system that pr
 | Limit Order | Order that executes only at a specified price or better |
 | Stop-Loss Order | Order triggered when the market price reaches a predefined threshold |
 | Partial Fill | When only part of an order quantity is matched |
-| Cash Check | Verification that a user has enough balance before placing an order |
+| Cash Check | Verification that a learner has enough balance before placing an order |
 | Margin Check | Verification that margin requirements are satisfied (if margin trading is enabled) |
 | Order Book Snapshot | Periodic saved state of the order book for recovery and visualization |
 | Asynchronous Database Writes | Writing trade and portfolio updates to the database in the background |
@@ -58,7 +58,7 @@ The problem statement reflects the design of a simplified trading system that pr
 | Learner | Places orders, manages portfolio, follows learning tasks |
 | Matching Engine | Matches buy and sell orders and executes trades |
 | Order Book Manager | Maintains sorted buy and sell orders for each stock |
-| Instructor | Evaluates user performance and assigns learning tasks |
+| Instructor | Evaluates learner's performance and assigns learning tasks |
 | **Course Provider** | An internal or external entity that supplies structured financial education content, learning materials, and course modules used on the platform |
 | **Platform Administrator** | Responsible for managing platform operations, user access control, course structure, system configuration, and overall performance monitoring |
 | Database Layer | Persists user data, trades, portfolios, and snapshots |
@@ -70,7 +70,7 @@ The problem statement reflects the design of a simplified trading system that pr
 
 ### Workflow 1: Order Placement and Matching
 - **Trigger / Start Condition:**  
-  User submits a buy or sell order.
+  Learner submits a buy or sell order.
 - **Steps Involved:**  
   1. Perform cash check / margin check.  
   2. Validate order type (market, limit, stop-loss).  
@@ -90,7 +90,7 @@ The problem statement reflects the design of a simplified trading system that pr
 
 - **Steps Involved**  
   1. The system captures the current state of the in-memory order book.  
-  2. User balances and open orders are included in the snapshot.  
+  2. Learner balances and open orders are included in the snapshot.  
   3. The snapshot is stored in persistent storage (database or file system).  
   4. In case of a system restart, the latest snapshot is loaded.  
   5. The order book and balances are restored in memory.
@@ -100,34 +100,34 @@ The problem statement reflects the design of a simplified trading system that pr
 
 ---
 
-### Workflow 3: Learning Progression and User Grouping
+### Workflow 3: Learning Progression and Grouping Learners
 - **Trigger / Start Condition:**  
-  User onboarding or course enrollment.
+  Learner onboarding or course enrollment.
 - **Steps Involved:**  
-  1. User completes a skill assessment quiz.  
-  2. User is grouped based on skill level (Beginner/Intermediate/Advanced).  
+  1. Learner completes a skill assessment quiz.  
+  2. Learner is grouped based on skill level (Beginner/Intermediate/Advanced).  
   3. Trading limits and learning tasks are applied.  
-  4. User performs trades under defined constraints.  
-  5. The instructor evaluates student performance based on discipline, risk management, and long-term profitability, recognizing that short-term profits are often influenced by luck.
+  4. Learner performs trades under defined constraints.  
+  5. The instructor evaluates learner's performance based on discipline, risk management, and long-term profitability, recognizing that short-term profits are often influenced by luck.
 - **Outcome / End Condition:**  
-  User progresses through learning stages with guided feedback.
+  Learner progresses through learning stages with guided feedback.
 
 ---
 
   ### Workflow 4: Order Cancellation
 
 - **Trigger / Start Condition**  
-  The user chooses to cancel an open (unmatched or partially matched) order.
+  The Learner chooses to cancel an open (unmatched or partially matched) order.
 
 - **Steps Involved**  
-  1. The user selects an active order from the order list.  
+  1. The Learner selects an active order from the order list.  
   2. The system checks whether the order is still open and cancellable.  
   3. The order is removed from the in-memory order book.  
-  4. Any reserved funds or shares are released back to the user.  
+  4. Any reserved funds or shares are released back to the Learner.  
   5. The cancellation event is saved to the database asynchronously.
 
 - **Outcome / End Condition**  
-  The order is successfully cancelled, and the user’s balance and order list are updated.
+  The order is successfully cancelled, and the Learner’s balance and order list are updated.
 
 ---
 
@@ -141,10 +141,10 @@ The problem statement reflects the design of a simplified trading system that pr
   2. The current value of each holding is recalculated using updated prices.  
   3. Unrealized profit or loss is updated for each position.  
   4. The total portfolio value is recalculated.  
-  5. Updated portfolio values are displayed to the user interface.
+  5. Updated portfolio values are displayed to the Learner's interface.
 
 - **Outcome / End Condition**  
-  The user sees the updated portfolio value and profit/loss based on the latest market prices.
+  The Learner sees the updated portfolio value and profit/loss based on the latest market prices.
 
 
 ---
@@ -152,7 +152,7 @@ The problem statement reflects the design of a simplified trading system that pr
 ## Rules, Constraints, and Exceptions
 
 ### Mandatory Rules or Policies
-- Orders are executed only if the user has sufficient funds or margin.
+- Orders are executed only if the Learner has sufficient funds or margin.
 - Orders are matched first by the best available price, and if prices are equal, by the order in which they were placed.
 - Portfolio and balance updates must remain consistent.
 - Implement Simplified Tax and Brokerage Rules.
@@ -183,7 +183,7 @@ The problem statement reflects the design of a simplified trading system that pr
 - Managing high request volumes without database bottlenecks.
 - Ensuring consistency while writing data asynchronously.
 - Tracking order book state reliably.
-- Fear of losing money can cause users to stop trading altogether.
+- Fear of losing money can cause Learners to stop trading altogether.
 
 ---
 
