@@ -4,7 +4,7 @@ This document outlines the problem statement, identified system actors, and the 
 
 ##  Problem Statement
 
-Many learners are interested in financial markets and stock trading, but they face significant challenges while learning and practicing trading in real environments. The major problems include:
+Many students are interested in financial markets and stock trading, but they face significant challenges while learning and practicing trading in real environments. The major problems include:
 
 - **Lack of practical trading exposure** during learning
 - **Risk of losing real money** while experimenting in live markets
@@ -16,7 +16,7 @@ Currently, most learners either study theoretical financial concepts without pra
 
 ##  Proposed Solution
 
-The **Paper Trading and Financial Learning Platform** provides an integrated environment where students can learn financial concepts and practice trading using virtual money.
+The **Paper Trading and Financial Learning Platform** provides an integrated environment where Learners can learn financial concepts and practice trading using virtual money.
 
 ### **Key Platform Features:**
 - **Risk-free simulated trading environment**
@@ -37,14 +37,14 @@ The **Paper Trading and Financial Learning Platform** provides an integrated env
 
 | Actor | Role Description |
 |-------|-----------------|
-| **Student Trader** | A learner who practices stock trading using virtual money and participates in structured financial learning programs |
-| **Instructor** | A domain expert who teaches financial market concepts, creates learning content, assigns trading exercises, and evaluates student performance |
+| **Learner** | A learner who practices stock trading using virtual money and participates in structured financial learning programs |
+| **Instructor** | A domain expert who teaches financial market concepts, creates learning content, assigns trading exercises, and evaluates learner's performance |
 | **Course Provider** | An internal or external entity that provides structured financial education content and course modules |
 | **Platform Administrator** | Authority responsible for managing platform operations, access control, academic structure, and performance monitoring |
 
 ##  Planned Features by Actor
 
-### **4.1 Student Trader Features**
+### **4.1 Learner Features**
 ####  **Trading Simulation**
 - View market prices (real-time or simulated)
 - Execute simulated buy and sell trades
@@ -70,16 +70,16 @@ The **Paper Trading and Financial Learning Platform** provides an integrated env
 
 ####  **Trading Practice Management**
 - Assign simulated trading exercises
-- Monitor student trading activity
+- Monitor Learner trading activity
 
 ####  **Session Scheduling**
 - Schedule trading classes or sessions
 - Modify existing schedules
-- Notify enrolled students
+- Notify enrolled Learners
 
-####  **Student Evaluation**
-- Evaluate student performance
-- Review student trading reports
+####  **Learner Evaluation**
+- Evaluate Learner performance
+- Review Learner trading reports
 
 ### **4.3 Course Provider Features**
 ####  **Content Management**
@@ -102,7 +102,7 @@ The **Paper Trading and Financial Learning Platform** provides an integrated env
 - Manage course availability and access
 
 ####  **Analytics and Reporting**
-- Generate student performance reports
+- Generate Learner performance reports
 - Generate platform performance reports
 
 ##  Key Domain Concepts
@@ -127,10 +127,10 @@ The **Paper Trading and Financial Learning Platform** provides an integrated env
 The platform is expected to:
 
 - **Reduce financial risk** during learning
-- **Improve financial literacy** among students
+- **Improve financial literacy** among students and other learners
 - **Provide structured trading education**
 - **Enable performance-driven financial learning**
-- **Prepare students for real-world financial markets**
+- **Prepare Students and other Learners for real-world financial markets**
 
 ##  Future Scope
 
