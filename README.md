@@ -4,7 +4,7 @@ This document outlines the problem statement, identified system actors, and the 
 
 ##  Problem Statement
 
-Many students are interested in financial markets and stock trading, but they face significant challenges while learning and practicing trading in real environments. The major problems include:
+Many people are interested in financial markets and stock trading, but they face significant challenges while learning and practicing trading in real environments. The major problems include:
 
 - **Lack of practical trading exposure** during learning
 - **Risk of losing real money** while experimenting in live markets
