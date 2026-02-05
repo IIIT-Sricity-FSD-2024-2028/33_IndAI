@@ -11,9 +11,8 @@ definitions:
       - Can access assigned learning courses and trading exercises
 
   Instructor:
-    description: A trading mentor who teaches financial market concepts and evaluates student trading performance
+    description: A mentor who assists in teaching financial market concepts and monitors student's activities
     business_rules:
-      - Can create and manage trading courses
       - Can assign trading exercises and simulations
       - Can provide feedback and performance evaluation
 
