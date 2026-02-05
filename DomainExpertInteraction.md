@@ -62,7 +62,7 @@ The problem statement reflects the design of a simplified trading system that pr
 | **Course Provider** | An internal or external entity that supplies structured financial education content, learning materials, and course modules used on the platform |
 | **Platform Administrator** | Responsible for managing platform operations, user access control, course structure, system configuration, and overall performance monitoring |
 | Database Layer | Persists user data, trades, portfolios, and snapshots |
-| Cache / In-Memory Store | Stores balances, order books, and active market data |
+| Cache / In-Memory Store | Stores and balances order books and active market data |
 
 ---
 
