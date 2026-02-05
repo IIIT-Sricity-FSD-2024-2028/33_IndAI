@@ -3,8 +3,8 @@ problem_statement: Education-Oriented Financial Literacy & Paper trading platfor
 
 definitions:
 
-  StudentTrader:
-    description: A learner who practices stock trading using virtual money for educational purposes
+  Learner:
+    description: A perform who practices stock trading using virtual money for educational purposes
     business_rules:
       - Can execute simulated buy and sell orders
       - Can view portfolio performance and trading history
@@ -60,12 +60,6 @@ definitions:
     business_rules:
       - Market price changes based on simulated or real market feeds
 
-  TradingSession:
-    description: A scheduled learning or trading activity period managed by instructors
-    business_rules:
-      - Students must be enrolled to participate
-      - Can include live simulation or guided practice
-
   Course:
     description: A structured learning program covering trading and financial market concepts
     business_rules:
@@ -109,7 +103,7 @@ definitions:
 
 from the domain expert interaction:
 
-MatchingEngine: Matching Engine
+MatchingEngine:
 definition:
   The core system component responsible for matching buy and sell trading orders based on defined rules such as price-time priority.
 examples:
@@ -118,7 +112,7 @@ aliases:
   - Order Matching Engine
   - Trade Execution Engine
 
-OrderBook: Order Book
+OrderBook:
 definition:
   An in-memory data structure that stores all active buy and sell orders for a financial instrument, organized by price and time.
 examples:
@@ -127,7 +121,7 @@ aliases:
   - Market Order Book
   - Trade Book
 
-MarketOrder: Market Order
+MarketOrder:
 definition:
   A trading order that is executed immediately at the best available price in the order book.
 examples:
@@ -136,7 +130,7 @@ aliases:
   - Immediate Order
   - At-Market Order
 
-LimitOrder: Limit Order
+LimitOrder:
 definition:
   A trading order that is executed only at a specified price or better and remains open until matched or cancelled.
 examples:
@@ -145,7 +139,7 @@ aliases:
   - Price-Limited Order
   - Pending Order
 
-StopLossOrder: Stop-Loss Order
+StopLossOrder:
 definition:
   A conditional trading order that is triggered when the market price reaches a predefined level to limit potential losses.
 examples:
@@ -154,7 +148,7 @@ aliases:
   - Stop Order
   - Risk Protection Order
 
-OrderBookSnapshot: Order Book Snapshot
+OrderBookSnapshot:
 definition:
   A saved copy of the current state of the order book and related balances, used for recovery in case of system failure.
 examples:
@@ -163,7 +157,7 @@ aliases:
   - Order Book State Backup
   - Trading Snapshot
 
-CashCheck: Cash Check
+CashCheck:
 definition:
   A validation process that ensures a trader has sufficient virtual balance before placing a buy order.
 examples:
@@ -172,7 +166,7 @@ aliases:
   - Balance Check
   - Funds Validation
 
-MarginTrading: Margin Trading
+MarginTrading: 
 definition:
   A trading mechanism that allows users to place orders using borrowed virtual funds within a predefined limit.
 examples:
@@ -181,7 +175,7 @@ aliases:
   - Leveraged Trading
   - Borrowed Capital Trading
 
-PriceTimePriority: Price-Time Priority
+PriceTimePriority:
 definition:
   A rule for order matching where orders with better prices are matched first, and among equal prices, earlier orders are matched before later ones.
 examples:
@@ -190,7 +184,7 @@ aliases:
   - FIFO Price Matching
   - Fair Matching Rule
 
-InMemoryDataStructure: In-Memory Data Structure
+InMemoryDataStructure: 
 definition:
   A data structure stored in system memory (RAM) to allow fast access and updates during order matching and trade execution.
 examples:
