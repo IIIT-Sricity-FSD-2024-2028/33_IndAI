@@ -16,7 +16,7 @@ Currently, most learners either study theoretical financial concepts without pra
 
 ##  Proposed Solution
 
-The **Education-Oriented Financial Literacy and Paper trading latform** provides an integrated environment where Learners can learn financial concepts and practice trading using virtual money.
+The **Education-Oriented Financial Literacy and Paper trading platform** provides an integrated environment where Learners can learn financial concepts and practice trading using virtual money.
 
 ### **Key Platform Features:**
 - **Risk-free simulated trading environment**
