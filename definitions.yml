@@ -174,21 +174,5 @@ aliases:
   - Leveraged Trading
   - Borrowed Capital Trading
 
-PriceTimePriority:
-definition:
-  A rule for order matching where orders with better prices are matched first, and among equal prices, earlier orders are matched before later ones.
-examples:
-  - Matching the highest buy price first, and if prices are equal, matching the earliest order.
-aliases:
-  - FIFO Price Matching
-  - Fair Matching Rule
 
-InMemoryDataStructure: 
-definition:
-  A data structure stored in system memory (RAM) to allow fast access and updates during order matching and trade execution.
-examples:
-  - Using arrays or lists to store active buy and sell orders.
-aliases:
-  - Memory-Based Storage
-  - Runtime Data Structure
 
