@@ -98,7 +98,7 @@ The **Education-Oriented Financial Literacy and Paper trading latform** provides
 - Monitor platform usage and activity
 
 ####  **Academic Structure Management**
-- Assign instructors to courses
+- Assign instructors to learners and courses
 - Manage course availability and access
 
 ####  **Analytics and Reporting**
