@@ -4,7 +4,7 @@ problem_statement: Education-Oriented Financial Literacy & Paper trading platfor
 definitions:
 
   Learner:
-    description: A perform who practices stock trading using virtual money for educational purposes
+    description: An individual who practices stock trading using virtual money to understand financial markets, trading strategies, and risk management for educational purposes.
     business_rules:
       - Can execute simulated buy and sell orders
       - Can view portfolio performance and trading history
