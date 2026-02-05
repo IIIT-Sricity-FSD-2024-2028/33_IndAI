@@ -21,7 +21,7 @@
 
 ## Domain Context and Terminology
 
-### Problem Statement: Education oriented Finantial Literacy and Paper Trading Simulation Platform
+### Problem Statement: Education oriented Financial Literacy and Paper Trading Simulation Platform
 
 ### How would you describe the overall purpose of this problem statement in your daily work?
 The problem statement reflects the design of a simplified trading system that prioritizes correctness, consistency, and learning outcomes rather than ultra-low latency or production-scale optimizations. It mirrors real-world trading workflows while remaining accessible for educational use.
