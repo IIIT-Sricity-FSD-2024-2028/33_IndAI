@@ -43,7 +43,7 @@ definitions:
       - Used to calculate profit, loss, and performance metrics
 
   VirtualBalance:
-    description: The simulated money available to a student trader for executing trades
+    description: The simulated money available to a learner trader for executing trades
     business_rules:
       - Decreases on buy orders
       - Increases on sell orders
