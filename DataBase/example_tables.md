@@ -78,7 +78,7 @@ Purpose: Records important actions performed by users.
 | log_id | user_id | action_type | entity_type | entity_id |
 |------|------|------|------|------|
 | 1 | 1 | LOGIN | user | 1 |
-| 2 | 2 | CREATE_COURSE | course | 5 |
+| 2 | 2 | CREATE_COURSE | course | 1 |
 
 ---
 
@@ -251,6 +251,28 @@ Purpose: Stores educational courses.
 
 ---
 
+## course_modules
+
+Purpose: Divides courses into structured learning modules.
+
+| module_id | course_id | title | module_order |
+|------|------|------|------|
+| 1 | 1 | Introduction to Markets | 1 |
+| 2 | 1 | Types of Stocks | 2 |
+
+---
+
+## learning_materials
+
+Purpose: Stores videos, articles, and documents for modules.
+
+| material_id | module_id | material_type | content_url |
+|------|------|------|------|
+| 1 | 1 | video | youtube.com/intro-market |
+| 2 | 2 | pdf | example.com/stocks.pdf |
+
+---
+
 ## learning_progress
 
 Purpose: Tracks progress of users in courses and challenges.
@@ -305,3 +327,51 @@ Purpose: Stores answers submitted by users.
 |------|------|------|
 | 1 | 1 | 1 |
 | 1 | 2 | 3 |
+
+---
+
+# 6. Live Education Module
+
+## live_classes
+
+Purpose: Stores scheduled live classes conducted by instructors.
+
+| live_class_id | class_title | schedule_datetime | duration_expected |
+|------|------|------|------|
+| 1 | Options Trading Workshop | 2024-05-10 18:00 | 90 |
+
+---
+
+## notifications
+
+Purpose: Sends alerts and announcements to users.
+
+| notification_id | user_id | description | time_stamp |
+|------|------|------|------|
+| 1 | 1 | New challenge available | 2024-05-01 |
+| 2 | 2 | Live class reminder | 2024-05-09 |
+
+---
+
+# 7. Platform Management Module
+
+## feature_management
+
+Purpose: Controls which trading features are enabled for users.
+
+| user_id | margin_trading | crypto_trading | forex_trading |
+|------|------|------|------|
+| 1 | TRUE | FALSE | FALSE |
+| 2 | TRUE | TRUE | TRUE |
+
+---
+
+## system_rules
+
+Purpose: Defines global rules for platform operations.
+
+| max_trading_limit | max_skill_points_per_challenge | min_skill_points_for_margin_trading | max_daily_trades |
+|------|------|------|------|
+| 100000 | 100 | 200 | 50 |
+
+---
