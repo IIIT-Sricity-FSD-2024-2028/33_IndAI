@@ -293,8 +293,12 @@ CREATE TABLE feature_management (
 );
 
 CREATE TABLE system_rules (
-    rule_name VARCHAR(100) PRIMARY KEY,
-    rule_value VARCHAR(100)
+    rule_id INT PRIMARY KEY AUTO_INCREMENT,
+    rule_name VARCHAR(100) NOT NULL UNIQUE,
+    rule_value VARCHAR(100) NOT NULL,
+    created_by INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(user_id)
 );
 
 CREATE TABLE instructor_student_mapping (
@@ -304,3 +308,4 @@ CREATE TABLE instructor_student_mapping (
     FOREIGN KEY(instructor_id) REFERENCES staff(user_id),
     FOREIGN KEY(student_id) REFERENCES students(user_id)
 );
+
