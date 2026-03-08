@@ -1,3 +1,35 @@
+# Database Schema Structure
+
+The database is divided into five modules to keep the design modular and easy to understand.
+
+```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 80, 'rankSpacing': 90}} }%%
+flowchart TB
+classDef invisible stroke-width:0px,fill:none;
+
+subgraph USER_LAYER["User Layer"]
+A[User Management Module]
+end
+
+subgraph CORE_LAYER["Core Application"]
+B[Trading Engine]
+end
+
+subgraph PLATFORM_FEATURES["Platform Features"]
+direction LR
+C[Market Data]
+D[Learning System]
+E[Live Education]
+F[Challenges]
+G[Platform Management]
+end
+
+A --- B
+B --- E
+
+linkStyle 0 stroke-width:0px
+linkStyle 1 stroke-width:0px
+```
 # Database ER Diagrams
 
 This document shows the entity-relationship structure of the platform database.
