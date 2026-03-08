@@ -22,21 +22,11 @@ Purpose: Defines system roles such as student, instructor, or administrator.
 
 Purpose: Stores user identity and login information.
 
-| user_id | email | first_name | last_name | phone_number | dob |
-|------|------|------|------|------|------|
-| 1 | rahul@gmail.com | Rahul | Sharma | 9876543210 | 2002-05-10 |
-| 2 | priya@gmail.com | Priya | Nair | 9123456780 | 1990-03-15 |
-
----
-
-## user_roles
-
-Purpose: Maps users to system roles.
-
-| user_id | role_id |
-|------|------|
-| 1 | 1 |
-| 2 | 2 |
+| user_id | role_id | email | first_name | last_name | phone_number | dob |
+|------|------|------|------|------|------|------|
+| 1 | 1 | rahul@gmail.com | Rahul | Sharma | 9876543210 | 2002-05-10 |
+| 2 | 2 | priya@gmail.com | Priya | Nair | 9123456780 | 1990-03-15 |
+| 3 | 3 | admin@platform.com | Admin | User | 9000000000 | 1985-01-01 |
 
 ---
 
@@ -120,10 +110,10 @@ Purpose: Stores the latest traded price of instruments.
 
 Purpose: Stores historical price data.
 
-| history_id | instrument_id | open_price | close_price | volume |
-|------|------|------|------|------|
-| 1 | 1 | 2400 | 2450 | 1000000 |
-| 2 | 2 | 1480 | 1500 | 850000 |
+| history_id | instrument_id | open_price | close_price | high_price | low_price | volume |
+|------|------|------|------|------|------|------|
+| 1 | 1 | 2400 | 2450 | 2470 | 2380 | 1000000 |
+| 2 | 2 | 1480 | 1500 | 1510 | 1470 | 850000 |
 
 ---
 
@@ -153,10 +143,10 @@ Purpose: Tracks stocks owned by users.
 
 Purpose: Stores buy and sell orders placed by users.
 
-| order_id | user_id | instrument_id | order_type | quantity | status |
-|------|------|------|------|------|------|
-| 1 | 1 | 1 | buy | 10 | pending |
-| 2 | 1 | 2 | sell | 5 | executed |
+| order_id | user_id | instrument_id | order_type | order_category | quantity | filled_quantity | limit_price | status |
+|------|------|------|------|------|------|------|------|------|
+| 1 | 1 | 1 | buy | market | 10 | 10 | NULL | executed |
+| 2 | 1 | 2 | sell | limit | 5 | 3 | 1500 | partial |
 
 ---
 
@@ -167,7 +157,7 @@ Purpose: Stores executed trades.
 | trade_id | order_id | execution_price | quantity |
 |------|------|------|------|
 | 1 | 1 | 2445 | 10 |
-| 2 | 2 | 1505 | 5 |
+| 2 | 2 | 1505 | 3 |
 
 ---
 
@@ -220,10 +210,10 @@ Purpose: Stores stock market indices.
 
 Purpose: Maps instruments belonging to each index.
 
-| index_id | instrument_id | weightage |
-|------|------|------|
-| 1 | 1 | 9.5 |
-| 1 | 2 | 7.2 |
+| index_id | instrument_id | weightage | added_date |
+|------|------|------|------|
+| 1 | 1 | 9.5 | 2023-01-01 |
+| 1 | 2 | 7.2 | 2023-01-01 |
 
 ---
 
@@ -244,10 +234,10 @@ Purpose: Stores company financial reports.
 
 Purpose: Stores educational courses.
 
-| course_id | title | difficulty | duration |
-|------|------|------|------|
-| 1 | Basics of Stock Market | beginner | 10 |
-| 2 | Technical Analysis | intermediate | 15 |
+| course_id | title | duration | difficulty | provider_id |
+|------|------|------|------|------|
+| 1 | Basics of Stock Market | 10 | beginner | 2 |
+| 2 | Technical Analysis | 15 | intermediate | 2 |
 
 ---
 
@@ -266,10 +256,10 @@ Purpose: Divides courses into structured learning modules.
 
 Purpose: Stores videos, articles, and documents for modules.
 
-| material_id | module_id | material_type | content_url |
-|------|------|------|------|
-| 1 | 1 | video | youtube.com/intro-market |
-| 2 | 2 | pdf | example.com/stocks.pdf |
+| material_id | module_id | material_type | content_url | duration |
+|------|------|------|------|------|
+| 1 | 1 | video | youtube.com/intro-market | 15 |
+| 2 | 2 | pdf | example.com/stocks.pdf | NULL |
 
 ---
 
@@ -277,10 +267,10 @@ Purpose: Stores videos, articles, and documents for modules.
 
 Purpose: Tracks progress of users in courses and challenges.
 
-| user_id | entity_id | entity_type | progress_percentage |
-|------|------|------|------|
-| 1 | 1 | course | 60 |
-| 1 | 3 | challenge | 100 |
+| user_id | entity_id | entity_type | progress_percentage | rating_out_of_5 |
+|------|------|------|------|------|
+| 1 | 1 | course | 60 | 4 |
+| 1 | 3 | challenge | 100 | 5 |
 
 ---
 
@@ -336,9 +326,9 @@ Purpose: Stores answers submitted by users.
 
 Purpose: Stores scheduled live classes conducted by instructors.
 
-| live_class_id | class_title | schedule_datetime | duration_expected |
-|------|------|------|------|
-| 1 | Options Trading Workshop | 2024-05-10 18:00 | 90 |
+| live_class_id | class_title | schedule_datetime | duration_expected | instructor_id |
+|------|------|------|------|------|
+| 1 | Options Trading Workshop | 2024-05-10 18:00 | 90 | 2 |
 
 ---
 
@@ -346,7 +336,7 @@ Purpose: Stores scheduled live classes conducted by instructors.
 
 Purpose: Sends alerts and announcements to users.
 
-| notification_id | user_id | description | time_stamp |
+| notification_id | user_id | description | created_at |
 |------|------|------|------|
 | 1 | 1 | New challenge available | 2024-05-01 |
 | 2 | 2 | Live class reminder | 2024-05-09 |
@@ -359,19 +349,21 @@ Purpose: Sends alerts and announcements to users.
 
 Purpose: Controls which trading features are enabled for users.
 
-| user_id | margin_trading | crypto_trading | forex_trading |
-|------|------|------|------|
-| 1 | TRUE | FALSE | FALSE |
-| 2 | TRUE | TRUE | TRUE |
+| user_id | feature_name | is_enabled |
+|------|------|------|
+| 1 | margin_trading | TRUE |
+| 1 | crypto_trading | FALSE |
+| 2 | forex_trading | TRUE |
 
 ---
 
 ## system_rules
 
-Purpose: Defines global rules for platform operations.
+Purpose: Defines configurable platform rules that control trading limits and platform behavior.
 
-| max_trading_limit | max_skill_points_per_challenge | min_skill_points_for_margin_trading | max_daily_trades |
+| rule_id | rule_name | rule_value | created_by |
 |------|------|------|------|
-| 100000 | 100 | 200 | 50 |
-
----
+| 1 | max_trading_limit | 100000 | 3 |
+| 2 | max_daily_trades | 50 | 3 |
+| 3 | max_skill_points_per_challenge | 100 | 3 |
+| 4 | min_skill_points_for_margin_trading | 200 | 3 |
