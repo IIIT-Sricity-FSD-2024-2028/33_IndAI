@@ -8,22 +8,17 @@ CREATE TABLE roles (
 
 CREATE TABLE users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
+    role_id INT NOT NULL,
     email VARCHAR(120) NOT NULL UNIQUE,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100),
     phone_number VARCHAR(20) UNIQUE,
     dob DATE,
     password_hash VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE user_roles (
-    user_id INT NOT NULL,
-    role_id INT NOT NULL,
-    PRIMARY KEY(user_id, role_id),
-    FOREIGN KEY(user_id) REFERENCES users(user_id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(role_id) REFERENCES roles(role_id)
 );
+
 
 CREATE TABLE students (
     user_id INT PRIMARY KEY,
