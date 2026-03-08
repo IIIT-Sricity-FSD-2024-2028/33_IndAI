@@ -4,7 +4,7 @@ This document describes the **complete ER structure of the Trading Learning Plat
 
 The schema contains:
 
-- **33 tables (entities)**
+- **32 tables (entities)**
 - **35 relationship diamonds**
 - Multiple modules for clarity
 
