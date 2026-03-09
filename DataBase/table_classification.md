@@ -193,7 +193,7 @@ Configuration Tables | 2 |
 
 Total Tables in Database:
 
-**33 Tables**
+**32 Tables**
 
 ---
 
