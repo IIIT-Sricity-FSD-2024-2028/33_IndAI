@@ -80,7 +80,7 @@ https://www.figma.com/board/qZDoxpMNaAEiiKQ4adKQYF/Untitled?node-id=0-1&t=q0M2Ib
 
 ### Live Interactive Prototype
 
-https://www.figma.com/design/fsAhtmyVVr4KSsQUW4eRWi/Untitled?node-id=0-1&t=892GyYqbUw7NSDBM-1
+https://www.figma.com/design/VCVrRUtqiVHKzHDPuBRwIb/Untitled?node-id=0-1&t=ZVLCYbSwLMKhMxPY-1
 
 ---
 
