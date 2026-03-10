@@ -8,11 +8,11 @@ This document provides example records for each table in the database to illustr
 
 ## roles
 
-Purpose: Defines system roles such as student, instructor, or administrator.
+Purpose: Defines system roles such as learner, instructor, or administrator.
 
 | role_id | role_name |
 |------|------|
-| 1 | student |
+| 1 | learner |
 | 2 | instructor |
 | 3 | admin |
 
@@ -30,9 +30,9 @@ Purpose: Stores user identity and login information.
 
 ---
 
-## students
+## learners
 
-Purpose: Stores additional information about student users.
+Purpose: Stores additional information about learner users.
 
 | user_id | institution_name | grade | major | institute_roll_number | skill_points |
 |------|------|------|------|------|------|
@@ -56,8 +56,8 @@ Purpose: Stores virtual trading account balances.
 
 | user_id | virtual_balance | created_at |
 |------|------|------|
-| 1 | 100000 | 2024-01-01 |
-| 2 | 150000 | 2024-02-01 |
+| 1 | 100000 | 2024-01-01 09:30:00 |
+| 2 | 150000 | 2024-02-01 10:15:00 |
 
 ---
 
@@ -65,18 +65,18 @@ Purpose: Stores virtual trading account balances.
 
 Purpose: Records important actions performed by users.
 
-| log_id | user_id | action_type | entity_type | entity_id |
-|------|------|------|------|------|
-| 1 | 1 | LOGIN | user | 1 |
-| 2 | 2 | CREATE_COURSE | course | 1 |
+| log_id | user_id | action_type | entity_type | entity_id | created_at |
+|------|------|------|------|------|------|
+| 1 | 1 | LOGIN | user | 1 | 2024-03-01 08:45:12 |
+| 2 | 2 | CREATE_COURSE | course | 1 | 2024-03-02 14:20:35 |
 
 ---
 
-## instructor_student_mapping
+## instructor_learner_mapping
 
-Purpose: Maps instructors to students they mentor.
+Purpose: Maps instructors to learners they mentor.
 
-| instructor_id | student_id |
+| instructor_id | learner_id |
 |------|------|
 | 2 | 1 |
 
@@ -101,8 +101,8 @@ Purpose: Stores the latest traded price of instruments.
 
 | instrument_id | recent_price | updated_at |
 |------|------|------|
-| 1 | 2450.50 | 2024-03-01 |
-| 2 | 1500.00 | 2024-03-01 |
+| 1 | 2450.50 | 2024-03-01 10:00:00 |
+| 2 | 1500.00 | 2024-03-01 10:00:00 |
 
 ---
 
@@ -110,10 +110,10 @@ Purpose: Stores the latest traded price of instruments.
 
 Purpose: Stores historical price data.
 
-| history_id | instrument_id | open_price | close_price | high_price | low_price | volume |
-|------|------|------|------|------|------|------|
-| 1 | 1 | 2400 | 2450 | 2470 | 2380 | 1000000 |
-| 2 | 2 | 1480 | 1500 | 1510 | 1470 | 850000 |
+| history_id | instrument_id | open_price | close_price | high_price | low_price | volume | recorded_at |
+|------|------|------|------|------|------|------|------|
+| 1 | 1 | 2400 | 2450 | 2470 | 2380 | 1000000 | 2024-03-01 15:30:00 |
+| 2 | 2 | 1480 | 1500 | 1510 | 1470 | 850000 | 2024-03-01 15:30:00 |
 
 ---
 
@@ -121,10 +121,10 @@ Purpose: Stores historical price data.
 
 Purpose: Stores aggregated order book levels.
 
-| depth_id | instrument_id | side | price | total_quantity |
-|------|------|------|------|------|
-| 1 | 1 | buy | 2448 | 500 |
-| 2 | 1 | sell | 2452 | 600 |
+| depth_id | instrument_id | side | price | total_quantity | updated_at |
+|------|------|------|------|------|------|
+| 1 | 1 | buy | 2448 | 500 | 2024-03-01 10:01:15 |
+| 2 | 1 | sell | 2452 | 600 | 2024-03-01 10:01:15 |
 
 ---
 
@@ -143,10 +143,10 @@ Purpose: Tracks stocks owned by users.
 
 Purpose: Stores buy and sell orders placed by users.
 
-| order_id | user_id | instrument_id | order_type | order_category | quantity | filled_quantity | limit_price | status |
-|------|------|------|------|------|------|------|------|------|
-| 1 | 1 | 1 | buy | market | 10 | 10 | NULL | executed |
-| 2 | 1 | 2 | sell | limit | 5 | 3 | 1500 | partial |
+| order_id | user_id | instrument_id | order_type | order_category | quantity | filled_quantity | limit_price | status | created_at |
+|------|------|------|------|------|------|------|------|------|------|
+| 1 | 1 | 1 | buy | market | 10 | 10 | NULL | executed | 2024-03-01 10:05:22 |
+| 2 | 1 | 2 | sell | limit | 5 | 3 | 1500 | partial | 2024-03-01 11:12:45 |
 
 ---
 
@@ -154,10 +154,10 @@ Purpose: Stores buy and sell orders placed by users.
 
 Purpose: Stores executed trades.
 
-| trade_id | order_id | execution_price | quantity |
-|------|------|------|------|
-| 1 | 1 | 2445 | 10 |
-| 2 | 2 | 1505 | 3 |
+| trade_id | order_id | execution_price | quantity | executed_at |
+|------|------|------|------|------|
+| 1 | 1 | 2445 | 10 | 2024-03-01 10:05:25 |
+| 2 | 2 | 1505 | 3 | 2024-03-01 11:13:02 |
 
 ---
 
@@ -165,10 +165,10 @@ Purpose: Stores executed trades.
 
 Purpose: Records deposits, withdrawals, and trade settlements.
 
-| transaction_id | user_id | amount | transaction_type |
-|------|------|------|------|
-| 1 | 1 | 50000 | deposit |
-| 2 | 1 | -15000 | trade |
+| transaction_id | user_id | amount | transaction_type | created_at |
+|------|------|------|------|------|
+| 1 | 1 | 50000 | deposit | 2024-02-20 09:00:00 |
+| 2 | 1 | -15000 | trade | 2024-03-01 10:05:30 |
 
 ---
 
@@ -267,10 +267,10 @@ Purpose: Stores videos, articles, and documents for modules.
 
 Purpose: Tracks progress of users in courses and challenges.
 
-| user_id | entity_id | entity_type | progress_percentage | rating_out_of_5 |
-|------|------|------|------|------|
-| 1 | 1 | course | 60 | 4 |
-| 1 | 3 | challenge | 100 | 5 |
+| user_id | entity_id | entity_type | progress_percentage | rating_out_of_5 | enrolled_at |
+|------|------|------|------|------|------|
+| 1 | 1 | course | 60 | 4 | 2024-02-01 12:00:00 |
+| 1 | 1 | challenge | 100 | 5 | 2024-02-15 16:30:00 |
 
 ---
 
@@ -328,7 +328,7 @@ Purpose: Stores scheduled live classes conducted by instructors.
 
 | live_class_id | class_title | schedule_datetime | duration_expected | instructor_id |
 |------|------|------|------|------|
-| 1 | Options Trading Workshop | 2024-05-10 18:00 | 90 | 2 |
+| 1 | Options Trading Workshop | 2024-05-10 18:00:00 | 90 | 2 |
 
 ---
 
@@ -338,8 +338,8 @@ Purpose: Sends alerts and announcements to users.
 
 | notification_id | user_id | description | created_at |
 |------|------|------|------|
-| 1 | 1 | New challenge available | 2024-05-01 |
-| 2 | 2 | Live class reminder | 2024-05-09 |
+| 1 | 1 | New challenge available | 2024-05-01 09:15:00 |
+| 2 | 2 | Live class reminder | 2024-05-09 17:45:00 |
 
 ---
 
@@ -361,9 +361,9 @@ Purpose: Controls which trading features are enabled for users.
 
 Purpose: Defines configurable platform rules that control trading limits and platform behavior.
 
-| rule_id | rule_name | rule_value | created_by |
-|------|------|------|------|
-| 1 | max_trading_limit | 100000 | 3 |
-| 2 | max_daily_trades | 50 | 3 |
-| 3 | max_skill_points_per_challenge | 100 | 3 |
-| 4 | min_skill_points_for_margin_trading | 200 | 3 |
+| rule_id | rule_name | rule_value | created_by | created_at |
+|------|------|------|------|------|
+| 1 | max_trading_limit | 100000 | 3 | 2024-01-01 00:00:00 |
+| 2 | max_daily_trades | 50 | 3 | 2024-01-01 00:00:00 |
+| 3 | max_skill_points_per_challenge | 100 | 3 | 2024-01-01 00:00:00 |
+| 4 | min_skill_points_for_margin_trading | 200 | 3 | 2024-01-01 00:00:00 |
