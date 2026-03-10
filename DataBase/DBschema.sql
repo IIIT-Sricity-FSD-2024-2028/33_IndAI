@@ -218,12 +218,13 @@ CREATE TABLE learning_materials (
 
 CREATE TABLE learning_progress (
     user_id INT NOT NULL,
-    entity_type ENUM('course','challenge'),
+    entity_id INT NOT NULL,
+    entity_type ENUM('course','challenge') NOT NULL,
     progress_percentage INT DEFAULT 0,
     enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     rating_out_of_5 INT,
-    PRIMARY KEY(user_id, entity_id, entity_type),
-    FOREIGN KEY(user_id) REFERENCES users(user_id)
+    PRIMARY KEY (user_id, entity_id, entity_type),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 CREATE TABLE live_classes (
@@ -303,3 +304,4 @@ CREATE TABLE instructor_learner_mapping (
     FOREIGN KEY(instructor_id) REFERENCES staff(user_id),
     FOREIGN KEY(learner_id) REFERENCES learners(user_id)
 );
+
