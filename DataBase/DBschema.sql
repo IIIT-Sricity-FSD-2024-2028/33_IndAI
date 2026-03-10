@@ -20,7 +20,7 @@ CREATE TABLE users (
 );
 
 
-CREATE TABLE students (
+CREATE TABLE learners (
     user_id INT PRIMARY KEY,
     institution_name VARCHAR(200),
     grade VARCHAR(50),
@@ -39,8 +39,9 @@ CREATE TABLE staff (
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
+
 CREATE TABLE accounts (
-    user_id INT PRIMARY KEY,
+    user_id INT,
     virtual_balance DECIMAL(15,2) DEFAULT 100000 CHECK(virtual_balance >= 0),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
@@ -67,7 +68,7 @@ CREATE TABLE instruments (
 );
 
 CREATE TABLE market_prices (
-    instrument_id INT PRIMARY KEY,
+    instrument_id INT,
     recent_price DECIMAL(12,2) NOT NULL CHECK(recent_price >= 0),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
@@ -102,7 +103,6 @@ CREATE TABLE portfolio (
     quantity INT NOT NULL CHECK(quantity >= 0),
     avg_price DECIMAL(12,2) CHECK(avg_price >= 0),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(user_id, instrument_id),
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
 );
@@ -150,7 +150,6 @@ CREATE TABLE watchlists (
 CREATE TABLE watchlist_items (
     watchlist_id INT NOT NULL,
     instrument_id INT NOT NULL,
-    PRIMARY KEY(watchlist_id, instrument_id),
     FOREIGN KEY(watchlist_id) REFERENCES watchlists(watchlist_id),
     FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
 );
@@ -167,7 +166,6 @@ CREATE TABLE index_constituents (
     instrument_id INT NOT NULL,
     weightage DECIMAL(5,2),
     added_date DATE,
-    PRIMARY KEY(index_id, instrument_id),
     FOREIGN KEY(index_id) REFERENCES indices(index_id),
     FOREIGN KEY(instrument_id) REFERENCES instruments(instrument_id)
 );
@@ -220,7 +218,6 @@ CREATE TABLE learning_materials (
 
 CREATE TABLE learning_progress (
     user_id INT NOT NULL,
-    entity_id INT NOT NULL,
     entity_type ENUM('course','challenge'),
     progress_percentage INT DEFAULT 0,
     enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -278,7 +275,6 @@ CREATE TABLE user_answers (
     question_id INT NOT NULL,
     selected_option INT,
     submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY(user_id, question_id),
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(question_id) REFERENCES questions(question_id),
     FOREIGN KEY(selected_option) REFERENCES options(option_id)
@@ -301,11 +297,9 @@ CREATE TABLE system_rules (
     FOREIGN KEY (created_by) REFERENCES users(user_id)
 );
 
-CREATE TABLE instructor_student_mapping (
+CREATE TABLE instructor_learner_mapping (
     instructor_id INT NOT NULL,
-    student_id INT NOT NULL,
-    PRIMARY KEY(instructor_id, student_id),
+    learner_id INT NOT NULL,
     FOREIGN KEY(instructor_id) REFERENCES staff(user_id),
-    FOREIGN KEY(student_id) REFERENCES students(user_id)
+    FOREIGN KEY(learner_id) REFERENCES learners(user_id)
 );
-
