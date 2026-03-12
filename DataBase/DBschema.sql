@@ -44,7 +44,7 @@ CREATE TABLE learners (
     institute_roll_no VARCHAR(50),
     skill_points INT,
     FOREIGN KEY (trading_user_id) REFERENCES trading_users(trading_user_id),
-     FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id)
+    FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id)
 );
 
 CREATE TABLE instructor (
@@ -78,15 +78,24 @@ CREATE TABLE courses (
     FOREIGN KEY (provider_id) REFERENCES course_provider(course_provider_id)
 );
 
-CREATE TABLE learning_progress (
+CREATE TABLE learning_progress_course (
     learner_id INT,
-    entity_id INT,
-    entity_type VARCHAR(50),
+    course_id INT,
     progress_percentage INT,
     enrolled_at TIMESTAMP,
-     FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id),
-    FOREIGN KEY (learner_id) REFERENCES learners(learner_id)
+    FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id),
+    FOREIGN KEY (learner_id) REFERENCES learners(learner_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
+);
 
+CREATE TABLE learning_progress_challenge (
+    learner_id INT,
+    challenge_id INT,
+    progress_percentage INT,
+    enrolled_at TIMESTAMP,
+    FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id),
+    FOREIGN KEY (learner_id) REFERENCES learners(learner_id),
+    FOREIGN KEY (challenge_id) REFERENCES challenges(challenge_id)
 );
 
 CREATE TABLE challenges (
@@ -220,3 +229,4 @@ CREATE TABLE transactions (
     created_at TIMESTAMP,
     FOREIGN KEY (trading_user_id) REFERENCES trading_users(trading_user_id)
 );
+
