@@ -9,6 +9,7 @@ CREATE TABLE users (
     phone_number VARCHAR(20) UNIQUE,
     dob DATE,
     password_hash VARCHAR(255) NOT NULL,
+    account_status ENUM('ACTIVE','SUSPENDED','DISABLED') DEFAULT 'ACTIVE',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -18,7 +19,6 @@ CREATE TABLE admin (
     permissions TEXT,
     department VARCHAR(100),
     last_login TIMESTAMP,
-    account_status ENUM('ACTIVE','SUSPENDED','DISABLED') DEFAULT 'ACTIVE',
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
