@@ -25,7 +25,6 @@ CREATE TABLE admin (
 CREATE TABLE trading_users (
     trading_user_id INT PRIMARY KEY,
     user_id INT UNIQUE NOT NULL,
-    experience_level ENUM('BEGINNER','INTERMEDIATE','ADVANCED') DEFAULT 'BEGINNER',
     total_virtual_balance DECIMAL(15,2) NOT NULL CHECK(total_virtual_balance >= 0),
     risk_profile ENUM('LOW','MEDIUM','HIGH'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -46,6 +45,7 @@ CREATE TABLE learners (
     learner_id INT PRIMARY KEY,
     trading_user_id INT UNIQUE NOT NULL,
     instructor_id INT,
+    experience_level ENUM('BEGINNER','INTERMEDIATE','ADVANCED') DEFAULT 'BEGINNER',
     institution_name VARCHAR(150),
     grade VARCHAR(50),
     major VARCHAR(100),
