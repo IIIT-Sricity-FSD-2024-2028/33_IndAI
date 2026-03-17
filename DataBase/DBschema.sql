@@ -89,7 +89,7 @@ CREATE TABLE challenges (
     FOREIGN KEY (learner_id) REFERENCES learners(learner_id)
 );
 
-CREATE TABLE learning_progress_course (
+CREATE TABLE course_progress (
     learner_id INT NOT NULL,
     course_id INT NOT NULL,
     progress_percentage INT CHECK(progress_percentage BETWEEN 0 AND 100),
@@ -98,14 +98,6 @@ CREATE TABLE learning_progress_course (
     FOREIGN KEY (course_id) REFERENCES courses(course_id)
 );
 
-CREATE TABLE learning_progress_challenge (
-    learner_id INT NOT NULL,
-    challenge_id INT NOT NULL,
-    progress_percentage INT CHECK(progress_percentage BETWEEN 0 AND 100),
-    enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (learner_id) REFERENCES learners(learner_id),
-    FOREIGN KEY (challenge_id) REFERENCES challenges(challenge_id)
-);
 
 CREATE TABLE notifications (
     notification_id INT PRIMARY KEY,
@@ -200,7 +192,7 @@ CREATE TABLE orders (
     order_category VARCHAR(50) NOT NULL,
     quantity INT NOT NULL CHECK(quantity > 0),
     filled_quantity INT DEFAULT 0 CHECK(filled_quantity >= 0),
-    limit_price DECIMAL(12,2) CHECK(limit_price >= 0),
+    price DECIMAL(12,2) CHECK(price >= 0),
     status ENUM('OPEN','PARTIAL','FILLED','CANCELLED') DEFAULT 'OPEN',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (instrument_id) REFERENCES instruments(instrument_id),
