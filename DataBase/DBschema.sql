@@ -16,9 +16,9 @@ CREATE TABLE users (
 CREATE TABLE admin (
     admin_id INT PRIMARY KEY,
     user_id INT UNIQUE NOT NULL,
-    permissions TEXT,
-    department VARCHAR(100),
-    last_login TIMESTAMP,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
@@ -91,10 +91,8 @@ CREATE TABLE challenges (
 CREATE TABLE course_progress (
     learner_id INT NOT NULL,
     course_id INT NOT NULL,
-    instructor_id INT NOT NULL,
     progress_percentage INT CHECK(progress_percentage BETWEEN 0 AND 100),
     enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id),
     FOREIGN KEY (learner_id) REFERENCES learners(learner_id),
     FOREIGN KEY (course_id) REFERENCES courses(course_id)
 );
@@ -153,15 +151,6 @@ CREATE TABLE market_depth (
     total_quantity INT CHECK(total_quantity >= 0),
     orders_count INT CHECK(orders_count >= 0),
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (instrument_id) REFERENCES instruments(instrument_id)
-);
-
-CREATE TABLE indices (
-    index_id INT PRIMARY KEY,
-    instrument_id INT,
-    index_name VARCHAR(100) NOT NULL,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (instrument_id) REFERENCES instruments(instrument_id)
 );
 
