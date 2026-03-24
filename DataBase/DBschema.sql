@@ -202,7 +202,7 @@ CREATE TABLE transactions (
     transaction_id INT PRIMARY KEY,
     trading_user_id INT NOT NULL,
     amount DECIMAL(12,2) NOT NULL,
-    transaction_type ENUM('DEPOSIT','WITHDRAWAL','TRADE') NOT NULL,
+    transaction_type ENUM('DEPOSIT','WITHDRAWAL','TAX') NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (trading_user_id) REFERENCES trading_users(trading_user_id)
 );
