@@ -93,6 +93,7 @@ CREATE TABLE course_progress (
     course_id INT NOT NULL,
     progress_percentage INT CHECK(progress_percentage BETWEEN 0 AND 100),
     enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id),
     FOREIGN KEY (learner_id) REFERENCES learners(learner_id),
     FOREIGN KEY (course_id) REFERENCES courses(course_id)
 );
