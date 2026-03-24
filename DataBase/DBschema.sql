@@ -91,6 +91,7 @@ CREATE TABLE challenges (
 CREATE TABLE course_progress (
     learner_id INT NOT NULL,
     course_id INT NOT NULL,
+    instructor_id INT NOT NULL
     progress_percentage INT CHECK(progress_percentage BETWEEN 0 AND 100),
     enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (instructor_id) REFERENCES instructor(instructor_id),
