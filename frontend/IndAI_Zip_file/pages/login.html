@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndAI – Sign In</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <style>
+    body { background:linear-gradient(135deg,#EFF6FF 0%,#F0FDF4 100%); min-height:100vh; display:flex; align-items:center; }
+    html.dark body { background:#0F1520; }
+    .login-left { flex:1; padding:64px; display:flex; flex-direction:column; justify-content:center; background:linear-gradient(145deg,#EFF6FF,#F5F3FF); min-height:100vh; }
+    html.dark .login-left { background:linear-gradient(145deg,#151C2C,#1A1E3A); }
+    .brand-left { display:flex; align-items:center; gap:10px; margin-bottom:32px; }
+    .brand-left span { font-size:1.4rem; font-weight:900; color:var(--dark); }
+    .tagline { font-size:2rem; font-weight:900; color:var(--dark); line-height:1.2; margin-bottom:16px; }
+    .tagline-sub { font-size:15px; color:var(--gray-600); line-height:1.7; margin-bottom:40px; }
+    .step-item { display:flex; align-items:flex-start; gap:14px; margin-bottom:22px; }
+    .step-num { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; }
+    .s1{background:var(--blue);} .s2{background:var(--green);} .s3{background:var(--orange);}
+    .step-item h4 { font-size:14px; font-weight:700; margin-bottom:3px; color:var(--dark); }
+    .step-item p { font-size:13px; color:var(--gray-500); margin:0; }
+    .risk-banner { background:var(--blue); color:#fff; border-radius:var(--radius-lg); padding:20px 24px; margin-top:32px; }
+    .risk-banner h3 { font-size:1.3rem; font-weight:900; margin-bottom:6px; color:#fff; }
+    .risk-banner p { font-size:13px; color:rgba(255,255,255,0.85); margin:0; }
+    .login-right { width:580px; background:#fff; padding:40px 52px; display:flex; flex-direction:column; justify-content:center; box-shadow:-8px 0 40px rgba(0,0,0,0.08); overflow-y:auto; min-height:100vh; }
+    html.dark .login-right { background:#1E2535; box-shadow:-8px 0 40px rgba(0,0,0,0.5); }
+    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--gray-600); font-size:13px; font-weight:600; text-decoration:none; margin-bottom:28px; }
+    .back-link:hover{color:var(--blue);}
+    .sign-in-title { font-size:2rem; font-weight:900; color:var(--dark); margin-bottom:6px; }
+    .sign-in-sub { font-size:14px; color:var(--gray-500); margin-bottom:28px; }
+    .demo-section { margin-top:20px; }
+    .demo-label { font-size:12px; font-weight:700; color:var(--gray-500); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px; }
+    .demo-btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .demo-btn { padding:10px 14px; border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); background:var(--gray-50); cursor:pointer; text-align:left; transition:all 0.15s; font-family:var(--font); }
+    .demo-btn:hover { border-color:var(--blue); background:var(--blue-light); }
+    .demo-btn .db-role { font-size:12px; font-weight:800; color:var(--dark); }
+    .demo-btn .db-cred { font-size:11px; color:var(--gray-500); margin-top:2px; }
+    .divider-text { text-align:center; margin:20px 0; color:var(--gray-400); font-size:13px; }
+    .terms-line { font-size:12px; color:var(--gray-400); text-align:center; margin-top:20px; }
+    .terms-line a { color:var(--blue); text-decoration:none; }
+    .field-error-span { display:block; color:var(--red); font-size:12px; margin-top:4px; min-height:16px; }
+    .nav-right-login { position:fixed; top:16px; right:24px; display:flex; gap:8px; z-index:200; }
+    @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+  </style>
+</head>
+<body>
+
+<!-- Dark mode toggle fixed top-right -->
+<div class="nav-right-login">
+  <button class="dark-mode-toggle" onclick="DarkMode.toggle()" title="Toggle Dark Mode" aria-label="Toggle theme"></button>
+</div>
+
+<div class="login-left">
+  <div class="brand-left">
+    <div style="width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;">↗</div>
+    <span>IndAI</span>
+  </div>
+  <div class="tagline">Welcome Back to Your<br>Trading Journey</div>
+  <p class="tagline-sub">Sign in to access your paper trading account and continue learning.</p>
+  <div class="step-item"><div class="step-num s1">1</div><div><h4>Select Your Role</h4><p>Choose between Learner, Instructor, Course Provider, or Admin</p></div></div>
+  <div class="step-item"><div class="step-num s2">2</div><div><h4>Enter Credentials</h4><p>Use your registered email and secure password</p></div></div>
+  <div class="step-item"><div class="step-num s3">3</div><div><h4>Access Dashboard</h4><p>Start trading, learning, or managing your platform</p></div></div>
+  <div class="risk-banner"><h3>100% Risk-Free</h3><p>Practice trading with virtual money in a safe, educational environment</p></div>
+</div>
+
+<div class="login-right">
+  <a href="../index.html" class="back-link">← Back to Home</a>
+  <div class="sign-in-title">Sign In</div>
+  <p class="sign-in-sub">Enter your credentials to access your account</p>
+
+  <div id="login-form">
+    <div class="form-group">
+      <label class="form-label">Select Role *</label>
+      <select id="role" class="form-select" onchange="clearErr('role')">
+        <option value="">Choose your role</option>
+        <option value="superuser">Super Admin</option>
+        <option value="admin">Admin</option>
+        <option value="instructor">Instructor</option>
+        <option value="provider">Course Provider</option>
+        <option value="learner">Learner</option>
+      </select>
+      <span class="field-error-span" id="err-role"></span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Email Address *</label>
+      <input type="email" id="email" class="form-input" placeholder="you@example.com" oninput="clearErr('email')">
+      <span class="field-error-span" id="err-email"></span>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password *</label>
+      <div style="position:relative;">
+        <input type="password" id="password" class="form-input" placeholder="Enter your password" oninput="clearErr('password')" style="padding-right:44px;">
+        <button type="button" onclick="togglePw()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:16px;" id="pw-eye">Show</button>
+      </div>
+      <span class="field-error-span" id="err-password"></span>
+    </div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <label class="checkbox-row"><input type="checkbox" id="remember"> Remember me</label>
+      <a href="#" onclick="Modals.showForgotPassword();return false;" style="font-size:13px;font-weight:600;color:var(--blue);text-decoration:none;">Forgot password?</a>
+    </div>
+
+    <div id="login-error" class="alert alert-red" style="display:none;margin-bottom:16px;"></div>
+    <button onclick="doLogin()" id="login-btn" class="btn btn-primary btn-block btn-lg">Sign In →</button>
+    <div class="divider-text">New to IndAI?</div>
+    <a href="register.html" class="btn btn-secondary btn-block" style="margin-bottom:0;">Create New Account</a>
+
+    <div class="demo-section">
+      <div class="demo-label">Go Quick Demo Access – click to auto-fill</div>
+      <div class="demo-btns">
+        <button class="demo-btn" onclick="fillDemo(this,'superuser','superadmin@indai.com','Admin@1234')"><div class="db-role">Super Admin</div><div class="db-cred">superadmin@indai.com</div></button>
+        <button class="demo-btn" onclick="fillDemo(this,'admin','admin@indai.com','Admin@1234')"><div class="db-role">Admin</div><div class="db-cred">admin@indai.com</div></button>
+        <button class="demo-btn" onclick="fillDemo(this,'instructor','instructor@indai.com','Inst@1234')"><div class="db-role">Instructor</div><div class="db-cred">instructor@indai.com</div></button>
+        <button class="demo-btn" onclick="fillDemo(this,'provider','provider@indai.com','Prov@1234')"><div class="db-role">Course Provider</div><div class="db-cred">provider@indai.com</div></button>
+        <button class="demo-btn" onclick="fillDemo(this,'learner','learner@indai.com','Learn@1234')" style="grid-column:1/-1;"><div class="db-role">Learner</div><div class="db-cred">learner@indai.com / Learn@1234</div></button>
+      </div>
+    </div>
+  </div>
+  <p class="terms-line">By signing in, you agree to our
+    <a href="#" onclick="Modals.showTerms();return false;">Terms of Service</a> and
+    <a href="#" onclick="Modals.showPrivacy();return false;">Privacy Policy</a>
+  </p>
+</div>
+
+<div id="modal-overlay" class="modal-overlay"></div>
+
+<script src="../js/data/mockData.js"></script>
+<script src="../js/utils/storage.js"></script>
+<script src="../js/utils/helpers.js"></script>
+<script src="../js/utils/validation.js"></script>
+<script src="../js/modules/trading.js"></script>
+<script src="../js/modules/courses.js"></script>
+<script src="../js/modules/assignments.js"></script>
+<script src="../js/modules/challenges.js"></script>
+<script src="../js/modules/users.js"></script>
+<script src="../js/utils/permissions.js"></script>
+<script src="../js/utils/auth.js"></script>
+<script src="../js/components/darkMode.js"></script>
+<script src="../js/components/modals.js"></script>
+<script>
+  // Auto-redirect if already logged in
+  (function() {
+    const s = Auth.getSession();
+    if (s && s.role) redirectByRole(s.role);
+  })();
+
+  // Restore remembered credentials
+  (function() {
+    const e = localStorage.getItem("indai_remember_email");
+    const r = localStorage.getItem("indai_remember_role");
+    if (e) { document.getElementById("email").value = e; document.getElementById("remember").checked = true; }
+    if (r) document.getElementById("role").value = r;
+  })();
+
+  function fillDemo(btn, role, email, pw) {
+    document.getElementById("role").value     = role;
+    document.getElementById("email").value    = email;
+    document.getElementById("password").value = pw;
+    clearAllErrors();
+    btn.style.borderColor = "var(--green)"; btn.style.background = "var(--green-light)";
+    setTimeout(() => { btn.style.borderColor = ""; btn.style.background = ""; }, 700);
+  }
+
+  function togglePw() {
+    const pw = document.getElementById("password"), eye = document.getElementById("pw-eye");
+    pw.type = pw.type === "password" ? "text" : "password";
+    eye.textContent = pw.type === "password" ? "Show" : "Hide";
+  }
+
+  function clearErr(id) {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove("input-error");
+    const sp = document.getElementById("err-" + id);
+    if (sp) sp.textContent = "";
+    document.getElementById("login-error").style.display = "none";
+  }
+
+  function clearAllErrors() { ["role","email","password"].forEach(clearErr); }
+
+  function setErr(id, msg) {
+    const el = document.getElementById(id);
+    if (el) el.classList.add("input-error");
+    const sp = document.getElementById("err-" + id);
+    if (sp) sp.textContent = msg;
+  }
+
+  function doLogin() {
+    clearAllErrors();
+    const role     = document.getElementById("role").value.trim();
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    let hasError   = false;
+
+    if (!role)     { setErr("role",     "Please select your role.");      hasError = true; }
+    if (!email)    { setErr("email",    "Email address is required.");    hasError = true; }
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                   { setErr("email",    "Enter a valid email address.");  hasError = true; }
+    if (!password) { setErr("password", "Password is required.");        hasError = true; }
+    if (hasError)  { showBanner("Please fill in all required fields.");  return; }
+
+    const btn = document.getElementById("login-btn");
+    btn.disabled = true; btn.textContent = "Signing in…";
+
+    setTimeout(() => {
+      let result = Auth.login(email, password, role);
+
+      if (!result.success) {
+        const byEmail = IndAIData.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+        if (!byEmail)                          result.message = "No account found with this email address.";
+        else if (byEmail.password !== password) result.message = "Incorrect password. Please try again.";
+        else if (byEmail.role !== role)         result.message = `These credentials belong to a "${byEmail.role}" account. Please select the correct role.`;
+        else if (byEmail.status === "pending")  result.message = "Your account is pending Super Admin approval. Please wait for approval notification.";
+        else if (byEmail.status === "suspended") result.message = "This account has been suspended. Contact an administrator.";
+      }
+
+      btn.disabled = false; btn.textContent = "Sign In →";
+
+      if (!result.success) {
+        showBanner(result.message || "Invalid credentials. Use the demo buttons below.");
+        setErr("email", " "); setErr("password", " ");
+        return;
+      }
+
+      if (document.getElementById("remember").checked) {
+        localStorage.setItem("indai_remember_email", email);
+        localStorage.setItem("indai_remember_role",  role);
+      } else {
+        localStorage.removeItem("indai_remember_email");
+        localStorage.removeItem("indai_remember_role");
+      }
+
+      redirectByRole(result.session.role);
+    }, 300);
+  }
+
+  function showBanner(msg) {
+    const el = document.getElementById("login-error");
+    el.innerHTML = "<strong>Login Failed:</strong> " + msg;
+    el.style.display = "flex";
+    const form = document.getElementById("login-form");
+    form.style.animation = "shake 0.35s ease";
+    setTimeout(() => { form.style.animation = ""; }, 400);
+  }
+
+  function redirectByRole(role) {
+    const map = { superuser:"superuser-dashboard.html", admin:"admin-dashboard.html", instructor:"instructor-dashboard.html", provider:"provider-dashboard.html", learner:"learner-dashboard.html" };
+    if (map[role]) window.location.href = map[role];
+  }
+
+  document.addEventListener("keydown", e => { if (e.key === "Enter") doLogin(); });
+</script>
+</body>
+</html>

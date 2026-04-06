@@ -1,0 +1,97 @@
+/* ============================================================
+   IndAI Platform – Page Styles (Login & Register)
+   Consolidated from inline <style> blocks in login.html & register.html
+   ============================================================ */
+
+/* ---- Login Page ---- */
+.login-page body { background:linear-gradient(135deg,#EFF6FF 0%,#F0FDF4 100%); min-height:100vh; display:flex; align-items:stretch; }
+html.dark .login-page body { background:#0F1520; }
+.login-left { flex:1; padding:64px; display:flex; flex-direction:column; justify-content:center; background:linear-gradient(145deg,#EFF6FF,#F5F3FF); }
+html.dark .login-left { background:linear-gradient(145deg,#151C2C,#1A1E3A); }
+.brand-left { display:flex; align-items:center; gap:10px; margin-bottom:32px; }
+.brand-left span { font-size:1.4rem; font-weight:900; color:var(--dark); }
+.tagline { font-size:2rem; font-weight:900; color:var(--dark); line-height:1.2; margin-bottom:16px; }
+.tagline-sub { font-size:15px; color:var(--gray-600); line-height:1.7; margin-bottom:40px; }
+.step-item { display:flex; align-items:flex-start; gap:14px; margin-bottom:22px; }
+.step-num { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; color:#fff; flex-shrink:0; }
+.s1{background:var(--blue);} .s2{background:var(--green);} .s3{background:var(--orange);}
+.step-item h4 { font-size:14px; font-weight:700; margin-bottom:3px; color:var(--dark); }
+.step-item p { font-size:13px; color:var(--gray-500); margin:0; }
+.risk-banner { background:var(--blue); color:#fff; border-radius:var(--radius-lg); padding:20px 24px; margin-top:32px; }
+.risk-banner h3 { font-size:1.3rem; font-weight:900; margin-bottom:6px; color:#fff; }
+.risk-banner p { font-size:13px; color:rgba(255,255,255,0.85); margin:0; }
+.login-right { width:580px; background:#fff; padding:40px 52px; display:flex; flex-direction:column; justify-content:center; box-shadow:-8px 0 40px rgba(0,0,0,0.08); overflow-y:auto; }
+html.dark .login-right { background:#1E2535; box-shadow:-8px 0 40px rgba(0,0,0,0.5); }
+.back-link { display:inline-flex; align-items:center; gap:6px; color:var(--gray-600); font-size:13px; font-weight:600; text-decoration:none; margin-bottom:28px; }
+.back-link:hover{color:var(--blue);}
+.sign-in-title { font-size:2rem; font-weight:900; color:var(--dark); margin-bottom:6px; }
+.sign-in-sub { font-size:14px; color:var(--gray-500); margin-bottom:28px; }
+.demo-section { margin-top:20px; }
+.demo-label { font-size:12px; font-weight:700; color:var(--gray-500); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px; }
+.demo-btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.demo-btn { padding:10px 14px; border:1.5px solid var(--gray-200); border-radius:var(--radius-sm); background:var(--gray-50); cursor:pointer; text-align:left; transition:all 0.15s; font-family:var(--font); }
+.demo-btn:hover { border-color:var(--blue); background:var(--blue-light); }
+.demo-btn .db-role { font-size:12px; font-weight:800; color:var(--dark); }
+.demo-btn .db-cred { font-size:11px; color:var(--gray-500); margin-top:2px; }
+.divider-text { text-align:center; margin:20px 0; color:var(--gray-400); font-size:13px; }
+.terms-line { font-size:12px; color:var(--gray-400); text-align:center; margin-top:20px; }
+.terms-line a { color:var(--blue); text-decoration:none; }
+.field-error-span { display:block; color:var(--red); font-size:12px; margin-top:4px; min-height:16px; }
+.nav-right-login { position:fixed; top:16px; right:24px; display:flex; gap:8px; z-index:200; }
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* ---- Register Page ---- */
+.reg-header { text-align:center; margin-bottom:32px; }
+.reg-header h2 { font-size:1.8rem; font-weight:900; color:var(--dark); margin-bottom:6px; }
+.reg-header p { font-size:14px; color:var(--gray-500); }
+.reg-card { background:#fff; border-radius:var(--radius-xl); padding:40px 48px; max-width:720px; width:100%; box-shadow:var(--shadow-md); }
+html.dark .reg-card { background:#1E2535; }
+.nav-btns { display:flex; justify-content:space-between; margin-top:28px; }
+.footer-trust { text-align:center; margin-top:28px; color:var(--gray-400); font-size:12px; display:flex; align-items:center; justify-content:center; gap:24px; }
+.step-content { display:none; }
+.step-content.active { display:block; }
+.role-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+.pw-rule { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--gray-400); padding:3px 0; }
+.pw-rule.met { color:var(--green); }
+.pw-rule::before { content:"✗"; font-weight:700; color:var(--gray-300); }
+.pw-rule.met::before { content:"✓"; color:var(--green); }
+.success-wrap { text-align:center; padding:32px 0; }
+.success-icon { width:80px; height:80px; background:var(--green-light); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; margin:0 auto 20px; }
+.pending-icon { width:80px; height:80px; background:var(--orange-light); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; margin:0 auto 20px; }
+.dark-corner { position:fixed; top:16px; right:24px; z-index:200; }
+
+
+.finance-hero-photo {
+  min-height: 340px;
+  background:
+    linear-gradient(135deg, rgba(15,23,42,0.82), rgba(37,99,235,0.48)),
+    radial-gradient(circle at 20% 20%, rgba(16,185,129,0.35), transparent 35%),
+    radial-gradient(circle at 80% 30%, rgba(59,130,246,0.35), transparent 30%),
+    radial-gradient(circle at 70% 80%, rgba(245,158,11,0.22), transparent 28%),
+    linear-gradient(140deg, #0f172a 0%, #1e3a8a 50%, #0f766e 100%);
+  background-size: cover;
+  background-position: center;
+}
+
+.table-wrap td,
+.table-wrap th,
+.stock-row,
+.holding-row,
+.notif-row,
+.challenge-card,
+.course-row {
+  word-break: break-word;
+}
+
+#portfolio-chart {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+#history-tbody td {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

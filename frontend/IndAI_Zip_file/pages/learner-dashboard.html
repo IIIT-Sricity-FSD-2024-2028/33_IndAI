@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndAI – Learner Dashboard</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/components.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="top-nav">
+    <div class="flex-center gap-12">
+      <div style="width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
+      <div>
+        <div style="font-weight:800; font-size:1rem;">IndAI</div>
+        <div style="font-size:11px; color:var(--gray-500);">Learner Portal</div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="nav-info" style="background:var(--orange-light); border-color:#FDE68A;">
+        <span style="display:flex;align-items:center;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg></span>
+        <span style="font-size:12px; color:var(--gray-600);">Skill Points</span>
+        <span id="skill-pts" style="font-weight:800; color:var(--orange);">0</span>
+      </div>
+      <div class="notif-btn" onclick="switchTab('notifications')"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-badge" id="notif-count">0</span></div>
+      <button onclick="openLearnerProfileModal()" style="width:34px;height:34px;border-radius:50%;border:2px solid var(--gray-200);background:var(--blue-light);cursor:pointer;display:flex;align-items:center;justify-content:center;" title="Profile"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button onclick="Auth.logout()" class="logout-btn"><svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Logout</button>
+    </div>
+  </nav>
+
+  <!-- TICKER -->
+  <div class="ticker-bar">
+    <div class="ticker-track" id="ticker-track"></div>
+  </div>
+
+  <div class="dashboard-content">
+    <!-- Stats -->
+    <div class="stat-grid" id="learner-stats"></div>
+
+    <!-- Tabs -->
+    <div class="tab-bar tabs-7">
+      <button class="tab-btn active" id="tab-portfolio" onclick="switchTab('portfolio')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg> Portfolio</button>
+      <button class="tab-btn" id="tab-watchlist" onclick="switchTab('watchlist')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Watchlist</button>
+      <button class="tab-btn" id="tab-trading" onclick="switchTab('trading')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg> Trading</button>
+      <button class="tab-btn" id="tab-challenges" onclick="switchTab('challenges')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg> Challenges</button>
+      <button class="tab-btn" id="tab-learning" onclick="switchTab('learning')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Learning</button>
+      <button class="tab-btn" id="tab-notifications" onclick="switchTab('notifications')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> Notifications</button>
+      <button class="tab-btn" id="tab-settings" onclick="switchTab('settings')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</button>
+    </div>
+
+    <!-- PORTFOLIO -->
+    <div class="view-section active" id="view-portfolio">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Portfolio Growth</div><div class="card-subtitle">Track your portfolio performance over time</div></div>
+            <div style="display:flex;gap:6px;" id="period-btns">
+              <button class="btn btn-secondary btn-sm" onclick="setPeriod('1W',this)">1W</button>
+              <button class="btn btn-primary btn-sm" onclick="setPeriod('1M',this)">1M</button>
+              <button class="btn btn-secondary btn-sm" onclick="setPeriod('3M',this)">3M</button>
+              <button class="btn btn-secondary btn-sm" onclick="setPeriod('1Y',this)">1Y</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:32px;margin-bottom:16px;">
+            <div><div style="font-size:12px;color:var(--gray-400);">Current Value</div><div id="port-val" style="font-weight:800;font-size:1.2rem;"></div></div>
+            <div><div style="font-size:12px;color:var(--gray-400);">Total Returns</div><div id="port-ret" class="gain" style="font-size:1rem;font-weight:800;"></div></div>
+            <div><div style="font-size:12px;color:var(--gray-400);">vs Benchmark</div><div style="color:var(--green);font-weight:800;">+1.75%</div></div>
+          </div>
+          <!-- Chart -->
+          <div class="portfolio-chart" style="height:220px;background:var(--gray-50);border-radius:var(--radius-sm);padding:12px;overflow:hidden;">
+            <canvas id="portfolio-chart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><div class="card-title">Holdings</div><div class="card-subtitle">Your current stock positions</div></div></div>
+          <div id="holdings-list"></div>
+          <div class="divider"></div>
+          <div class="card-header" style="margin-bottom:12px;"><div><div class="card-title">Portfolio Analyzer</div><div class="card-subtitle">AI-powered insights on your portfolio</div></div></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="padding:12px;background:var(--green-light);border-radius:8px;border-left:3px solid var(--green);">
+              <div style="font-weight:700;font-size:13px;color:#065F46;">Strong Performance</div>
+              <div style="font-size:12px;color:#065F46;margin-top:2px;">Your portfolio is outperforming the market by 2.4%</div>
+            </div>
+            <div style="padding:12px;background:var(--orange-light);border-radius:8px;border-left:3px solid var(--orange);">
+              <div style="font-weight:700;font-size:13px;color:#92400E;">Diversification Tip</div>
+              <div style="font-size:12px;color:#92400E;margin-top:2px;">Consider adding healthcare or FMCG stocks for better sector balance</div>
+            </div>
+            <div style="padding:12px;background:var(--blue-light);border-radius:8px;border-left:3px solid var(--blue);">
+              <div style="font-weight:700;font-size:13px;color:var(--blue);">Risk Level: Moderate</div>
+              <div style="font-size:12px;color:var(--blue);margin-top:2px;">Portfolio volatility is within acceptable range</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Trade History -->
+      <div class="card mt-24">
+        <div class="card-header"><div><div class="card-title">Trade History</div><div class="card-subtitle">All your executed trades</div></div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Symbol</th><th>Type</th><th>Quantity</th><th>Price</th><th>Total</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody id="trade-history"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- WATCHLIST -->
+    <div class="view-section" id="view-watchlist">
+      <div class="flex-between mb-16">
+        <div><h3 class="page-title">Watchlist</h3><p class="page-subtitle">Stocks you're monitoring</p></div>
+        <div style="display:flex;gap:10px;">
+          <div class="search-box"><span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input id="watch-search" class="form-input" style="width:200px;" placeholder="Search to add..." oninput="TradingUI.searchToAdd()"></div>
+        </div>
+      </div>
+      <div id="search-results" style="display:none;" class="card mb-16"></div>
+      <div class="card">
+        <div id="watchlist-table"></div>
+      </div>
+    </div>
+
+    <!-- TRADING / MARKET EXPLORER -->
+    <div class="view-section" id="view-trading">
+      <div class="flex-between mb-16">
+        <div><h3 class="page-title">Market Explorer</h3><p class="page-subtitle">Discover and analyze stocks across all sectors</p></div>
+      </div>
+      <div class="card mb-16">
+        <div class="search-box mb-16"><span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input id="market-search" class="form-input" placeholder="Search by symbol or company name..." oninput="filterMarket()"></div>
+        <div class="filter-chips" id="cap-filters">
+          <button class="chip active" onclick="TradingUI.setCapFilter('All',this)">All</button>
+          <button class="chip" onclick="TradingUI.setCapFilter('Large Cap',this)">Large Cap</button>
+          <button class="chip" onclick="TradingUI.setCapFilter('Mid Cap',this)">Mid Cap</button>
+          <button class="chip" onclick="TradingUI.setCapFilter('Small Cap',this)">Small Cap</button>
+        </div>
+        <div class="filter-chips" id="sector-filters">
+          <button class="cat-chip active" onclick="TradingUI.setSectorFilter('All',this)">All</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('IT',this)">IT</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('Banking',this)">Banking</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('Energy',this)">Energy</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('FMCG',this)">FMCG</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('Pharma',this)">Pharma</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('Automobile',this)">Auto</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('Telecom',this)">Telecom</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('Infrastructure',this)">Infra</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('Power',this)">Power</button>
+          <button class="cat-chip" onclick="TradingUI.setSectorFilter('Technology',this)">Tech</button>
+        </div>
+      </div>
+
+      <!-- Gainers/Losers/Active -->
+      <div class="grid-3 mb-16">
+        <div class="card" id="top-gainers-card">
+          <div style="color:var(--green);font-weight:800;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg> Top Gainers</div>
+          <div id="top-gainers"></div>
+        </div>
+        <div class="card" id="top-losers-card">
+          <div style="color:var(--red);font-weight:800;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> Top Losers</div>
+          <div id="top-losers"></div>
+        </div>
+        <div class="card">
+          <div style="color:var(--blue);font-weight:800;font-size:13px;margin-bottom:10px;display:flex;align-items:center;gap:5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg> Most Active</div>
+          <div id="most-active"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="flex-between mb-16">
+          <div style="font-weight:700;" id="stock-count-label">All Stocks</div>
+        </div>
+        <div id="stock-list"></div>
+      </div>
+    </div>
+
+    <!-- CHALLENGES -->
+    <div class="view-section" id="view-challenges">
+      <div class="flex-between mb-16">
+        <div><h3 class="page-title">Trading Challenges</h3><p class="page-subtitle">Complete challenges to earn skill points</p></div>
+      </div>
+      <div class="grid-2">
+        <div id="challenges-list"></div>
+        <div>
+          <div class="card mb-16">
+            <div class="card-header"><div><div class="card-title" style="display:flex;align-items:center;gap:7px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg> Class Leaderboard</div><div class="card-subtitle">Top performers in your class</div></div></div>
+            <div id="leaderboard-container"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LEARNING -->
+    <div class="view-section" id="view-learning">
+      <div class="flex-between mb-16">
+        <div><h3 class="page-title">My Learning</h3><p class="page-subtitle">Your enrolled courses and progress</p></div>
+      </div>
+      <div id="learning-list"></div>
+      <div class="card mt-24">
+        <div class="card-header"><div><div class="card-title">Upcoming Sessions</div><div class="card-subtitle">Scheduled trading classes</div></div></div>
+        <div id="upcoming-sessions-learner"></div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div class="view-section" id="view-notifications">
+      <div class="flex-between mb-16">
+        <div><h3 class="page-title">Notifications</h3><p class="page-subtitle">Your alerts and updates</p></div>
+        <button class="btn btn-secondary btn-sm" onclick="markAllRead()">Mark all as read</button>
+      </div>
+      <div class="card"><div id="notifications-list"></div></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="view-section" id="view-settings">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header"><div><div class="card-title">Profile Settings</div><div class="card-subtitle">Update your personal information</div></div></div>
+          <div id="settings-form">
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">First Name</label><input id="set-first" class="form-input"></div>
+              <div class="form-group"><label class="form-label">Last Name</label><input id="set-last" class="form-input"></div>
+            </div>
+            <div class="form-group"><label class="form-label">Email</label><input id="set-email" class="form-input" readonly style="opacity:0.7;"></div>
+            <div class="form-group"><label class="form-label">Institution</label><input id="set-inst" class="form-input"></div>
+            <div class="form-group"><label class="form-label">Course / Major</label><input id="set-major" class="form-input"></div>
+            <button class="btn btn-primary btn-block" onclick="saveSettings()">Save Changes</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div><div class="card-title">Change Password</div><div class="card-subtitle">Update your account password</div></div></div>
+          <div class="form-group"><label class="form-label">Current Password *</label><input id="pw-current" type="password" class="form-input"></div>
+          <div class="form-group"><label class="form-label">New Password *</label><input id="pw-new" type="password" class="form-input" oninput="checkPwNew()"></div>
+          <div class="form-group"><label class="form-label">Confirm New Password *</label><input id="pw-confirm" type="password" class="form-input"></div>
+          <div class="pw-req">
+            <div class="pw-req-title">Password Requirements:</div>
+            <div class="pw-rule" id="npw-len">At least 8 characters</div>
+            <div class="pw-rule" id="npw-upper">One uppercase letter</div>
+            <div class="pw-rule" id="npw-num">One number</div>
+            <div class="pw-rule" id="npw-special">One special character</div>
+          </div>
+          <button class="btn btn-primary btn-block mt-16" onclick="changePassword()">Update Password</button>
+          <div class="card mt-24" style="background:var(--gray-50);">
+            <div style="font-weight:700;margin-bottom:12px;">Account Information</div>
+            <div id="account-info" style="font-size:13px;color:var(--gray-600);line-height:2;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-overlay" class="modal-overlay"></div>
+  <script src="../js/data/mockData.js"></script>
+<script src="../js/utils/storage.js"></script>
+<script src="../js/utils/helpers.js"></script>
+<script src="../js/utils/validation.js"></script>
+<script src="../js/modules/trading.js"></script>
+<script src="../js/modules/courses.js"></script>
+<script src="../js/modules/assignments.js"></script>
+<script src="../js/modules/challenges.js"></script>
+<script src="../js/modules/users.js"></script>
+  <script src="../js/utils/permissions.js"></script>
+  <script src="../js/utils/auth.js"></script>
+  <script src="../js/components/darkMode.js"></script>
+  <script src="../js/components/modals.js"></script>
+  <script src="../js/components/trading.js"></script>
+  <script src="../js/modules/learner.js"></script>
+</body>
+</html>

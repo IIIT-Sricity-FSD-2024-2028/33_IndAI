@@ -1,0 +1,377 @@
+/* ============================================================
+   IndAI – Shared Dashboard Navbar & Component CSS
+   Used by: admin, instructor, learner, provider dashboards
+   ============================================================ */
+
+/* ---- Nav Right ---- */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-brand-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-brand-logo svg {
+  width: 18px;
+  height: 18px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-brand-logo.purple { background: var(--purple); }
+.nav-brand-logo.blue   { background: var(--blue); }
+.nav-brand-logo.green  { background: var(--green); }
+.nav-brand-logo.orange { background: var(--orange); }
+
+.nav-brand-title {
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--dark);
+}
+
+.nav-brand-sub {
+  font-size: 11px;
+  color: var(--gray-500);
+  margin-top: 1px;
+}
+
+/* ---- Nav Info Chip ---- */
+.nav-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--gray-200);
+  background: var(--gray-50);
+}
+
+.nav-info svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.nav-info-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.nav-info-value {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.nav-info.purple-info {
+  background: var(--purple-light);
+  border-color: #DDD6FE;
+}
+
+.nav-info.purple-info svg,
+.nav-info.purple-info .nav-info-label,
+.nav-info.purple-info .nav-info-value { color: var(--purple); stroke: var(--purple); }
+
+.nav-info.blue-info {
+  background: var(--blue-light);
+  border-color: #BFDBFE;
+}
+
+.nav-info.blue-info svg,
+.nav-info.blue-info .nav-info-label,
+.nav-info.blue-info .nav-info-value { color: var(--blue); stroke: var(--blue); }
+
+.nav-info.green-info {
+  background: var(--green-light);
+  border-color: #A7F3D0;
+}
+
+.nav-info.green-info svg,
+.nav-info.green-info .nav-info-label,
+.nav-info.green-info .nav-info-value { color: var(--green); stroke: var(--green); }
+
+/* ---- Notification Button ---- */
+.notif-btn {
+  position: relative;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  transition: all 0.15s;
+}
+
+.notif-btn:hover {
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+}
+
+.notif-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--gray-600);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.notif-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: var(--red);
+  color: #fff;
+  border-radius: 99px;
+  padding: 1px 5px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
+  min-width: 16px;
+  text-align: center;
+  border: 2px solid var(--white);
+}
+
+/* ---- Profile Button ---- */
+.profile-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--gray-200);
+  background: var(--gray-50);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.profile-btn:hover {
+  border-color: var(--blue);
+  background: var(--blue-light);
+}
+
+.profile-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--gray-600);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.profile-btn.purple-profile { background: var(--purple-light); border-color: #DDD6FE; }
+.profile-btn.purple-profile svg { stroke: var(--purple); }
+
+/* ---- Logout Button ---- */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 7px;
+  border: 1.5px solid var(--gray-200);
+  background: var(--white);
+  color: var(--gray-700);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+
+.logout-btn:hover {
+  background: var(--red-light);
+  border-color: #FCA5A5;
+  color: var(--red);
+}
+
+.logout-btn svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+/* ---- System Health Monitor Items ---- */
+.health-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+}
+
+.health-item.green { background: var(--green-light); border-color: #A7F3D0; }
+.health-item.blue  { background: var(--blue-light);  border-color: #BFDBFE; }
+.health-item.purple{ background: var(--purple-light); border-color: #DDD6FE; }
+
+.health-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.health-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.health-icon.green  { background: rgba(16,185,129,0.15); }
+.health-icon.blue   { background: rgba(37,99,235,0.12); }
+.health-icon.purple { background: rgba(124,58,237,0.12); }
+
+.health-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.health-icon.green  svg { stroke: var(--green); }
+.health-icon.blue   svg { stroke: var(--blue); }
+.health-icon.purple svg { stroke: var(--purple); }
+
+.health-title { font-weight: 700; font-size: 14px; color: var(--dark); }
+.health-sub   { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
+
+/* ---- Tab Bar Icon Styles ---- */
+.tab-btn svg {
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ---- Utility Classes ---- */
+.gap-12 { gap: 12px; }
+.mt-20  { margin-top: 20px; }
+.mb-16  { margin-bottom: 16px; }
+
+.flex-end-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.sub-tab-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.feature-status-wrap {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--gray-200);
+}
+
+.feature-status-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 10px;
+}
+
+/* ============================================================
+   DARK MODE - Shared Dashboard Components
+   ============================================================ */
+html.dark .notif-btn {
+  background: #2A344A;
+  border-color: #364056;
+  color: #EEF2FF;
+}
+
+html.dark .notif-btn svg { stroke: #B8C4D4; }
+html.dark .notif-btn:hover { background: #364056; }
+
+html.dark .notif-badge { border-color: #1E2535; }
+
+html.dark .profile-btn {
+  background: #2A344A;
+  border-color: #364056;
+}
+
+html.dark .profile-btn svg { stroke: #B8C4D4; }
+html.dark .profile-btn:hover { border-color: var(--blue); background: #1E3A5F; }
+
+html.dark .profile-btn.purple-profile { background: #1E1740; border-color: #4C3BB5; }
+html.dark .profile-btn.purple-profile svg { stroke: #A78BFA; }
+
+html.dark .logout-btn {
+  background: #2A344A;
+  border-color: #364056;
+  color: #EEF2FF;
+}
+
+html.dark .logout-btn:hover {
+  background: #3D1515;
+  border-color: #7F3030;
+  color: #FCA5A5;
+}
+
+html.dark .nav-info {
+  background: #2A344A;
+  border-color: #364056;
+}
+
+html.dark .nav-info.purple-info { background: #1E1740; border-color: #4C3BB5; }
+html.dark .nav-info.blue-info   { background: #1E3A5F; border-color: #2563EB; }
+html.dark .nav-info.green-info  { background: #0D2E1F; border-color: #059669; }
+
+html.dark .nav-brand-title { color: #EEF2FF; }
+html.dark .nav-brand-sub   { color: #8492A6; }
+
+html.dark .health-item.green  { background: #0D2E1F; border-color: #065F46; }
+html.dark .health-item.blue   { background: #1E3A5F; border-color: #1D4ED8; }
+html.dark .health-item.purple { background: #1E1740; border-color: #6D28D9; }
+
+html.dark .health-title { color: #EEF2FF; }
+html.dark .health-sub   { color: #8492A6; }
+
+html.dark .feature-status-wrap {
+  background: #0F1520;
+  border-color: #2A344A;
+}
+
+html.dark .feature-status-title { color: #EEF2FF; }

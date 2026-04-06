@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IndAI – Create Account</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <style>
+    body { background:linear-gradient(135deg,#EFF6FF 0%,#F0FDF4 100%); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:32px 20px; }
+    html.dark body { background:#0F1520; }
+    .reg-header { text-align:center; margin-bottom:32px; }
+    .reg-header h2 { font-size:1.8rem; font-weight:900; color:var(--dark); margin-bottom:6px; }
+    .reg-header p { font-size:14px; color:var(--gray-500); }
+    .back-link { display:inline-flex; align-items:center; gap:6px; color:var(--gray-600); font-size:13px; font-weight:600; text-decoration:none; margin-bottom:12px; align-self:flex-start; }
+    .back-link:hover{color:var(--blue);}
+    .reg-card { background:#fff; border-radius:var(--radius-xl); padding:40px 48px; max-width:720px; width:100%; box-shadow:var(--shadow-md); }
+    html.dark .reg-card { background:#1E2535; }
+    .nav-btns { display:flex; justify-content:space-between; margin-top:28px; }
+    .footer-trust { text-align:center; margin-top:28px; color:var(--gray-400); font-size:12px; display:flex; align-items:center; justify-content:center; gap:24px; }
+    .step-content { display:none; }
+    .step-content.active { display:block; }
+    .role-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+    .pw-rule { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--gray-400); padding:3px 0; }
+    .pw-rule.met { color:var(--green); }
+    .pw-rule::before { content:"No"; font-weight:700; color:var(--gray-300); }
+    .pw-rule.met::before { content:"Done"; color:var(--green); }
+    .success-wrap { text-align:center; padding:32px 0; }
+    .success-icon { width:80px; height:80px; background:var(--green-light); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; margin:0 auto 20px; }
+    .pending-icon { width:80px; height:80px; background:var(--orange-light); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:40px; margin:0 auto 20px; }
+    .field-error-span { display:block; color:var(--red); font-size:12px; margin-top:4px; min-height:16px; }
+    .form-group { margin-bottom:16px; }
+    .dark-corner { position:fixed; top:16px; right:24px; z-index:200; }
+  </style>
+</head>
+<body>
+
+<div class="dark-corner">
+  <button class="dark-mode-toggle" onclick="DarkMode.toggle()" title="Toggle Dark Mode">Mode</button>
+</div>
+
+<a href="login.html" class="back-link">← Back to Login</a>
+
+<div class="reg-header">
+  <a href="../index.html" style="display:flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;margin-bottom:16px;">
+    <div style="width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;">↗</div>
+    <span style="font-size:1.4rem;font-weight:900;color:var(--dark);">IndAI</span>
+  </a>
+  <h2>Create Your Account</h2>
+  <p>Join thousands learning paper trading risk-free</p>
+</div>
+
+<div class="reg-card">
+  <!-- Stepper -->
+  <div class="stepper" id="stepper-wrap">
+    <div class="step-progress">
+      <span class="step-label" id="step-label">Step 1 of 5</span>
+      <span class="step-pct" id="step-pct">20% Complete</span>
+    </div>
+    <div class="step-bar"><div class="step-bar-fill" id="step-bar-fill" style="width:20%"></div></div>
+    <div class="step-circles">
+      <div class="step-circle-item"><div class="step-circle active" id="sc1">1</div><span class="step-name active" id="sn1">Role</span></div>
+      <div class="step-circle-item"><div class="step-circle" id="sc2">2</div><span class="step-name" id="sn2">Personal</span></div>
+      <div class="step-circle-item"><div class="step-circle" id="sc3">3</div><span class="step-name" id="sn3">Details</span></div>
+      <div class="step-circle-item"><div class="step-circle" id="sc4">4</div><span class="step-name" id="sn4">Security</span></div>
+      <div class="step-circle-item"><div class="step-circle" id="sc5">5</div><span class="step-name" id="sn5">Preferences</span></div>
+    </div>
+  </div>
+
+  <!-- STEP 1: Role -->
+  <div class="step-content active" id="step-1">
+    <h3>Choose Your Role</h3>
+    <p style="font-size:13px;color:var(--gray-500);">Select the role that best describes you</p>
+    <div class="role-grid">
+      <div class="role-card" id="role-learner" onclick="selectRole('learner')">
+        <div class="role-icon blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"/><path d="M5 20a7 7 0 0 1 14 0"/></svg></div>
+        <h4>Learner</h4><p class="desc">Students who want to learn trading</p>
+        <ul><li>Access learning modules</li><li>Simulate trades</li><li>Join challenges</li><li>Track portfolio</li></ul>
+        <div style="margin-top:8px;"><span class="badge badge-green" style="font-size:11px;">Done Instant Access</span></div>
+      </div>
+      <div class="role-card" id="role-instructor" onclick="selectRole('instructor')">
+        <div class="role-icon green" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h11"/><path d="M4 12h11"/><path d="M4 17h7"/><path d="M18 8v8"/><path d="M14 12h8"/></svg></div>
+        <h4>Instructor</h4><p class="desc">Teachers who guide students</p>
+        <ul><li>Manage students</li><li>Award skill points</li><li>Create assignments</li><li>Track performance</li></ul>
+        <div style="margin-top:8px;"><span class="badge badge-orange" style="font-size:11px;">Pending Requires Approval</span></div>
+      </div>
+      <div class="role-card" id="role-provider" onclick="selectRole('provider')">
+        <div class="role-icon orange" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8"/><path d="M8 13h5"/></svg></div>
+        <h4>Course Provider</h4><p class="desc">Educators who create courses</p>
+        <ul><li>Create courses</li><li>Design quizzes</li><li>Set challenges</li><li>Publish content</li></ul>
+        <div style="margin-top:8px;"><span class="badge badge-orange" style="font-size:11px;">Pending Requires Approval</span></div>
+      </div>
+      <div class="role-card" id="role-admin" onclick="selectRole('admin')">
+        <div class="role-icon purple" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h0A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h0a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v0a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></div>
+        <h4>Admin</h4><p class="desc">Platform administrators</p>
+        <ul><li>Configure system</li><li>Manage users</li><li>Set trading rules</li><li>View analytics</li></ul>
+        <div style="margin-top:8px;"><span class="badge badge-red" style="font-size:11px;">Secure Requires Approval</span></div>
+      </div>
+    </div>
+    <span class="field-error-span" id="err-role" style="margin-top:12px;display:block;"></span>
+    <div class="nav-btns"><div></div><button class="btn btn-primary" onclick="nextStep()">Next Step →</button></div>
+  </div>
+
+  <!-- STEP 2: Personal Info -->
+  <div class="step-content" id="step-2">
+    <h3>Personal Information</h3>
+    <p style="font-size:13px;color:var(--gray-500);margin-bottom:20px;">Tell us about yourself</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">First Name *</label>
+        <input type="text" id="reg-first" class="form-input" placeholder="John" oninput="clearErr('reg-first')">
+        <span class="field-error-span" id="err-reg-first"></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last Name *</label>
+        <input type="text" id="reg-last" class="form-input" placeholder="Doe" oninput="clearErr('reg-last')">
+        <span class="field-error-span" id="err-reg-last"></span>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Email Address *</label>
+        <input type="email" id="reg-email" class="form-input" placeholder="john.doe@example.com" oninput="clearErr('reg-email')">
+        <span class="field-error-span" id="err-reg-email"></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone Number *</label>
+        <input type="tel" id="reg-phone" class="form-input" placeholder="9876543210" oninput="clearErr('reg-phone')">
+        <span class="field-error-span" id="err-reg-phone"></span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Date of Birth *</label>
+      <input type="date" id="reg-dob" class="form-input" oninput="clearErr('reg-dob')">
+      <span class="field-error-span" id="err-reg-dob"></span>
+    </div>
+    <div class="alert alert-blue register-info-box" style="margin-top:4px;">
+      <div class="register-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 1 1 8 0v3"/></svg></div>
+      <div><strong>Privacy First</strong><br><span style="font-size:12px;">Your personal information is stored locally and never shared with third parties.</span></div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+      <button class="btn btn-primary" onclick="nextStep()">Next Step →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Role-specific Details -->
+  <div class="step-content" id="step-3">
+    <h3>Role Details</h3>
+    <p style="font-size:13px;color:var(--gray-500);margin-bottom:20px;">Additional information for your role</p>
+    <!-- Learner fields -->
+    <div id="step3-learner">
+      <div class="form-group">
+        <label class="form-label">Institution / School Name</label>
+        <input type="text" id="reg-institution" class="form-input" placeholder="IIIT Sri City" oninput="clearErr('reg-institution')">
+        <span class="field-error-span" id="err-reg-institution"></span>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Student ID</label>
+          <input type="text" id="reg-studentid" class="form-input" placeholder="STU12345" oninput="clearErr('reg-studentid')">
+          <span class="field-error-span" id="err-reg-studentid"></span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Grade / Level</label>
+          <input type="text" id="reg-grade" class="form-input" placeholder="e.g. 2nd Year, 10th Grade, Professor…" oninput="clearErr('reg-grade')">
+          <span class="form-hint">Enter your current grade, year, or professional level</span>
+          <span class="field-error-span" id="err-reg-grade"></span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Course / Major</label>
+        <input type="text" id="reg-major" class="form-input" placeholder="Computer Science">
+      </div>
+    </div>
+    <!-- Instructor fields -->
+    <div id="step3-instructor" style="display:none;">
+      <div class="alert alert-orange register-info-box" style="margin-bottom:16px;"><div class="register-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></div><div><strong>Approval Required</strong><br><span style="font-size:12px;">Instructor accounts require Super Admin approval. You'll be notified once approved.</span></div></div>
+      <div class="form-group">
+        <label class="form-label">Institution / Organization *</label>
+        <input type="text" id="reg-inst-org" class="form-input" placeholder="IIIT Sri City" oninput="clearErr('reg-inst-org')">
+        <span class="field-error-span" id="err-reg-inst-org"></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Expertise / Specialization *</label>
+        <input type="text" id="reg-expertise" class="form-input" placeholder="Equity Markets, Technical Analysis" oninput="clearErr('reg-expertise')">
+        <span class="field-error-span" id="err-reg-expertise"></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Years of Experience *</label>
+        <select id="reg-exp" class="form-select" onchange="clearErr('reg-exp')">
+          <option value="">Select experience</option>
+          <option>Less than 1 year</option><option>1-3 years</option><option>3-5 years</option><option>5-10 years</option><option>10+ years</option>
+        </select>
+        <span class="field-error-span" id="err-reg-exp"></span>
+      </div>
+    </div>
+    <!-- Provider fields -->
+    <div id="step3-provider" style="display:none;">
+      <div class="alert alert-orange register-info-box" style="margin-bottom:16px;"><div class="register-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></div><div><strong>Approval Required</strong><br><span style="font-size:12px;">Course Provider accounts require Super Admin approval before you can publish content.</span></div></div>
+      <div class="form-group">
+        <label class="form-label">Organization Name *</label>
+        <input type="text" id="reg-org" class="form-input" placeholder="TradingPro Academy" oninput="clearErr('reg-org')">
+        <span class="field-error-span" id="err-reg-org"></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Website / LinkedIn</label>
+        <input type="text" id="reg-website" class="form-input" placeholder="https://...">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Content Type</label>
+        <select id="reg-content-type" class="form-select">
+          <option value="">Select type</option><option>Video Courses</option><option>Text Modules</option><option>Mixed</option>
+        </select>
+      </div>
+    </div>
+    <!-- Admin fields -->
+    <div id="step3-admin" style="display:none;">
+      <div class="alert alert-red register-info-box" style="margin-bottom:16px;"><div class="register-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V8a4 4 0 1 1 8 0v3"/></svg></div><div><strong>Admin Authorization Required</strong><br><span style="font-size:12px;">Admin accounts require both an authorization code and Super Admin approval.</span></div></div>
+      <div class="form-group">
+        <label class="form-label">Institution *</label>
+        <input type="text" id="reg-admin-inst" class="form-input" placeholder="IIIT Sri City" oninput="clearErr('reg-admin-inst')">
+        <span class="field-error-span" id="err-reg-admin-inst"></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Admin Type</label>
+        <input type="text" class="form-input" value="Admin" disabled>
+        <input type="hidden" id="reg-access" value="Admin">
+        <span class="form-hint">Admin accounts are created as normal Admin roles.</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Authorization Code *</label>
+        <input type="text" id="reg-auth-code" class="form-input" placeholder="Enter admin authorization code" oninput="clearErr('reg-auth-code')">
+        <span class="form-hint">Demo code: <strong>ADMIN2024</strong></span>
+        <span class="field-error-span" id="err-reg-auth-code"></span>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+      <button class="btn btn-primary" onclick="nextStep()">Next Step →</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Security -->
+  <div class="step-content" id="step-4">
+    <h3>Account Security</h3>
+    <p style="font-size:13px;color:var(--gray-500);margin-bottom:20px;">Create a strong password for your account</p>
+    <div class="form-group">
+      <label class="form-label">Password *</label>
+      <div style="position:relative;">
+        <input type="password" id="reg-pw" class="form-input" placeholder="Enter a strong password" oninput="checkPassword();clearErr('reg-pw')" style="padding-right:44px;">
+        <button type="button" onclick="toggleRegPw('reg-pw','eye1')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:16px;" id="eye1">Show</button>
+      </div>
+      <span class="field-error-span" id="err-reg-pw"></span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm Password *</label>
+      <div style="position:relative;">
+        <input type="password" id="reg-pw2" class="form-input" placeholder="Re-enter your password" oninput="clearErr('reg-pw2')" style="padding-right:44px;">
+        <button type="button" onclick="toggleRegPw('reg-pw2','eye2')" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--gray-400);font-size:16px;" id="eye2">Show</button>
+      </div>
+      <span class="field-error-span" id="err-reg-pw2"></span>
+    </div>
+    <div class="pw-req">
+      <div class="pw-req-title">Password Requirements:</div>
+      <div class="pw-rule" id="pw-len">At least 8 characters</div>
+      <div class="pw-rule" id="pw-upper">One uppercase letter (A-Z)</div>
+      <div class="pw-rule" id="pw-lower">One lowercase letter (a-z)</div>
+      <div class="pw-rule" id="pw-num">One number (0-9)</div>
+      <div class="pw-rule" id="pw-special">One special character (!@#$%^&amp;*)</div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+      <button class="btn btn-primary" onclick="nextStep()">Next Step →</button>
+    </div>
+  </div>
+
+  <!-- STEP 5: Preferences -->
+  <div class="step-content" id="step-5">
+    <h3>Trading Preferences</h3>
+    <p style="font-size:13px;color:var(--gray-500);margin-bottom:20px;">Help us personalise your experience</p>
+    <div class="form-group">
+      <label class="form-label">Trading Experience *</label>
+      <select id="reg-texp" class="form-select" onchange="clearErr('reg-texp')">
+        <option value="">Select your experience level</option>
+        <option value="beginner">Beginner – No prior trading knowledge</option>
+        <option value="intermediate">Intermediate – Some understanding of markets</option>
+        <option value="advanced">Advanced – Active trader with experience</option>
+      </select>
+      <span class="field-error-span" id="err-reg-texp"></span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Risk Tolerance *</label>
+      <select id="reg-risk" class="form-select" onchange="clearErr('reg-risk')">
+        <option value="">Select your risk tolerance</option>
+        <option value="low">Low – Prefer stable, low-risk investments</option>
+        <option value="moderate">Moderate – Balance of risk and reward</option>
+        <option value="high">High – Comfortable with higher volatility</option>
+      </select>
+      <span class="field-error-span" id="err-reg-risk"></span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Learning Goals (Optional)</label>
+      <textarea id="reg-goals" class="form-textarea" placeholder="What do you want to achieve with IndAI?"></textarea>
+    </div>
+    <div class="alert alert-blue register-info-box" style="margin-bottom:16px;">
+      <div class="register-info-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10"/><path d="M8.5 10.5c0-1.4 1.3-2.5 3.5-2.5s3.5 1.1 3.5 2.5-1 2.1-3.5 2.5-3.5 1.1-3.5 2.5S9.8 18 12 18s3.5-1.1 3.5-2.5"/></svg></div><div><strong>Welcome Bonus!</strong><br><span style="font-size:12px;">Learners start with ₹1,00,000 virtual money + 50 skill points.</span></div>
+    </div>
+    <label class="checkbox-row" style="margin-bottom:8px;">
+      <input type="checkbox" id="reg-terms">
+      I agree to the <a href="#" onclick="Modals.showTerms();return false;" style="color:var(--blue);">Terms of Service</a> and <a href="#" onclick="Modals.showPrivacy();return false;" style="color:var(--blue);">Privacy Policy</a>
+    </label>
+    <label class="checkbox-row" style="margin-bottom:16px;">
+      <input type="checkbox" id="reg-understand"> I understand this is paper trading — no real money is involved.
+    </label>
+    <span class="field-error-span" id="err-terms"></span>
+    <div class="nav-btns">
+      <button class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+      <button class="btn btn-green" id="submit-btn" onclick="submitRegistration()">Done Create Account</button>
+    </div>
+  </div>
+
+  <!-- STEP 6: Success / Pending -->
+  <div class="step-content" id="step-6">
+    <div class="success-wrap">
+      <div id="step6-icon"></div>
+      <h2 id="step6-title" style="margin-bottom:10px;"></h2>
+      <p id="step6-sub"></p>
+      <div id="step6-details" style="border-radius:var(--radius-lg);padding:20px;margin:24px 0;text-align:left;"></div>
+      <a href="login.html" class="btn btn-primary btn-lg" id="step6-btn">Go to Sign In →</a>
+    </div>
+  </div>
+</div>
+
+<div class="footer-trust">
+  <span>Secure &amp; Encrypted</span>
+  <span>100% Risk-Free</span>
+  <span>10,000+ Students</span>
+</div>
+
+<div id="modal-overlay" class="modal-overlay"></div>
+
+<script src="../js/data/mockData.js"></script>
+<script src="../js/utils/storage.js"></script>
+<script src="../js/utils/helpers.js"></script>
+<script src="../js/utils/validation.js"></script>
+<script src="../js/modules/trading.js"></script>
+<script src="../js/modules/courses.js"></script>
+<script src="../js/modules/assignments.js"></script>
+<script src="../js/modules/challenges.js"></script>
+<script src="../js/modules/users.js"></script>
+<script src="../js/utils/permissions.js"></script>
+<script src="../js/utils/auth.js"></script>
+<script src="../js/components/darkMode.js"></script>
+<script src="../js/components/modals.js"></script>
+<script>
+  let currentStep = 1;
+  let selectedRole = "";
+  const maxDobDate = new Date();
+  maxDobDate.setFullYear(maxDobDate.getFullYear() - 10);
+  document.getElementById("reg-dob").max = maxDobDate.toISOString().split("T")[0];
+  const NEEDS_APPROVAL = ["instructor","provider","admin"];
+  const stepPcts   = ["20%","40%","60%","80%","100%"];
+  const stepLabels = ["Step 1 of 5","Step 2 of 5","Step 3 of 5","Step 4 of 5","Step 5 of 5"];
+
+  function selectRole(role) {
+    selectedRole = role;
+    document.querySelectorAll(".role-card").forEach(c => { c.classList.remove("selected"); c.querySelector(".selected-badge")?.remove(); });
+    const card = document.getElementById("role-" + role);
+    card.classList.add("selected");
+    const badge = document.createElement("div"); badge.className = "selected-badge"; badge.textContent = "Selected Done";
+    card.appendChild(badge);
+    clearErr("role");
+  }
+
+  function updateStepper(step) {
+    for (let i = 1; i <= 5; i++) {
+      const sc = document.getElementById("sc" + i), sn = document.getElementById("sn" + i);
+      sc.className = "step-circle"; sn.className = "step-name";
+      if (i < step)      { sc.classList.add("done");   sc.textContent = "Done"; sn.classList.add("done"); }
+      else if (i === step){ sc.classList.add("active"); sc.textContent = i;   sn.classList.add("active"); }
+      else                { sc.textContent = i; }
+    }
+    document.getElementById("step-bar-fill").style.width = stepPcts[step-1];
+    document.getElementById("step-label").textContent    = stepLabels[step-1];
+    document.getElementById("step-pct").textContent      = stepPcts[step-1] + " Complete";
+  }
+
+  function showStep(n) {
+    document.querySelectorAll(".step-content").forEach(s => s.classList.remove("active"));
+    document.getElementById("step-" + n)?.classList.add("active");
+    if (n <= 5) updateStepper(n);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function nextStep() { if (!validateStep(currentStep)) return; currentStep++; if (currentStep === 3) updateStep3UI(); showStep(currentStep); }
+  function prevStep() { currentStep--; showStep(currentStep); }
+
+  function updateStep3UI() {
+    ["learner","instructor","provider","admin"].forEach(r => {
+      document.getElementById("step3-" + r).style.display = r === selectedRole ? "block" : "none";
+    });
+  }
+
+  function setErr(id, msg) {
+    const el = document.getElementById(id); if (el) el.classList.add("input-error");
+    const sp = document.getElementById("err-" + id); if (sp) sp.textContent = msg;
+  }
+  function clearErr(id) {
+    const el = document.getElementById(id); if (el) el.classList.remove("input-error");
+    const sp = document.getElementById("err-" + id); if (sp) sp.textContent = "";
+  }
+  function required(id, label) {
+    const val = (document.getElementById(id)?.value || "").trim();
+    if (!val) { setErr(id, label + " is required."); return false; }
+    clearErr(id); return true;
+  }
+  function selectRequired(id, label) {
+    const val = document.getElementById(id)?.value || "";
+    if (!val) { setErr(id, "Please select " + label + "."); return false; }
+    clearErr(id); return true;
+  }
+
+  function validateStep(step) {
+    if (step === 1) { if (!selectedRole) { setErr("role","Please select a role to continue."); return false; } return true; }
+    if (step === 2) {
+      const ok = [required("reg-first","First name"),required("reg-last","Last name"),required("reg-email","Email"),required("reg-phone","Phone"),required("reg-dob","Date of birth")].every(Boolean);
+      if (!ok) return false;
+      if (!Validate.name(document.getElementById('reg-first').value)) { setErr('reg-first','First name must be at least 3 characters and contain only alphabets and spaces.'); return false; }
+      if (!Validate.name(document.getElementById('reg-last').value)) { setErr('reg-last','Last name must be at least 3 characters and contain only alphabets and spaces.'); return false; }
+      clearErr('reg-first'); clearErr('reg-last');
+      const dob = document.getElementById("reg-dob").value;
+      if (!Validation.minAge("reg-dob", "Date of Birth", 10).checks[1].test(dob)) { setErr("reg-dob", "You must be at least 10 years old."); return false; }
+      clearErr("reg-dob");
+      const email = document.getElementById("reg-email").value.trim();
+      if (!Validate.email(email)) { setErr("reg-email","Use a Gmail address or an email ending in .in."); return false; }
+      if (!Validate.emailAvailable(email)) { setErr("reg-email","This email is already registered."); return false; }
+      clearErr("reg-email");
+      const phone = document.getElementById("reg-phone").value.replace(/\D/g,"");
+      if (!Validate.phone(phone)) { setErr("reg-phone","Enter a valid 10-digit Indian mobile number."); return false; }
+      clearErr("reg-phone"); return true;
+    }
+    if (step === 3) {
+      if (selectedRole === "learner") {
+        const institution = document.getElementById("reg-institution").value.trim();
+        const studentId = document.getElementById("reg-studentid").value.trim();
+        const grade = document.getElementById("reg-grade").value.trim();
+        const major = document.getElementById("reg-major").value.trim();
+        if (institution && institution.length < 3) { setErr("reg-institution", "Institution name must be at least 3 characters."); return false; }
+        if (institution && /^[0-9]/.test(institution)) { setErr("reg-institution", "Institution name cannot start with a number."); return false; }
+        if (studentId && studentId.length < 3) { setErr("reg-studentid", "Student ID must be at least 3 characters."); return false; }
+        if (institution && studentId && IndAIData.users.some(u => u.role === "learner" && String(u.institution || "").trim().toLowerCase() === institution.toLowerCase() && String(u.studentId || "").trim().toLowerCase() === studentId.toLowerCase())) {
+          setErr("reg-studentid", "Student ID already exists for this institution."); return false;
+        }
+        if (grade && !Validate.minLength(grade, 3)) { setErr("reg-grade", "Grade / Level must be at least 3 characters."); return false; }
+        if (major && major.length < 3) { setErr("reg-major", "Major must be at least 3 characters."); return false; }
+        clearErr("reg-institution"); clearErr("reg-studentid"); clearErr("reg-grade"); clearErr("reg-major");
+        return true;
+      }
+      if (selectedRole === "instructor") {
+        const okInst = [required("reg-inst-org","Organization"),required("reg-expertise","Expertise"),selectRequired("reg-exp","years of experience")].every(Boolean);
+        if (!okInst) return false;
+        const org = document.getElementById("reg-inst-org").value.trim();
+        const expertise = document.getElementById("reg-expertise").value.trim();
+        if (org.length < 3) { setErr("reg-inst-org", "Institution / Organization must be at least 3 characters."); return false; }
+        if (/^[0-9]/.test(org)) { setErr("reg-inst-org", "Organization cannot start with a number."); return false; }
+        if (!Validate.minLength(expertise, 3)) { setErr("reg-expertise", "Expertise / Specialization must be at least 3 characters."); return false; }
+        clearErr("reg-inst-org"); clearErr("reg-expertise");
+        return true;
+      }
+      if (selectedRole === "provider") {
+        if (!required("reg-org","Organization")) return false;
+        const org = document.getElementById("reg-org").value.trim();
+        const website = document.getElementById("reg-website").value.trim();
+        if (org.length < 3) { setErr("reg-org", "Organization must be at least 3 characters."); return false; }
+        if (/^[0-9]/.test(org)) { setErr("reg-org", "Organization cannot start with a number."); return false; }
+        if (website && website.length < 3) { setErr("reg-website", "Website / LinkedIn must be at least 3 characters."); return false; }
+        if (website && !Validation.isValidUrl(website)) { setErr("reg-website", "Enter a valid link starting with http:// or https://"); return false; }
+        clearErr("reg-org"); clearErr("reg-website");
+        return true;
+      }
+      if (selectedRole === "admin") {
+        if (!required("reg-admin-inst","Institution")) return false;
+        if (document.getElementById("reg-admin-inst").value.trim().length < 3) { setErr("reg-admin-inst", "Institution must be at least 3 characters."); return false; }
+        if (/^[0-9]/.test(document.getElementById("reg-admin-inst").value.trim())) { setErr("reg-admin-inst", "Institution cannot start with a number."); return false; }
+                const code = document.getElementById("reg-auth-code").value.trim();
+        if (!code) { setErr("reg-auth-code","Authorization code is required."); return false; }
+        if (code !== "ADMIN2024") { setErr("reg-auth-code","Invalid code. Demo code is: ADMIN2024"); return false; }
+        clearErr("reg-auth-code"); return true;
+      }
+      return true;
+    }
+    if (step === 4) {
+      const pw = document.getElementById("reg-pw").value, pw2 = document.getElementById("reg-pw2").value;
+      if (!pw) { setErr("reg-pw","Password is required."); return false; }
+      if (!Validate.password(pw).valid()) { setErr("reg-pw","Password must meet all requirements."); return false; }
+      clearErr("reg-pw");
+      if (!pw2) { setErr("reg-pw2","Please confirm your password."); return false; }
+      if (pw !== pw2) { setErr("reg-pw2","Passwords do not match."); return false; }
+      clearErr("reg-pw2"); return true;
+    }
+    if (step === 5) {
+      if (!selectRequired("reg-texp","your experience level")) return false;
+      if (!selectRequired("reg-risk","your risk tolerance"))   return false;
+      const goals = document.getElementById("reg-goals").value.trim();
+      if (goals && goals.length < 3) { setErr("reg-goals", "Learning goals must be at least 3 characters."); return false; }
+      clearErr("reg-goals");
+      if (!document.getElementById("reg-terms").checked)    { document.getElementById("err-terms").textContent = "You must agree to the Terms of Service."; return false; }
+      if (!document.getElementById("reg-understand").checked){ document.getElementById("err-terms").textContent = "Please confirm you understand this is paper trading."; return false; }
+      document.getElementById("err-terms").textContent = ""; return true;
+    }
+    return true;
+  }
+
+  function checkPassword() {
+    const pw = document.getElementById("reg-pw").value, c = Validate.password(pw);
+    ["len","upper","lower","num","special"].forEach((k,i) => {
+      const key = ["length","upper","lower","number","special"][i];
+      document.getElementById("pw-"+k).className = "pw-rule" + (c[key] ? " met" : "");
+    });
+  }
+
+  function toggleRegPw(inputId, eyeId) {
+    const i = document.getElementById(inputId), e = document.getElementById(eyeId);
+    i.type = i.type === "password" ? "text" : "password";
+    e.textContent = i.type === "password" ? "Show" : "Hide";
+  }
+
+  function submitRegistration() {
+    if (!validateStep(5)) return;
+    const btn = document.getElementById("submit-btn");
+    btn.disabled = true; btn.textContent = "Creating account…";
+
+    const first = document.getElementById("reg-first").value.trim();
+    const last  = document.getElementById("reg-last").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const phone = document.getElementById("reg-phone").value.trim();
+    const pw    = document.getElementById("reg-pw").value;
+    const exp   = document.getElementById("reg-texp").value;
+    const risk  = document.getElementById("reg-risk").value;
+    const goals = document.getElementById("reg-goals").value.trim();
+
+    // Role-specific fields
+    let roleFields = {};
+    if (selectedRole === "learner") {
+      roleFields = { institution:document.getElementById("reg-institution").value.trim(), studentId:document.getElementById("reg-studentid").value.trim(), grade:document.getElementById("reg-grade").value.trim(), major:document.getElementById("reg-major").value.trim() };
+    } else if (selectedRole === "instructor") {
+      roleFields = { institution:document.getElementById("reg-inst-org").value.trim(), expertise:document.getElementById("reg-expertise").value.trim(), yearsExp:document.getElementById("reg-exp").value, studentIds:[] };
+    } else if (selectedRole === "provider") {
+      roleFields = { organization:document.getElementById("reg-org").value.trim(), website:document.getElementById("reg-website").value.trim() };
+    } else if (selectedRole === "admin") {
+      roleFields = { institution:document.getElementById("reg-admin-inst").value.trim(), accessLevel:"Admin" };
+    }
+
+    const isLearner    = selectedRole === "learner";
+    const needsApproval = NEEDS_APPROVAL.includes(selectedRole);
+
+    const userData = {
+      firstName: first, lastName: last, email, phone, password: pw, dateOfBirth: document.getElementById("reg-dob").value,
+      role: selectedRole,
+      status: needsApproval ? "pending" : "active",
+      skillPoints:    isLearner ? 50 : 0,
+      portfolioValue: isLearner ? 100000 : 0,
+      tradingLimit:   isLearner ? 100000 : 0,
+      virtualBalance: isLearner ? 100000 : 0,
+      experience: exp, riskTolerance: risk, goals,
+      ...roleFields
+    };
+
+    const result = DB.addUser(userData);
+    if (result.error) {
+      btn.disabled = false; btn.textContent = "Done Create Account";
+      setErr("reg-email", result.error); currentStep = 2; showStep(2); return;
+    }
+
+    // For roles that need approval, add to pending approvals queue
+    if (needsApproval) {
+      DB.addPendingApproval({
+        firstName: first, lastName: last, email, role: selectedRole,
+        institution: roleFields.institution || roleFields.organization || "",
+        organization: roleFields.organization || roleFields.institution || ""
+      });
+    }
+
+    persistData();
+
+    // Show success/pending screen
+    currentStep = 6;
+    document.querySelectorAll(".step-content").forEach(s => s.classList.remove("active"));
+    document.getElementById("step-6").classList.add("active");
+    document.getElementById("stepper-wrap").style.display = "none";
+
+    const roleLabels = { learner:"Learner", instructor:"Instructor", provider:"Course Provider", admin:"Admin" };
+    const iconEl    = document.getElementById("step6-icon");
+    const titleEl   = document.getElementById("step6-title");
+    const subEl     = document.getElementById("step6-sub");
+    const detailsEl = document.getElementById("step6-details");
+    const btnEl     = document.getElementById("step6-btn");
+
+    if (needsApproval) {
+      iconEl.innerHTML = '<div class="pending-icon">Pending</div>';
+      titleEl.textContent = "Account Submitted for Approval!";
+      subEl.textContent   = "Your account request has been sent to the Super Admin for review.";
+      detailsEl.style.background = "var(--orange-light)";
+      detailsEl.innerHTML = `<p style="font-size:13px;color:#92400E;line-height:2;margin:0;">
+        Name <strong>Name:</strong> ${first} ${last}<br>
+        Email <strong>Email:</strong> ${email}<br>
+        Role <strong>Role:</strong> ${roleLabels[selectedRole]}<br>
+        Pending <strong>Status:</strong> Pending Super Admin Approval<br>
+        Notice <strong>Note:</strong> You will be notified once your account is approved. You cannot log in until approval.
+      </p>`;
+      btnEl.textContent = "Back to Sign In";
+    } else {
+      iconEl.innerHTML = '<div class="success-icon">Done</div>';
+      titleEl.textContent = "Account Created Successfully!";
+      subEl.textContent   = "Your IndAI account is ready. You can now sign in.";
+      detailsEl.style.background = "var(--green-light)";
+      detailsEl.innerHTML = `<p style="font-size:13px;color:#065F46;line-height:2;margin:0;">
+        Name <strong>Name:</strong> ${first} ${last}<br>
+        Email <strong>Email:</strong> ${email}<br>
+        Role <strong>Role:</strong> ${roleLabels[selectedRole]}<br>
+        Finance <strong>Welcome bonus:</strong> ₹1,00,000 virtual money + 50 skill points<br>
+        Go <strong>You can sign in immediately</strong> with the button below.
+      </p>`;
+    }
+  }
+</script>
+</body>
+</html>
