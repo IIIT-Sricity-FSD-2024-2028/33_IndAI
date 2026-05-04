@@ -1,0 +1,178 @@
+domain: Fin-Tech , Ed-Tech
+problem_statement: Education-Oriented Financial Literacy & Paper trading platform
+
+definitions:
+
+  Learner:
+    description: An individual who practices stock trading using virtual money to understand financial markets, trading strategies, and risk management for educational purposes.
+    business_rules:
+      - Can execute simulated buy and sell orders
+      - Can view portfolio performance and trading history
+      - Can access assigned learning courses and trading exercises
+
+  Instructor:
+    description: A mentor who assists in learning financial market concepts and monitors learner's activities
+    business_rules:
+      - Can assign trading exercises and simulations
+      - Can provide feedback and performance evaluation
+
+  CourseProvider:
+    description: An organization or expert that supplies structured trading and financial education content
+    business_rules:
+      - Can publish new courses and modules
+      - Can update existing course materials
+
+  PlatformAdministrator:
+    description: A system authority responsible for managing platform operations and academic structure
+    business_rules:
+      - Can assign instructors to courses
+      - Can manage platform access permissions
+      - Can generate institutional performance reports
+
+  SimulatedTrade:
+    description: A virtual stock market transaction executed for learning without real financial risk
+    business_rules:
+      - Uses virtual currency instead of real money
+      - Updates virtual portfolio holdings
+      - Stored for performance evaluation
+
+  TradingPortfolio:
+    description: A virtual collection of financial assets owned by a student trader
+    business_rules:
+      - Updated automatically after each simulated trade
+      - Used to calculate profit, loss, and performance metrics
+
+  VirtualBalance:
+    description: The simulated money available to a learner trader for executing trades
+    business_rules:
+      - Decreases on buy orders
+      - Increases on sell orders
+
+  TradingOrder:
+    description: A request to buy or sell a financial instrument in the simulation environment
+    business_rules:
+      - Must specify asset, quantity, and order type
+      - Must be validated before execution
+
+  FinancialInstrument:
+    description: A tradable market asset such as stocks, ETFs, or indices available in simulation
+    business_rules:
+      - Market price changes based on simulated or real market feeds
+
+  Course:
+    description: A structured learning program covering trading and financial market concepts
+    business_rules:
+      - Contains multiple course modules
+      - Assigned to instructors and student traders
+
+  CourseModule:
+    description: A learning unit containing educational content, exercises, and assessments
+    business_rules:
+      - Must belong to a course
+      - Can contain assignments and trading tasks
+
+  LearningMaterial:
+    description: Educational resources such as videos, documents, or practice exercises
+    business_rules:
+      - Must be linked to a course module
+
+  TradingAssignment:
+    description: A practical trading task assigned to student traders for skill development
+    business_rules:
+      - Has submission deadlines
+      - Evaluated by instructors
+
+  PerformanceFeedback:
+    description: Instructor evaluation and guidance provided based on student trading activity
+    business_rules:
+      - Visible only to assigned student trader
+      - Stored for progress tracking
+
+  PerformanceReport:
+    description: Analytical summary of student trading outcomes and learning progress
+    business_rules:
+      - Generated using trading history and course performance
+      - Accessible to instructors and administrators
+
+  MarketPriceFeed:
+    description: Source of financial instrument price information used in trading simulation
+    business_rules:
+      - Must update periodically
+      - Used for trade execution validation
+
+from the domain expert interaction:
+
+MatchingEngine:
+definition:
+  The core system component responsible for matching buy and sell trading orders based on defined rules such as price-time priority.
+examples:
+  - Matching a buy order at ₹105 with the lowest available sell order at ₹100.
+aliases:
+  - Order Matching Engine
+  - Trade Execution Engine
+
+OrderBook:
+definition:
+  An in-memory data structure that stores all active buy and sell orders for a financial instrument, organized by price and time.
+examples:
+  - A list of buy orders sorted by highest price and sell orders sorted by lowest price.
+aliases:
+  - Market Order Book
+  - Trade Book
+
+MarketOrder:
+definition:
+  A trading order that is executed immediately at the best available price in the order book.
+examples:
+  - Buying shares instantly at the current lowest selling price.
+aliases:
+  - Immediate Order
+  - At-Market Order
+
+LimitOrder:
+definition:
+  A trading order that is executed only at a specified price or better and remains open until matched or cancelled.
+examples:
+  - Placing a buy order for a stock only if its price drops to ₹100.
+aliases:
+  - Price-Limited Order
+  - Pending Order
+
+StopLossOrder:
+definition:
+  A conditional trading order that is triggered when the market price reaches a predefined level to limit potential losses.
+examples:
+  - Automatically selling a stock when its price falls below ₹90.
+aliases:
+  - Stop Order
+  - Risk Protection Order
+
+OrderBookSnapshot:
+definition:
+  A saved copy of the current state of the order book and related balances, used for recovery in case of system failure.
+examples:
+  - Restoring active orders after a server restart using the last saved snapshot.
+aliases:
+  - Order Book State Backup
+  - Trading Snapshot
+
+CashCheck:
+definition:
+  A validation process that ensures a trader has sufficient virtual balance before placing a buy order.
+examples:
+  - Rejecting a buy order because the user does not have enough virtual funds.
+aliases:
+  - Balance Check
+  - Funds Validation
+
+MarginTrading: 
+definition:
+  A trading mechanism that allows users to place orders using borrowed virtual funds within a predefined limit.
+examples:
+  - Allowing a trader with ₹50,000 to trade stocks worth ₹1,00,000 using margin.
+aliases:
+  - Leveraged Trading
+  - Borrowed Capital Trading
+
+
+

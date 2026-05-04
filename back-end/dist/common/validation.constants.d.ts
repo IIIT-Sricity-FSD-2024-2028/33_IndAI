@@ -1,0 +1,15 @@
+export declare const NAME_REGEX: RegExp;
+export declare const INDIAN_PHONE_REGEX: RegExp;
+export declare const INDAI_EMAIL_REGEX: RegExp;
+export declare const PASSWORD_REGEX: RegExp;
+export declare const SYMBOL_REGEX: RegExp;
+export declare const USER_ROLES: readonly ["superuser", "admin", "instructor", "provider", "learner", "SUPER_USER", "ADMIN", "INSTRUCTOR", "COURSE_PROVIDER", "LEARNER"];
+export declare const USER_STATUSES: readonly ["active", "pending", "suspended", "disabled"];
+export declare const COURSE_STATUSES: readonly ["draft", "published", "active", "inactive", "completed", "archived"];
+export declare const DIFFICULTIES: readonly ["Easy", "Medium", "Hard", "BEGINNER", "INTERMEDIATE", "ADVANCED", "Beginner", "Intermediate", "Advanced"];
+export declare const ASSIGNMENT_STATUSES: readonly ["active", "completed", "pending", "in_progress", "submitted", "approved"];
+export declare const SESSION_STATUSES: readonly ["scheduled", "completed", "cancelled", "active", "pending"];
+export declare const MODULE_TYPES: readonly ["video", "document", "quiz", "text", "article", "assignment", "Video Courses", "Text Modules", "Mixed"];
+export declare const NOTIFICATION_TYPES: readonly ["info", "success", "warning", "error", "trade", "course", "assignment", "session", "student"];
+export declare const EXPERIENCE_LEVELS: readonly ["Beginner", "Intermediate", "Advanced", "BEGINNER", "INTERMEDIATE", "ADVANCED", "0-1", "1-3", "3-5", "5+"];
+export declare const RISK_TOLERANCES: readonly ["Low", "Medium", "High", "Conservative", "Moderate", "Aggressive", "LOW", "MEDIUM", "HIGH"];
