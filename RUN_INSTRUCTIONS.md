@@ -1,4 +1,4 @@
-# IndAI Review–4 Run Instructions
+# IndAI Run Instructions
 
 ## Folder Structure
 
