@@ -1,0 +1,768 @@
+[
+  {
+    "name": "Bharan",
+    "roll": "S20240010176",
+    "actors": [
+      "User Admin"
+    ],
+    "shared": "Public pages, authentication and registration",
+    "scope": "User onboarding and institution account administration",
+    "areas": [
+      [
+        "Public access",
+        "Sign-in, role-based destination selection, registration, public contact and homepage interaction."
+      ],
+      [
+        "User Admin",
+        "Institution management, intake invitation links, roster preview/import and account administration."
+      ],
+      [
+        "Identity integration",
+        "Authenticated API calls, active/pending account handling, role-aware onboarding and validation feedback."
+      ]
+    ],
+    "frontend": [
+      [
+        "frontend/src/pages/AuthPages.jsx",
+        [
+          "LoginPage",
+          "RegisterPage",
+          "rolePath"
+        ],
+        "Login/registration state, controlled inputs and authenticated destination selection."
+      ],
+      [
+        "frontend/src/main.jsx",
+        [
+          "App",
+          "Home"
+        ],
+        "Public page selection, contact interaction and identity bootstrap integration."
+      ],
+      [
+        "frontend/src/layouts/Login.jsx",
+        [
+          "Login"
+        ],
+        "Login form presentation and field/action callbacks."
+      ],
+      [
+        "frontend/src/layouts/Register.jsx",
+        [
+          "Register"
+        ],
+        "Registration wizard presentation."
+      ],
+      [
+        "frontend/src/layouts/UserAdminDashboard.jsx",
+        [
+          "UserAdminDashboard"
+        ],
+        "User Admin portal layout."
+      ],
+      [
+        "frontend/src/components/Institutes.jsx",
+        [
+          "Institutes",
+          "InstituteIntake"
+        ],
+        "Institution setup, CSV intake and public roster collection."
+      ],
+      [
+        "frontend/src/components/Management.jsx",
+        [
+          "UserManager",
+          "AccountForm"
+        ],
+        "User Admin account operations in shared role-aware components."
+      ]
+    ],
+    "backend": [
+      [
+        "back-end/src/modules/auth/auth.controller.ts",
+        "AuthController",
+        "Login, registration, refresh, logout and authenticated identity routes."
+      ],
+      [
+        "back-end/src/modules/auth/auth.service.ts",
+        "AuthService",
+        "Credential verification and account/session lifecycle."
+      ],
+      [
+        "back-end/src/modules/users/users.service.ts",
+        "UsersService",
+        "Account creation and profile validation rules."
+      ],
+      [
+        "back-end/src/modules/institutes/institutes.module.ts",
+        "InstitutesController",
+        "Invitation, CSV preview/import, request retrieval and configured email delivery."
+      ]
+    ],
+    "routes": [
+      [
+        "POST",
+        "/api/auth/login",
+        "AuthController.login"
+      ],
+      [
+        "POST",
+        "/api/auth/register",
+        "AuthController.register"
+      ],
+      [
+        "GET",
+        "/api/auth/me",
+        "AuthController.me"
+      ],
+      [
+        "POST",
+        "/api/institutes/:id/preview",
+        "InstitutesController.preview"
+      ],
+      [
+        "POST",
+        "/api/institutes/:id/import",
+        "InstitutesController.importCsv"
+      ]
+    ],
+    "react": [
+      [
+        "State and controlled inputs",
+        "LoginPage/RegisterPage own form, busy/error and wizard-step state. Layout callbacks send field values to these parent components."
+      ],
+      [
+        "Conditional rendering",
+        "Registration fields and result messages depend on role, wizard step and approval status."
+      ],
+      [
+        "Lists and filtering",
+        "Institution rows and roster entries are rendered from API results; shared account controls select role-specific fields."
+      ],
+      [
+        "Side effects",
+        "App performs its identity lookup on dashboard startup. useResource supplies public configuration and institution-request resources with cleanup."
+      ],
+      [
+        "API integration",
+        "Sign-in stores the access token through setToken; form actions await real Nest endpoints and present backend validation errors."
+      ]
+    ],
+    "flow": "A public form collects account data, the authentication API validates credentials/account status, and rolePath selects the dashboard. User Admin institution intake separates CSV preview from the import mutation; invitation delivery uses configured SMTP.",
+    "boundary": "Coordinates account identity/guard behavior with Gurwinder and shared profile controls with Praneeth. Account management is scoped to User Admin behavior, not exclusive ownership of the shared Management component."
+  },
+  {
+    "name": "Jeswanth",
+    "roll": "S20240010202",
+    "actors": [
+      "Learner"
+    ],
+    "shared": "Learner-facing trading and learning integration",
+    "scope": "Learner portal, virtual trading and progress",
+    "areas": [
+      [
+        "Virtual trading",
+        "Instrument search, quotes/history, market/limit/stop order entry, pending-order cancellation and holdings."
+      ],
+      [
+        "Portfolio and watchlist",
+        "Cash/marked-value totals, recorded portfolio growth, holdings/order tables, adjacent Buy/Sell shortcuts and saved watchlist membership."
+      ],
+      [
+        "Learning consumption",
+        "Published course enrollment, lesson access/completion, quiz attempts, assignment submissions and learner-visible sessions/notifications."
+      ]
+    ],
+    "frontend": [
+      [
+        "frontend/src/layouts/LearnerDashboard.jsx",
+        [
+          "LearnerDashboard"
+        ],
+        "Learner portal navigation and presentation."
+      ],
+      [
+        "frontend/src/components/Common.jsx",
+        [
+          "Holdings"
+        ],
+        "Shared holdings rows, grouped Buy/Sell buttons and onTrade callback integration."
+      ],
+      [
+        "frontend/src/components/TradingWorkspace.jsx",
+        [
+          "TradingWorkspace",
+          "PriceChart"
+        ],
+        "Controlled trading form, market history and inline SVG price chart."
+      ],
+      [
+        "frontend/src/pages/Dashboard.jsx",
+        [
+          "Portfolio",
+          "PortfolioChart",
+          "Watchlist",
+          "TradeRows"
+        ],
+        "Portfolio/watchlist composition and recorded-value display."
+      ],
+      [
+        "frontend/src/components/Learning.jsx",
+        [
+          "Courses",
+          "Modules",
+          "Quizzes"
+        ],
+        "Learner enrollment, completion and quiz-taking branches of shared learning components."
+      ],
+      [
+        "frontend/src/components/Management.jsx",
+        [
+          "Assignments"
+        ],
+        "Learner submission controls in the shared assignment component."
+      ],
+      [
+        "frontend/src/components/Commerce.jsx",
+        [
+          "Subscription"
+        ],
+        "Learner subscription presentation and payment integration boundary."
+      ]
+    ],
+    "backend": [
+      [
+        "back-end/src/modules/algo/algo.module.ts",
+        "AlgoController",
+        "Authenticated virtual-account routing."
+      ],
+      [
+        "back-end/algo/server.mjs",
+        "routes",
+        "Manual order/search/history/portfolio request dispatch."
+      ],
+      [
+        "back-end/algo/store.mjs",
+        "markPortfolio",
+        "Per-user account persistence and recorded valuations."
+      ],
+      [
+        "back-end/src/modules/watchlists/watchlists.controller.ts",
+        "WatchlistsController",
+        "Saved symbol membership routes."
+      ],
+      [
+        "back-end/src/modules/enrollments/enrollments.controller.ts",
+        "EnrollmentsController",
+        "Enrollment access and saved lesson progress."
+      ]
+    ],
+    "routes": [
+      [
+        "POST",
+        "/api/algo/orders",
+        "AlgoController.route"
+      ],
+      [
+        "GET",
+        "/api/algo/portfolio",
+        "AlgoController.route"
+      ],
+      [
+        "POST",
+        "/api/watchlists/:userId/items",
+        "WatchlistsController.addItem"
+      ],
+      [
+        "POST",
+        "/api/enrollments",
+        "EnrollmentsController.create"
+      ],
+      [
+        "PATCH",
+        "/api/enrollments/:id/progress",
+        "EnrollmentsController.update"
+      ]
+    ],
+    "react": [
+      [
+        "State and controlled inputs",
+        "TradingWorkspace owns query/search, selected instrument, side, quantity, order type, trigger price and chart period."
+      ],
+      [
+        "Components and callbacks",
+        "PriceChart receives candles; Watchlist reports its symbol through onTrade; Holdings receives positions/onTrade/busy and calls onTrade(position, side). Dashboard.openTrade passes initialInstrument/initialSymbol/initialSide to TradingWorkspace; tradeHolding selects an existing workspace holding."
+      ],
+      [
+        "Validation and events",
+        "Order submission checks quote availability, positive whole-share quantity, virtual balance and owned shares before the backend checks the request."
+      ],
+      [
+        "Side effects",
+        "An effect selects an initial instrument after search data loads. Resource hooks poll quotes/account data and ignore obsolete results after cleanup."
+      ],
+      [
+        "Conditional lists",
+        "Limit/Stop price fields and pending-order cancellation appear only when applicable. Portfolio/watchlist/order records use map and lookup/filter operations."
+      ]
+    ],
+    "flow": "TradingWorkspace sends a virtual order through api. AlgoController binds the request to the authenticated account before the engine validates and persists it. The saved result drives the notice and portfolio reload. Learning mutations similarly update the backend before progress is refreshed.",
+    "boundary": "Coordinates provider content/access interfaces with Purvaj, instructor assignment/session interfaces with Praneeth, and shared subscription verification with Gurwinder. This scope focuses on learner-facing behavior, leaving content authoring and payment administration with their actor leads."
+  },
+  {
+    "name": "Purvaj",
+    "roll": "S20240010178",
+    "actors": [
+      "Course Provider"
+    ],
+    "shared": "Provider-facing content and assessment lifecycle",
+    "scope": "Provider portal, course authoring and assessments",
+    "areas": [
+      [
+        "Course lifecycle",
+        "Draft course forms, provider course list, module ordering/editing and commercial review/offer interaction."
+      ],
+      [
+        "Lesson media",
+        "Video/PDF selection, size/type validation, upload placement, signed media access and module refresh."
+      ],
+      [
+        "Assessments and analytics",
+        "MCQ authoring, PDF question papers, submission review/manual grading, course assignments and enrollment/completion analytics."
+      ]
+    ],
+    "frontend": [
+      [
+        "frontend/src/layouts/ProviderDashboard.jsx",
+        [
+          "ProviderDashboard"
+        ],
+        "Provider portal layout and navigation."
+      ],
+      [
+        "frontend/src/components/Learning.jsx",
+        [
+          "Courses",
+          "Modules",
+          "Uploads",
+          "Quizzes",
+          "QuizEditor",
+          "LessonVideo"
+        ],
+        "Provider authoring, uploads, question editor and review controls."
+      ],
+      [
+        "frontend/src/pages/Dashboard.jsx",
+        [
+          "ProviderAnalytics"
+        ],
+        "Course enrollment/completion analytics and provider composition."
+      ],
+      [
+        "frontend/src/components/Management.jsx",
+        [
+          "Assignments"
+        ],
+        "Provider-owned course assignment creation/review branches."
+      ],
+      [
+        "frontend/src/components/Commerce.jsx",
+        [
+          "Earnings"
+        ],
+        "Provider earnings display."
+      ]
+    ],
+    "backend": [
+      [
+        "back-end/src/modules/courses/courses.controller.ts",
+        "CoursesController",
+        "Provider course create/update/list routes."
+      ],
+      [
+        "back-end/src/modules/courses/courses.service.ts",
+        "CoursesService",
+        "Course records and provider analytics data."
+      ],
+      [
+        "back-end/src/modules/course-modules/course-modules.controller.ts",
+        "CourseModulesController",
+        "Lesson upload, module editing and signed access."
+      ],
+      [
+        "back-end/src/modules/quizzes/quizzes.controller.ts",
+        "QuizzesController",
+        "MCQ/PDF quiz storage, scoring and grade operations."
+      ],
+      [
+        "back-end/src/modules/commercial/commercial.service.ts",
+        "CommercialService",
+        "Provider course review/offer/earnings integration."
+      ]
+    ],
+    "routes": [
+      [
+        "POST",
+        "/api/courses",
+        "CoursesController.create"
+      ],
+      [
+        "POST",
+        "/api/course-modules/upload-video",
+        "CourseModulesController.uploadVideo"
+      ],
+      [
+        "POST",
+        "/api/quizzes",
+        "QuizzesController.create"
+      ],
+      [
+        "POST",
+        "/api/quizzes/:id/attempts/:attemptId/grade",
+        "QuizzesController.grade"
+      ],
+      [
+        "POST",
+        "/api/commercial/courses/:id/submit-review",
+        "CommercialController.submit"
+      ]
+    ],
+    "react": [
+      [
+        "State and props",
+        "Courses holds selected/edit state. Modules receives course, enrollment, notify and onProgress; QuizEditor receives initial, courses and onSubmit."
+      ],
+      [
+        "Controlled assessment forms",
+        "Question text/options, correct-answer radios, format/course choices, instructions and written answers are state-driven."
+      ],
+      [
+        "File events and validation",
+        "Uploads stores browser File objects after file checks and transmits FormData; PDF format conditionally changes the quiz form."
+      ],
+      [
+        "Side effects",
+        "Modules scrolls/focuses the module editor when editModule changes. Quizzes reloads/reconciles review data through the resource hook."
+      ],
+      [
+        "Immutable rendering",
+        "QuizEditor maps questions/options and creates new arrays/objects for edits; course/module lists render stable record IDs."
+      ]
+    ],
+    "flow": "A provider saves a draft, uploads modules and creates assessments through real Nest endpoints. Commercial review controls publication. Enrolled learners generate progress and attempts; provider analytics and grading read and update those saved records.",
+    "boundary": "Coordinates learner presentation and progress with Jeswanth, course publication/offer handling with Gurwinder, and shared assignment controls with Praneeth. The heavy authoring/media/assessment workload stays within this dedicated actor scope."
+  },
+  {
+    "name": "Praneeth",
+    "roll": "S20240010179",
+    "actors": [
+      "Instructor"
+    ],
+    "shared": "Shared profile, theme and interaction components",
+    "scope": "Instructor portal, teaching workflows and shared account UI",
+    "areas": [
+      [
+        "Instructor management",
+        "Assigned learner visibility, instructor-owned assignment creation/review, scheduled sessions and performance/earnings views."
+      ],
+      [
+        "Communication",
+        "Selected/all-assigned active learner notification composer and learner receipt integration."
+      ],
+      [
+        "Shared account interaction",
+        "Profile editing/password-change integration, theme persistence and shared form/modal behavior across portals."
+      ]
+    ],
+    "frontend": [
+      [
+        "frontend/src/layouts/InstructorDashboard.jsx",
+        [
+          "InstructorDashboard"
+        ],
+        "Instructor portal layout and views."
+      ],
+      [
+        "frontend/src/components/Management.jsx",
+        [
+          "Assignments",
+          "Sessions"
+        ],
+        "Instructor assignment, submission approval and session controls."
+      ],
+      [
+        "frontend/src/components/NotificationComposer.jsx",
+        [
+          "NotificationComposer"
+        ],
+        "Recipient selection, message state and successful-send callback."
+      ],
+      [
+        "frontend/src/pages/Dashboard.jsx",
+        [
+          "Dashboard",
+          "NotificationList"
+        ],
+        "Instructor analytics/composition and shared account/profile integration."
+      ],
+      [
+        "frontend/src/components/ThemeToggle.jsx",
+        [
+          "ThemeToggle"
+        ],
+        "Persistent theme preference and storage-event cleanup."
+      ],
+      [
+        "frontend/src/components/Common.jsx",
+        [
+          "Editor",
+          "Modal",
+          "Notice"
+        ],
+        "Shared controlled form, dialog and validation feedback integration."
+      ],
+      [
+        "frontend/src/components/Commerce.jsx",
+        [
+          "Earnings"
+        ],
+        "Instructor earnings presentation."
+      ]
+    ],
+    "backend": [
+      [
+        "back-end/src/modules/assignments/assignments.service.ts",
+        "AssignmentsService",
+        "Assignment records, submissions and one-time completion approval."
+      ],
+      [
+        "back-end/src/modules/sessions/sessions.service.ts",
+        "SessionsService",
+        "Saved session scheduling/update rules."
+      ],
+      [
+        "back-end/src/modules/notifications/notifications.service.ts",
+        "NotificationsService",
+        "Assigned active recipient selection and in-app records."
+      ],
+      [
+        "back-end/src/modules/account/account.module.ts",
+        "AccountController",
+        "Profile and password-change endpoints."
+      ]
+    ],
+    "routes": [
+      [
+        "POST",
+        "/api/assignments",
+        "AssignmentsController.create"
+      ],
+      [
+        "POST",
+        "/api/assignments/:id/approve/:learnerId",
+        "AssignmentsController.approve"
+      ],
+      [
+        "POST",
+        "/api/sessions",
+        "SessionsController.create"
+      ],
+      [
+        "POST",
+        "/api/notifications/send",
+        "NotificationsController.send"
+      ],
+      [
+        "PATCH",
+        "/api/account/profile",
+        "AccountController.profile"
+      ]
+    ],
+    "react": [
+      [
+        "Controlled teaching forms",
+        "Assignments/Sessions compose Editor with field definitions and asynchronous submission callbacks."
+      ],
+      [
+        "Recipient state and filtering",
+        "NotificationComposer receives learners/onSent, tracks all/ids/query/message, filters eligible candidates and maps checkbox rows."
+      ],
+      [
+        "Parent-child communication",
+        "onSent receives the backend recipient count. notify callbacks report saved/rejected actions; onUser updates the parent profile."
+      ],
+      [
+        "Shared effects",
+        "Modal manages focus/Escape/scroll cleanup. ThemeToggle synchronizes DOM/localStorage preference and removes its storage listener."
+      ],
+      [
+        "Validation and API actions",
+        "Busy/recipient rules disable invalid sends; server checks assignment ownership, active learners, DTO rules and profile credentials."
+      ]
+    ],
+    "flow": "Instructor actions operate on assigned learners. The frontend submits a validated form or recipient selection, then reloads saved records after the backend mutation. Shared profile/theme/modal controls provide consistent interaction across all actors.",
+    "boundary": "Coordinates learner submission/receipt views with Jeswanth and provider-owned assignment variants with Purvaj. Shared Common and Dashboard files are coordinated at function/role boundaries with the other leads, not treated as exclusively owned files."
+  },
+  {
+    "name": "Gurwinder",
+    "roll": "S20240010082",
+    "actors": [
+      "Super Admin",
+      "Payment Admin"
+    ],
+    "shared": "Authorization, commercial administration and platform reporting",
+    "scope": "Administrative oversight, commercial review and payment integration",
+    "areas": [
+      [
+        "Super Admin",
+        "Actor-specific account controls, staff approvals, configuration, audit/activity and platform reporting."
+      ],
+      [
+        "Payment Admin",
+        "Course quote/review/counter-offer/publication, revenue dashboards and instructor/provider compensation records."
+      ],
+      [
+        "Shared service boundaries",
+        "Razorpay order/signature/webhook handling, role/division/ownership enforcement and administrative reporting integration."
+      ]
+    ],
+    "frontend": [
+      [
+        "frontend/src/layouts/SuperuserDashboard.jsx",
+        [
+          "SuperuserDashboard"
+        ],
+        "Super Admin portal layout."
+      ],
+      [
+        "frontend/src/layouts/PaymentAdminDashboard.jsx",
+        [
+          "PaymentAdminDashboard"
+        ],
+        "Payment Admin portal layout."
+      ],
+      [
+        "frontend/src/components/Management.jsx",
+        [
+          "UserManager",
+          "AccountForm",
+          "Approvals",
+          "Configuration"
+        ],
+        "Super Admin actor controls, approvals and configuration."
+      ],
+      [
+        "frontend/src/components/Commerce.jsx",
+        [
+          "Revenue",
+          "InstructorPay",
+          "GatewayStatus"
+        ],
+        "Course sanction/revenue/compensation/gateway status presentation."
+      ],
+      [
+        "frontend/src/components/PlatformReports.jsx",
+        [
+          "PlatformAnalytics",
+          "SystemActivity"
+        ],
+        "Saved platform counts, charts and administrative activity."
+      ],
+      [
+        "frontend/src/services/payments.js",
+        [
+          "checkout"
+        ],
+        "Frontend checkout integration with verified backend activation."
+      ]
+    ],
+    "backend": [
+      [
+        "back-end/src/modules/superuser/superuser.controller.ts",
+        "SuperuserController",
+        "Staff approval, oversight and audit APIs."
+      ],
+      [
+        "back-end/src/modules/admin/admin.controller.ts",
+        "AdminController",
+        "Configuration and instructor-assignment operations."
+      ],
+      [
+        "back-end/src/modules/commercial/commercial.service.ts",
+        "CommercialService",
+        "Publication, offer, revenue and compensation rules."
+      ],
+      [
+        "back-end/src/modules/payments/payments.service.ts",
+        "PaymentsService",
+        "Server payment verification and activation rules."
+      ],
+      [
+        "back-end/src/modules/reports/reports.controller.ts",
+        "ReportsController",
+        "Platform/learner/course reports."
+      ],
+      [
+        "back-end/src/common/roles.guard.ts",
+        "RolesGuard",
+        "Authenticated role checks."
+      ],
+      [
+        "back-end/src/common/ownership.guard.ts",
+        "OwnershipGuard",
+        "Resource-level mutation/identity checks."
+      ]
+    ],
+    "routes": [
+      [
+        "GET",
+        "/api/reports/platform",
+        "ReportsController.platform"
+      ],
+      [
+        "POST",
+        "/api/superuser/approvals/:userId/approve",
+        "SuperuserController.approve"
+      ],
+      [
+        "PATCH",
+        "/api/admin/config",
+        "AdminController.updateConfig"
+      ],
+      [
+        "POST",
+        "/api/commercial/courses/:id/approve",
+        "CommercialController.approve"
+      ],
+      [
+        "GET",
+        "/api/commercial/revenue/summary",
+        "CommercialController.revenue"
+      ]
+    ],
+    "react": [
+      [
+        "Actor-dependent forms",
+        "AccountForm selects fields from actor state; changing actor remounts its controlled Editor."
+      ],
+      [
+        "State and callback flow",
+        "Revenue owns review/payment-dialog state and awaits commercial mutations before refreshing resource data."
+      ],
+      [
+        "Conditional role views",
+        "Super Admin and Payment Admin layouts expose their role/division operations while backend checks remain authoritative."
+      ],
+      [
+        "Resource-driven reports",
+        "PlatformAnalytics/SystemActivity receive report data as props and render current saved counts/activity, rather than fixed placeholders."
+      ],
+      [
+        "API and payment boundary",
+        "checkout coordinates frontend interaction with server-created payment orders. Internal compensation records are separate from bank transfers."
+      ]
+    ],
+    "flow": "Administrative forms invoke guarded Nest controllers/services. Commercial approval publishes an eligible provider course; report resources refresh the saved state. Payment activation requires backend verification rather than a client-only success callback.",
+    "boundary": "Coordinates User Admin account/onboarding boundaries with Bharan, provider negotiation/publication with Purvaj, learner subscription with Jeswanth, and instructor earnings/notifications with Praneeth. The two smaller administrative actors are combined to balance the actor-based allocation."
+  }
+]

@@ -1,0 +1,13 @@
+node_modules/
+**/node_modules/
+.env
+**/.env
+**/persistent-data/
+**/uploads/
+**/*.tsbuildinfo
+**/dist/
+*.log
+
+test-results/
+browser-results.json
+ui-*.png

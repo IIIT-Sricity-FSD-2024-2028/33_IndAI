@@ -1,0 +1,7 @@
+**/node_modules
+**/.env
+**/persistent-data
+**/uploads
+**/dist
+.git
+*.zip
