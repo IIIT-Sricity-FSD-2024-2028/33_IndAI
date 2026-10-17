@@ -8,6 +8,7 @@ export class CreateEnrollmentDto {
   @ApiPropertyOptional({ example: 'Admin User' }) @IsOptional() @IsString() assignedBy?: string;
 }
 export class UpdateProgressDto {
-  @ApiProperty({ example: 75, minimum: 0, maximum: 100 }) @Type(() => Number) @IsInt() @Min(0) @Max(100) progress: number;
+  @ApiPropertyOptional({ example: 75, minimum: 0, maximum: 100 }) @IsOptional() @Type(() => Number) @IsInt() @Min(0) @Max(100) progress?: number;
+  @ApiPropertyOptional() @IsOptional() @IsString() moduleId?: string;
   @ApiPropertyOptional({ enum: ['in_progress','completed','pending'] }) @IsOptional() @IsIn(['in_progress','completed','pending'] as any, { message: 'Invalid enrollment status.' }) status?: string;
 }

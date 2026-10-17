@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsIn, IsNotEmpty, IsOptional, IsString, MinLength, IsDateString } from 'class-validator';
+import { IsArray, ArrayUnique, IsBoolean, IsIn, IsNotEmpty, IsOptional, IsString, MinLength, IsDateString } from 'class-validator';
 import { NOTIFICATION_TYPES } from '../../common/validation.constants';
 
 export class CreateNotificationDto {
@@ -16,4 +16,10 @@ export class UpdateNotificationDto {
   @ApiPropertyOptional() @IsOptional() @IsString() @MinLength(1) message?: string;
   @ApiPropertyOptional({ enum: NOTIFICATION_TYPES }) @IsOptional() @IsIn(NOTIFICATION_TYPES as any) type?: string;
   @ApiPropertyOptional() @IsOptional() @IsBoolean() read?: boolean;
+}
+export class SendNotificationsDto {
+ @IsOptional() @IsBoolean() all?: boolean;
+ @IsOptional() @IsArray() @ArrayUnique() @IsString({each:true}) userIds?:string[];
+ @IsString() @MinLength(3) message:string;
+ @IsOptional() @IsString() title?:string;
 }

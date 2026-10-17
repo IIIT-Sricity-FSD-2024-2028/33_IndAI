@@ -6,7 +6,9 @@ import { ASSIGNMENT_STATUSES, DIFFICULTIES } from '../../common/validation.const
 export class CreateAssignmentDto {
   @ApiProperty({ example: 'Trading Plan', minLength: 3 }) @IsString() @MinLength(3) title: string;
   @ApiProperty({ example: 'Submit a paper trade plan.', minLength: 3 }) @IsString() @MinLength(3) description: string;
-  @ApiProperty({ example: 'u3' }) @IsString() @IsNotEmpty({ message: 'Instructor ID is required.' }) instructorId: string;
+  @ApiProperty({ example: 'u3' }) @IsOptional() @IsString() instructorId?: string;
+  @IsOptional() @IsString() providerId?: string;
+  @IsOptional() @IsString() courseId?: string;
   @ApiPropertyOptional({ type: [String], example: ['u6'] }) @IsOptional() @IsArray() @IsString({ each: true }) studentIds?: string[];
   @ApiProperty({ example: '2026-05-20', description: 'Must be a future date within 365 days.' }) @IsString() @IsNotEmpty({ message: 'Due date is required.' }) dueDate: string;
   @ApiProperty({ example: 50, minimum: 1, maximum: 200 }) @Type(() => Number) @IsInt() @Min(1) @Max(200) skillPoints: number;
@@ -15,6 +17,8 @@ export class CreateAssignmentDto {
   @ApiPropertyOptional({ example: 'Trading Challenge' }) @IsOptional() @IsString() type?: string;
 }
 export class UpdateAssignmentDto {
+ @IsOptional() @IsString() providerId?:string;
+ @IsOptional() @IsString() courseId?:string;
   @ApiPropertyOptional({ minLength: 3 }) @IsOptional() @IsString() @MinLength(3) title?: string;
   @ApiPropertyOptional({ minLength: 3 }) @IsOptional() @IsString() @MinLength(3) description?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() instructorId?: string;

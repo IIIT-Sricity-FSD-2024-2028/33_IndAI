@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, NotFoundException, Patch, Post } from '@nestjs/common';
+import { BadRequestException, Body, Controller, ForbiddenException, Get, Headers, NotFoundException, Patch, Post } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { DataStore } from '../../store/data.store';
 import { Roles } from '../../common/roles.decorator';
@@ -11,6 +11,9 @@ import { AssignInstructorDto, UpdateConfigDto } from './dto';
 export class AdminController {
   constructor(private readonly db: DataStore) {}
 
+  private requireUserAdmin(userId?:string){ const u=userId?this.db.getUser(userId):null; if(!u || !((u.role==='admin'&&u.adminTeam==='USER_ADMIN')||u.role==='superuser')) throw new ForbiddenException('User Admin or Super Admin access required.'); }
+  private requireSuper(userId?:string){ const u=userId?this.db.getUser(userId):null; if(!u || u.role!=='superuser') throw new ForbiddenException('Super Admin access required.'); }
+
   @Get('config')
   @Roles('superuser','admin')
   @ApiOperation({summary:'Get platform config'})
@@ -22,7 +25,8 @@ export class AdminController {
   @Roles('superuser','admin')
   @ApiOperation({summary:'Update platform config'})
   @ApiBody({type:UpdateConfigDto})
-  updateConfig(@Body() body:UpdateConfigDto){
+  updateConfig(@Body() body:UpdateConfigDto, @Headers('x-user-id') userId?:string){
+    this.requireSuper(userId);
     if (!body || Object.keys(body).length === 0) throw new BadRequestException('At least one config field is required.');
     Object.assign(this.db.config, body);
     return {success:true,data:this.db.config};
@@ -32,7 +36,8 @@ export class AdminController {
   @Roles('superuser','admin')
   @ApiOperation({summary:'Assign instructor to learner'})
   @ApiBody({type:AssignInstructorDto})
-  assign(@Body() body:AssignInstructorDto){
+  assign(@Body() body:AssignInstructorDto, @Headers('x-user-id') userId?:string){
+    this.requireUserAdmin(userId);
     const learner=this.db.getUser(body.learnerId);
     if(!learner || learner.role !== 'learner') throw new NotFoundException('Learner not found.');
     const instructor=this.db.getUser(body.instructorId);
