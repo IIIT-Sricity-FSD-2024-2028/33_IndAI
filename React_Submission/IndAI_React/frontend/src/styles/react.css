@@ -1,0 +1,16 @@
+body[data-page="Login"] #root,body[data-page="Register"] #root{display:contents}
+[hidden]{display:none!important}
+body[data-page="Register"] .step-content:not([hidden]){display:block}
+body[data-page="Register"] .reg-card{margin:0 auto}
+body[data-page="Login"] .login-left,body[data-page="Login"] .login-right{min-height:100vh}
+.modal{max-height:90vh;overflow:auto;width:min(880px,95vw)}
+.card + .card{margin-top:16px}
+.form-textarea{width:100%}
+.view-section:has(> .algo-workspace){overflow:visible}
+@media(max-width:760px){body[data-page="Login"]{display:block}body[data-page="Login"] .login-left{display:none}body[data-page="Login"] .login-right{width:100%;padding:32px 24px}.grid-2,.grid-3{grid-template-columns:1fr}.table-wrap{overflow-x:auto}}
+
+body[data-team="PAYMENT_ADMIN"] #tab-users,body[data-team="PAYMENT_ADMIN"] #tab-config,body[data-team="PAYMENT_ADMIN"] #tab-assignments{display:none}
+body[data-team="USER_ADMIN"] #tab-config{display:none}
+.algo-workspace .stat-value{color:#eaf0ff}
+.upload-drop-zone{border:2px dashed var(--gray-200);border-radius:20px;padding:42px 20px;text-align:center;cursor:pointer;margin:16px 0;color:var(--dark)}.upload-drop-zone:hover,.upload-drop-zone:focus{border-color:var(--orange);background:var(--orange-light)}.upload-drop-zone p{margin-top:8px;color:var(--gray-500);font-size:13px}.quiz-question{border:1px solid var(--gray-200);border-radius:12px;padding:16px;margin:20px 0}.quiz-question legend{padding:0 8px;font-weight:700}.quiz-option{display:flex;align-items:center;gap:10px;margin-bottom:10px}.modal-box.modal{background:var(--white);padding:28px;box-shadow:var(--shadow-md);max-width:880px}.modal-title{margin-bottom:20px}.modal-overlay.active{z-index:10000}.modal video{max-height:400px}.stock-workspace .card + .card{margin-top:0}
+.course-review-badges{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.course-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0 20px}.course-metrics>div{background:var(--blue-light);border-radius:8px;padding:12px;text-align:center}.course-metrics>div:nth-child(2){background:var(--green-light)}.course-metrics>div:nth-child(3){background:var(--orange-light)}.course-metrics strong{display:block;color:var(--blue);font-size:1.3rem}.course-metrics span{font-size:12px}
