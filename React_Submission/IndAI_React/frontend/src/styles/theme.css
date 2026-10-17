@@ -1,0 +1,13 @@
+#global-theme-toggle{position:fixed!important;left:18px!important;bottom:18px!important;top:auto!important;right:auto!important;z-index:25000;width:42px;height:42px;font-size:23px;background:var(--white);color:var(--dark);box-shadow:var(--shadow-sm)}
+html.dark{--white:#1e2535;--dark:#eef2ff;--gray-800:#e1e7f0;--gray-700:#d0d9e6;--gray-600:#b6c2d2;--gray-500:#a0aec2;--gray-400:#8c9bb0;--gray-300:#44516a;--gray-200:#344159;--gray-100:#263246;--gray-50:#151c2a;color-scheme:dark}
+html:not(.dark){color-scheme:light}
+html.dark .modal-box.modal,html.dark .equity-chart-panel,html.dark .quiz-question{background:var(--white);color:var(--dark);border-color:var(--gray-200)}
+body[data-role="instructor"] #view-analysis,body[data-role="instructor"] #view-earnings{width:100%;max-width:1200px;margin:0 auto;padding:0 24px 28px}
+body[data-role="instructor"] #view-earnings>.stat-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.recipient-list,.system-events{max-height:360px;overflow:auto}.recipient-list{border:1px solid var(--gray-200);padding:12px;border-radius:8px}.system-events .activity-item{padding:12px 0;border-bottom:1px solid var(--gray-100)}.system-events p{font-size:12px;color:var(--gray-500);margin-top:4px}.overview-counts p{margin-bottom:18px}.equity-chart-panel{border-radius:12px;background:var(--gray-50);padding:14px}.equity-chart-panel .form-select{display:inline-block;width:auto;padding:6px}.equity-chart-panel svg{min-height:200px}
+@media(max-width:760px){body[data-role="instructor"] #view-analysis,body[data-role="instructor"] #view-earnings{padding:0 16px 20px}body[data-role="instructor"] #view-earnings>.stat-grid{grid-template-columns:1fr}}
+html.dark .btn-primary,html.dark .btn-purple,html.dark .btn-green,html.dark .btn-orange,html.dark .btn-danger{color:#fff}
+html.dark .market-pulse-bar{background:#101827;color:#eef2ff}
+html.dark .market-pulse-live,html.dark .ticker-track{color:#eef2ff}
+html.dark .market-pulse-breadth{color:#b6c2d2}
+html.dark .card-title,html.dark .page-title,html.dark .modal-title{color:#eef2ff}

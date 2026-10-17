@@ -1,0 +1,5 @@
+import {hasToken,search,demoUniverse} from './market.mjs';
+import {sessionQuotes,sessionStatus} from './session.mjs';
+let universePromise;
+async function instruments(){if(!hasToken())return demoUniverse();universePromise??=Promise.all(['RELIANCE','TCS','INFY','HDFCBANK','ICICIBANK','SBIN'].map(async symbol=>{const r=await search(symbol,'NSE');return r.instruments.find(i=>i.trading_symbol===symbol&&i.segment==='NSE_EQ')})).then(a=>a.filter(Boolean)).catch(e=>{universePromise=null;throw e});return universePromise;}
+export async function pulse(){const list=await instruments(),quotes=await sessionQuotes(list.map(s=>s.instrument_key)),session=await sessionStatus();return {source:session.source,mode:session.mode,marketOpen:session.marketOpen,stocks:list.map(s=>{const q=quotes[s.instrument_key],previous=q?.previous_close||q?.last_price||1;return {symbol:s.trading_symbol,name:s.name,instrument_key:s.instrument_key,price:q?.last_price||0,change:Number(((q?.last_price/previous-1)*100).toFixed(2)),source:q?.source,asof:q?.asof}})}};

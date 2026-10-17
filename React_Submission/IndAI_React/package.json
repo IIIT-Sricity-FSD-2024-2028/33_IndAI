@@ -1,0 +1,21 @@
+{
+  "name": "indai-react-platform",
+  "private": true,
+  "version": "3.2.0",
+  "scripts": {
+    "setup": "node scripts/configure.mjs && npm ci && npm --prefix frontend ci && npm --prefix back-end ci",
+    "dev": "node scripts/dev.mjs",
+    "build": "npm --prefix frontend run build && npm --prefix back-end run build",
+    "start": "node scripts/start.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node tests/browser-smoke.cjs && node tests/browser-actions.cjs && node tests/homepage.cjs && node tests/browser-regression.cjs && node tests/browser-round2.cjs",
+    "demo:prepare": "node scripts/prepare-demo.mjs",
+    "test:demo:browser": "node tests/browser-demo.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  },
+  "engines": {
+    "node": ">=24 <25"
+  }
+}
