@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { NotificationsService } from './notifications.service';
 import { Roles } from '../../common/roles.decorator';
 import { ApiRoleHeader } from '../../common/swagger-role-header';
-import { CreateNotificationDto, UpdateNotificationDto } from './dto';
+import { CreateNotificationDto, SendNotificationsDto, UpdateNotificationDto } from './dto';
 @ApiTags('Notifications') @Controller('notifications') @ApiRoleHeader()
 export class NotificationsController { constructor(private readonly service:NotificationsService){}
+ @Post('send') @Roles('superuser','admin','instructor') send(@Body() b:SendNotificationsDto,@Req() req:any){return {success:true,data:this.service.send(req.user,b)};}
  @Get() @Roles('superuser','admin','instructor','provider','learner') @ApiOperation({summary:'List all notifications'}) all(){return {success:true,data:this.service.findAll()};}
  @Get('user/:userId') @Roles('superuser','admin','instructor','provider','learner') @ApiOperation({summary:'List notifications by user'}) byUser(@Param('userId') userId:string){return {success:true,data:this.service.findByUser(userId)};}
  @Get(':id') @Roles('superuser','admin','instructor','provider','learner') @ApiOperation({summary:'Get one notification'}) one(@Param('id') id:string){return {success:true,data:this.service.findOne(id)};}

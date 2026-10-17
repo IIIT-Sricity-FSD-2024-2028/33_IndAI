@@ -3,6 +3,12 @@ import { StoreModule } from '../../store/store.module';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { JwtTokenService } from './jwt-token.service';
 
-@Module({ imports: [StoreModule, UsersModule], controllers: [AuthController], providers: [AuthService] })
+@Module({
+  imports: [StoreModule, UsersModule],
+  controllers: [AuthController],
+  providers: [AuthService, JwtTokenService],
+  exports: [AuthService, JwtTokenService],
+})
 export class AuthModule {}

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsDateString, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Matches, Max, Min, MinLength } from 'class-validator';
+import { IsArray, IsBoolean, IsDateString, IsIn, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, IsUrl, Matches, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { EXPERIENCE_LEVELS, INDAI_EMAIL_REGEX, INDIAN_PHONE_REGEX, NAME_REGEX, PASSWORD_REGEX, RISK_TOLERANCES, USER_ROLES, USER_STATUSES } from '../../common/validation.constants';
 
 export class CreateUserDto {
@@ -76,17 +76,21 @@ export class CreateUserDto {
   @IsOptional() @IsUrl({ require_protocol: true, protocols: ['http','https'] }, { message: 'Website / LinkedIn must be a valid URL starting with http:// or https://.' })
   website?: string;
 
-  @ApiPropertyOptional({ example: 'Video Courses' })
-  @IsOptional() @IsString()
+  @ApiPropertyOptional({ enum:['Video Courses','Text Modules','Mixed'], example: 'Video Courses' })
+  @IsOptional() @IsIn(['Video Courses','Text Modules','Mixed'], { message: 'Invalid content type.' })
   contentType?: string;
 
-  @ApiPropertyOptional({ example: 'ADMIN-2026' })
+  @ApiPropertyOptional({ example: 'ADMIN2024', description:'Required for public User Admin / Payment Admin registration requests.' })
   @IsOptional() @IsString() @IsNotEmpty({ message: 'Authorization code is required.' })
   authCode?: string;
 
   @ApiPropertyOptional({ example: 'Full' })
   @IsOptional() @IsString() @IsNotEmpty({ message: 'Admin access level is required.' })
   accessLevel?: string;
+
+  @ApiPropertyOptional({ enum:['USER_ADMIN','PAYMENT_ADMIN'], description:'Requested/assigned admin division. Public admin requests remain pending until Super Admin approval.' })
+  @IsOptional() @IsIn(['USER_ADMIN','PAYMENT_ADMIN'], { message:'Admin team must be USER_ADMIN or PAYMENT_ADMIN.' })
+  adminTeam?: 'USER_ADMIN'|'PAYMENT_ADMIN';
 
   @ApiPropertyOptional({ enum: EXPERIENCE_LEVELS })
   @IsOptional() @IsIn(EXPERIENCE_LEVELS as any, { message: 'Invalid experience level.' })
@@ -115,14 +119,19 @@ export class CreateUserDto {
   virtualBalance?: number;
   @ApiPropertyOptional({ example: 'Beginner' }) @IsOptional() @IsString()
   experience?: string;
-  @ApiPropertyOptional({ example: 'Learn paper trading safely' }) @IsOptional() @IsString()
+  @ApiPropertyOptional({ example: 'Learn paper trading safely', maxLength:500 }) @IsOptional() @IsString() @MaxLength(500, { message:'Learning goals cannot exceed 500 characters.' })
   goals?: string;
-  @ApiPropertyOptional({ type: [String], example: [] }) @IsOptional()
+  @ApiPropertyOptional({ type: [String], example: [] }) @IsOptional() @IsArray() @IsString({ each:true })
   studentIds?: string[];
 }
 
 
 export class UpdateUserDto {
+  @IsOptional() @IsString() @MinLength(3) organization?:string;
+  @IsOptional() @IsString() @MinLength(3) expertise?:string;
+  @IsOptional() @IsString() yearsExp?:string;
+  @IsOptional() @IsString() @MinLength(3) studentId?:string;
+
   @ApiPropertyOptional() @IsOptional() @IsString() @MinLength(3) @Matches(NAME_REGEX, { message: 'First name can contain only alphabets and spaces.' }) firstName?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MinLength(3) @Matches(NAME_REGEX, { message: 'Last name can contain only alphabets and spaces.' }) lastName?: string;
   @ApiPropertyOptional() @IsOptional() @Matches(INDAI_EMAIL_REGEX, { message: 'Use a Gmail address or an email ending in .in.' }) email?: string;
@@ -133,4 +142,6 @@ export class UpdateUserDto {
   @ApiPropertyOptional() @IsOptional() @IsString() instructorId?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MinLength(3) @Matches(/^[^0-9].*$/, { message: 'Institution name cannot start with a number.' }) institution?: string;
   @ApiPropertyOptional() @IsOptional() @IsString() @MinLength(3) major?: string;
+  @ApiPropertyOptional({ description:'Course Provider verification flag. Super Admin sets this after verification.' }) @IsOptional() @IsBoolean() providerVerified?: boolean;
+  @ApiPropertyOptional({ enum:['USER_ADMIN','PAYMENT_ADMIN'] }) @IsOptional() @IsIn(['USER_ADMIN','PAYMENT_ADMIN']) adminTeam?: 'USER_ADMIN'|'PAYMENT_ADMIN';
 }

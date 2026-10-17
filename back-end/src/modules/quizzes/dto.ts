@@ -22,5 +22,11 @@ export class UpdateQuizDto {
 }
 export class SubmitQuizDto {
   @ApiProperty({ example: 'u6' }) @IsString() @IsNotEmpty({ message: 'Learner ID is required.' }) learnerId: string;
-  @ApiProperty({ type: [Number], example: [0,1,2] }) @IsArray() @IsInt({ each: true }) answers: number[];
+  @ApiProperty({ type: [Number], example: [0,1,2] }) @IsOptional() @IsArray() @IsInt({ each: true }) answers?: number[];
+  @IsOptional() @IsString() @MinLength(3) submissionText?:string;
+}
+
+export class GradeQuizDto {
+ @Type(()=>Number) @IsInt() @Min(0) @Max(100) score:number;
+ @IsOptional() @IsString() feedback?:string;
 }

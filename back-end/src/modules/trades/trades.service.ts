@@ -12,7 +12,7 @@ export class TradesService {
     const exists=this.db.stocks.some(s=>s.symbol===sym);
     if(!exists) throw new NotFoundException('Stock symbol not found.');
     const stock=this.db.getStock(sym); if(!stock) throw new NotFoundException('Stock not found.');
-    const qty=Number(dto.qty); const price=Number(dto.price || stock.price);
+    const qty=Number(dto.qty); const price=Number(stock.price);
     if(!Number.isInteger(qty) || qty <= 0) throw new BadRequestException('Quantity must be a positive whole number.');
     if(!(price > 0)) throw new BadRequestException('Price must be positive.');
     const total=Number((qty*price).toFixed(2));
