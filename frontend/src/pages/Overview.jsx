@@ -156,3 +156,40 @@ function LearnerOverview({ user }) {
     </>
   );
 }
+function InstructorSummary() {
+  const query = useResource("/trading/account");
+  const roster = useResource("/teaching/learners");
+  return (
+    <>
+      <div className="overview-banner">
+        <div>
+          <span className="eyebrow">INSTRUCTOR PAPER ACCOUNT</span>
+          <div className="hero-value">{rupees(query.data?.available, 0)}</div>
+          <p>Available paper cash · initial funding ₹10,00,000</p>
+        </div>
+        <PrimaryLink to="/trading">Open trading workspace</PrimaryLink>
+      </div>
+      <div className="tile-list">
+        <Tile
+          tile={{
+            to: "/learners",
+            icon: "people",
+            title: "My learners",
+            copy: roster.data
+              ? roster.data.length +
+                " active learners · reviewed work and paper-fund awards"
+              : "View your active roster and award paper funds.",
+          }}
+        />
+        <Tile
+          tile={{
+            to: "/quizzes",
+            icon: "tasks",
+            title: "Quizzes",
+            copy: "Create assessments and review learner responses.",
+          }}
+        />
+      </div>
+    </>
+  );
+}
