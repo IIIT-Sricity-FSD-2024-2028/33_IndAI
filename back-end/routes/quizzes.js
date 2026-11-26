@@ -11,7 +11,7 @@ const questionSchema=form({kind:z.enum(['mcq','short','long']),prompt:words(2000
 });
 const quizSchema=form({title:words(120,4),description:z.string().trim().max(2000),course:id.optional(),assignment:id.optional(),
   recipients:z.array(id).max(100).optional(),due:numeric(1,4102444800000).optional(),questions:z.array(questionSchema).min(1).max(50)});
-const answersSchema=form({answers:z.record(z.string().max(10000)).refine(a=>Object.keys(a).length<=50,'Too many answers.')});
+const answersSchema=form({answers:z.record(z.string(),z.string().max(10000)).refine(a=>Object.keys(a).length<=50,'Too many answers.')});
 const questions=(db,quiz)=>db.all('SELECT * FROM quiz_questions WHERE quiz=? ORDER BY position',quiz).map(q=>({...q,options:q.options?JSON.parse(q.options):null}));
 function validateAnswers(items,answers,final=false) {
   ensure(Object.keys(answers).every(key=>items.some(q=>String(q.id)===key)),422,'INVALID_ANSWER','An answer references an unknown question.');

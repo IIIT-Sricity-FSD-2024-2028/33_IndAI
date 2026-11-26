@@ -1,0 +1,12 @@
+# Domain and workflow rules
+
+- Free uses the existing basic entitlement. Email verification creates a pending application, and administrator approval opens Free access. Suspension and archival override ordinary access.
+- Pro includes subscription courses and course provider requests for learning plans and milestones. Plus adds personal instructor requests. Guidance starts after acceptance. Capacity and eligibility are rechecked transactionally.
+- Initial paper funding is â‚¹1 lakh for Free, â‚¹1.5 lakh for Pro, â‚¹2 lakh for Plus, and â‚¹10 lakh for instructors. Higher plan funding is credited once through the ledger. Downgrades preserve the simulated trading history and existing account cash.
+- An instructor may reward a currently assigned learner's reviewed submission. The amount is bounded by a total â‚¹10,000 per learner over a rolling seven days. Each submission is rewarded at most once. Award history is retained across resets, plan changes, and reassignment.
+- Course content moves through draft, review, published, and archived. Resources follow course enrollment and plan access, assignment relationships, or quiz scope. Reviewed submission resources cannot be replaced.
+- A quiz is authored as a draft with MCQ, short-answer, and long-answer questions. Its scope is one course, one assignment, or a selected instructor roster. Publication freezes the questions. Draft responses are private to their learner. Final submissions are unique and immutable. MCQs auto-score, and written answers await a manual review.
+- Providers own their course content and related quizzes. One-time licensing terms move from submitted to agreed, countered, or rejected. The provider must accept a counteroffer. Agreed terms and a content approval are both required for publication. Each course can accrue one licensing earning and a recorded external payment reference.
+- Admin can inspect every actor and manage ordinary member accounts. Super Admin additionally manages privileged accounts and role permissions. Status, session, permission, profile, intervention, and funding changes are audited.
+- Admin and Super Admin use the operations support queue and ticket conversations.
+- A pending paper order reserves cash or shares. Full fills post one execution and ledger entry. Linked exits share a reservation and cancel their sibling on fill. Every financial operation uses integer paise and a database transaction.

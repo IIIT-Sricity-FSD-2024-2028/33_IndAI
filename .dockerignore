@@ -1,7 +1,17 @@
 **/node_modules
 **/.env
+**/.env.*
+!**/.env.example
 **/persistent-data
 **/uploads
 **/dist
+**/*.sqlite*
+data
 .git
+legacy
+back-end/src
+back-end/algo
+back-end/data
 *.zip
+*.log
+test-results

@@ -83,7 +83,8 @@ export function createApp(db,{ serve=false, ready=()=>true }={}) {
     app.use(express.static(dist,{index:false}));
     app.get('/{*path}',(req,res,next) => {
       if (!req.accepts('html') || /\.[a-z\d]+$/i.test(req.path)) return next();
-      res.sendFile(index);
+      // Only this fixed build entry is allowed through hidden checkout parents.
+      res.sendFile(index,{dotfiles:'allow'});
     });
   }
   app.use((error,req,res,next) => {

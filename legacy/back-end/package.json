@@ -1,0 +1,35 @@
+{
+  "name": "indai-review4-backend",
+  "version": "1.0.0",
+  "description": "IndAI NestJS backend with JWT authentication, RBAC, Razorpay, B2B/B2C revenue model and minute-stock simulation.",
+  "scripts": {
+    "start": "node dist/main.js",
+    "start:dev": "node ./node_modules/@nestjs/cli/bin/nest.js start --watch",
+    "build": "node ./node_modules/@nestjs/cli/bin/nest.js build",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint \"{src,test}/**/*.ts\" --fix",
+    "start:prod": "node dist/main.js"
+  },
+  "dependencies": {
+    "@nestjs/common": "^12.0.1",
+    "@nestjs/core": "^12.0.1",
+    "@nestjs/platform-express": "^12.0.1",
+    "@nestjs/swagger": "^12.0.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "multer": "^2.3.0",
+    "nodemailer": "^10.1.2",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^12.0.0",
+    "@nestjs/schematics": "^12.0.0",
+    "@nestjs/testing": "^12.0.1",
+    "@types/express": "^4.17.21",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.10.2",
+    "typescript": "^6.0.0"
+  }
+}

@@ -1,21 +1,37 @@
 {
   "name": "indai-react-platform",
   "private": true,
-  "version": "3.2.0",
-  "scripts": {
-    "setup": "node scripts/configure.mjs && npm ci && npm --prefix frontend ci && npm --prefix back-end ci",
-    "dev": "node scripts/dev.mjs",
-    "build": "npm --prefix frontend run build && npm --prefix back-end run build",
-    "start": "node scripts/start.mjs",
-    "test": "node --test tests/*.test.mjs",
-    "test:browser": "node tests/browser-smoke.cjs && node tests/browser-actions.cjs && node tests/homepage.cjs && node tests/browser-regression.cjs && node tests/browser-round2.cjs",
-    "demo:prepare": "node scripts/prepare-demo.mjs",
-    "test:demo:browser": "node tests/browser-demo.cjs"
-  },
-  "devDependencies": {
-    "playwright": "1.56.1"
-  },
+  "version": "3.3.0",
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "back-end"
+  ],
   "engines": {
     "node": ">=24 <25"
+  },
+  "scripts": {
+    "setup": "node scripts/install.mjs",
+    "dev": "node scripts/dev.js",
+    "build": "npm --workspace frontend run build && npm --workspace back-end run build",
+    "start": "node back-end/server.js --serve",
+    "seed": "node scripts/setup.js --seed",
+    "test": "vitest run",
+    "test:browser": "node tests/browser.js",
+    "test:e2e": "node tests/browser.js",
+    "test:demo:browser": "node tests/browser.js",
+    "demo:prepare": "node scripts/setup.js --seed",
+    "test:smoke": "node scripts/smoke.js",
+    "test:catalog-ui": "node scripts/check-catalog-ui.js",
+    "test:trading-ui": "node tests/trading-browser.js",
+    "staff:provision": "node scripts/provision-staff.js",
+    "stocks:sync": "node scripts/sync-instruments.js",
+    "verify:submission": "node scripts/verify-submission.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1",
+    "supertest": "7.3.2",
+    "vite": "7.3.8",
+    "vitest": "5.1.2"
   }
 }
