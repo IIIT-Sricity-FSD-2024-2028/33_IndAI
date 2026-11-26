@@ -193,3 +193,124 @@ function InstructorSummary() {
     </>
   );
 }
+export function Overview() {
+  const user = useOutletContext();
+  if (user.status !== "approved")
+    return (
+      <>
+        <Heading
+          title="Application status"
+          detail={"Signed in as " + user.email}
+        />
+        <section className="panel inset narrow">
+          <Status>{user.status}</Status>
+          <h2>
+            {user.status === "pending"
+              ? "Awaiting administrator review"
+              : user.status === "rejected"
+                ? "Application declined"
+                : "Account access suspended"}
+          </h2>
+          <p>
+            {user.application?.note ||
+              (user.status === "pending"
+                ? "Your email is verified. An administrator will review your application before Basic access opens."
+                : "Contact support if you need help with your account.")}
+          </p>
+          {user.application && (
+            <p className="muted">
+              Submitted {shortDate(user.application.created)}
+            </p>
+          )}
+          {user.status === "rejected" && (
+            <Action title="Resubmit application" path="/applications" />
+          )}
+        </section>
+      </>
+    );
+  if (user.role === "provider")
+    return (
+      <>
+        <Heading
+          title={"Welcome, " + user.name.split(" ")[0]}
+          detail="Your courses, learner guidance, and commercial workspace."
+        />
+        <div className="tile-list narrow">
+          <Tile
+            tile={{
+              to: "/guidance",
+              icon: "people",
+              title: "Learner requests",
+              copy: "Manage Pro and Plus learner relationships.",
+            }}
+          />
+          <Tile
+            tile={{
+              to: "/tasks",
+              icon: "tasks",
+              title: "Learning plans",
+              copy: "Plan courses and review milestones.",
+            }}
+          />
+          <Tile
+            tile={{
+              to: "/provider",
+              icon: "portfolio",
+              title: "Provider workspace",
+              copy: "Course proposals, engagement, and settlement records.",
+            }}
+          />
+          <Tile
+            tile={{
+              to: "/courses",
+              icon: "book",
+              title: "My courses",
+              copy: "Create lessons and attach videos and materials.",
+            }}
+          />
+          <Tile
+            tile={{
+              to: "/quizzes",
+              icon: "tasks",
+              title: "Course quizzes",
+              copy: "Create assessments and review responses.",
+            }}
+          />
+        </div>
+      </>
+    );
+  const learner = user.role === "student";
+  return (
+    <>
+      <Heading
+        title={"Welcome, " + user.name.split(" ")[0]}
+        detail={
+          learner
+            ? "Review your account and continue your practice."
+            : "Review your open work and recent updates."
+        }
+      />
+      {learner ? (
+        <LearnerOverview user={user} />
+      ) : (
+        <>
+          {user.role === "instructor" && <InstructorSummary />}
+          <div className="tile-list narrow">
+            {allTiles
+              .filter((tile) =>
+                ["admin", "superadmin"].includes(user.role)
+                  ? tile.to === "/admin"
+                  : ["/guidance", "/tasks"].includes(tile.to) ||
+                    (user.role === "instructor" && tile.to === "/trading") ||
+                    (user.role === "instructor" && tile.to === "/courses"),
+              )
+              .map((tile) => (
+                <Tile key={tile.to} tile={tile} />
+              ))}
+            <Empty>Open notifications for recent activity.</Empty>
+          </div>
+        </>
+      )}
+    </>
+  );
+}
