@@ -1,69 +1,42 @@
-# API overview
+# API routes
 
-The backend applies the `/api` prefix. Swagger UI is available at http://localhost:3000/api/docs while the server is running. Controllers define HTTP routes and DTOs; services and selected controllers implement business rules. Some modules intentionally keep their business logic in the controller file.
+The API is served from `/api`. Protected routes use the HttpOnly session cookie. State-changing application requests require `X-IndAI-Request: 1` with an allowed origin. The Razorpay webhook uses the signed raw body. Monetary amounts are integer paise. Timestamps are epoch milliseconds except for chart intervals, which use day strings or epoch seconds. List endpoints accept a zero-based page parameter where supported.
 
-## Identity and request handling
+| Area | Routes and inputs |
+| --- | --- |
+| Session | `GET /config`, `GET /me`, `POST /auth/register` (name, email, password, confirmation), `/auth/resend` (email, password), `/auth/verify` (email, code), `/auth/login` (email, password, optional mfa), `/auth/logout`, `/auth/recovery` (email), `/auth/reset` (email, code, password, confirmation) |
+| Applications | `POST /applications` (resubmit), `POST /admin/applications/:id` (decision and optional approval note or required rejection reason) |
+| Administration | `GET /admin?queue=users&search=&page=0` also accepts staff, courses, payments, support, and audit depending on role. `POST /admin/staff/:id/decision` (decision, reason), `POST /admin/users/:id/suspend` (reason). |
+| Guidance | `GET /staff?kind=instructor` or provider, `GET /guidance`, `POST /guidance` (kind, staff, goal), `POST /guidance/:id/decision` (action, optional reason) |
+| Billing | `GET /plans`, `POST /payments` (plan, provider), `POST /payments/:id/demo`, `/payments/:id/discard-demo`, `/payments/:id/reconcile` (optional payment/signature pair), `/payments/webhook`, `/admin/payments/:id/refund` (reason) |
+| Courses | `GET /courses`, `GET /courses/:id`, `POST /courses`, `PUT /courses/:id` (title, description, outcomes, difficulty, prerequisites, policy), `POST /courses/:id/lessons` (module, title, body), `/courses/:id/submit`, `/courses/:id/review` (action, optional reason), `/courses/:id/enroll`, `/courses/:id/lessons/:lesson/complete` |
+| Tasks | `GET /tasks`, `POST /assignments` or `/milestones` (relationship, title, body, due), `PUT /learning-plans/:id` (title, body), `POST /assignments/:id/submit` (body), `/submissions/:id/review` (feedback), `/milestones/:id/state` (state) |
+| Market catalogue and quotes | `GET /trading/catalog` returns full metadata, count and snapshot time; `GET /trading/quotes?symbols=` accepts 1–500 comma-separated URL-encoded symbols and returns only their quotes. |
+| Market | `GET /trading/instruments?q=`, `/trading/instruments/:symbol`, `/trading/instruments/:symbol/candles?range=1D` |
+| Paper account | `GET /trading/account`, `/trading/ledger`, `/trading/orders?working=true`, `POST /trading/orders` (symbol, clientKey UUID, side, type, qty, validity, optional price, trigger, sl, tp), `/trading/orders/:id/cancel`, `/trading/reset` (confirm) |
+| Watchlists and journal | `GET /trading/watchlists`, `POST /trading/watchlists` (name), `PUT /trading/watchlists/:id` (name, symbols in order), `DELETE /trading/watchlists/:id`, `GET /trading/journal`, `POST /trading/journal` (tag, body, optional order) |
+| Notifications | `GET /notifications`, `POST /notifications/:id/read` |
+| Support | `GET /support`, `POST /support` (subject, body), `GET /support/:id`, `POST /support/:id/reply` (body), `POST /support/:id/close` |
+| Operations | `GET /health`, `GET /ready` |
 
-The React api helper adds the Bearer access token and includes credentials. JSON requests use application/json; FormData uploads let the browser select the multipart boundary. AuthController attaches the refresh token as an HttpOnly cookie.
+Errors contain code, message, requestId, and optional fields. Each request also receives an X-Request-ID header.
 
-Global JwtAuthGuard, RolesGuard and OwnershipGuard are registered in AppModule. Division-specific rules such as User Admin intake or Payment Admin commercial operations are also applied in controllers/services. A caller-selected user ID is not proof of identity or permission. The global ValidationPipe transforms values, whitelists DTO properties and rejects unexpected properties.
+## Member, resource, quiz, and provider endpoints
 
-Successful responses generally use success/data envelopes. Rejected requests expose errors to the React helper, which throws a message used by form/notice state. Successful platform mutations pass through PersistenceInterceptor; virtual accounts also persist in their own engine store.
+| Area | Routes |
+| --- | --- |
+| Members | GET /members with search, role, status, and page; GET /members/:id with page; POST /members to create pending staff; PUT /members/:id/profile; POST /members/:id/status, /permissions, /revoke-sessions, /reset-password, /notes |
+| Instructor roster and funding | GET /guidance/active; GET /teaching/learners; POST /teaching/learners/:id/award with submission, amount in paise, and reason |
+| Resources | GET /resources/:kind/:id; POST /resources/:kind/:id/upload with the binary body, Content-Type, and URI-encoded X-File-Name; GET /resource-files/:id with optional byte Range; DELETE /resource-files/:id |
+| Quizzes | GET /quizzes and /quizzes/:id; POST /quizzes with title, description, scope, due, and questions; PUT /quizzes/:id for draft edits; POST /quizzes/:id/publish and /archive; PUT /quizzes/:id/draft with answers keyed by question ID; POST /quizzes/:id/submit; GET /quizzes/:id/attempts; POST /quiz-attempts/:id/grade |
+| Providers | GET /provider; GET and POST /courses/:id/terms; POST /courses/:id/terms/respond |
+| Commerce | GET /commerce; POST /commerce/:id/decision; POST /commerce/:id/earning; POST /settlements/:id/paid with a completed external transfer reference |
 
-## Primary actor interfaces
+Resource kinds are course, lesson, assignment, submission, and quiz. Each target independently authorizes access. Uploads accept PDF, MP4, and WebM up to 100 MB and ten resources per target. A resource URL identifies an authorized link, and possession of the URL grants no access by itself.
 
-| Method and route template | Handler | Actor integration |
-|---|---|---|
-| `POST /api/auth/login` | `AuthController.login` | User Admin / Public pages, authentication and registration |
-| `POST /api/auth/register` | `AuthController.register` | User Admin / Public pages, authentication and registration |
-| `GET /api/auth/me` | `AuthController.me` | User Admin / Public pages, authentication and registration |
-| `POST /api/institutes/:id/preview` | `InstitutesController.preview` | User Admin / Public pages, authentication and registration |
-| `POST /api/institutes/:id/import` | `InstitutesController.importCsv` | User Admin / Public pages, authentication and registration |
-| `POST /api/algo/orders` | `AlgoController.route` | Learner / Learner-facing trading and learning integration |
-| `GET /api/algo/portfolio` | `AlgoController.route` | Learner / Learner-facing trading and learning integration |
-| `POST /api/watchlists/:userId/items` | `WatchlistsController.addItem` | Learner / Learner-facing trading and learning integration |
-| `POST /api/enrollments` | `EnrollmentsController.create` | Learner / Learner-facing trading and learning integration |
-| `PATCH /api/enrollments/:id/progress` | `EnrollmentsController.update` | Learner / Learner-facing trading and learning integration |
-| `POST /api/courses` | `CoursesController.create` | Course Provider / Provider-facing content and assessment lifecycle |
-| `POST /api/course-modules/upload-video` | `CourseModulesController.uploadVideo` | Course Provider / Provider-facing content and assessment lifecycle |
-| `POST /api/quizzes` | `QuizzesController.create` | Course Provider / Provider-facing content and assessment lifecycle |
-| `POST /api/quizzes/:id/attempts/:attemptId/grade` | `QuizzesController.grade` | Course Provider / Provider-facing content and assessment lifecycle |
-| `POST /api/commercial/courses/:id/submit-review` | `CommercialController.submit` | Course Provider / Provider-facing content and assessment lifecycle |
-| `POST /api/assignments` | `AssignmentsController.create` | Instructor / Shared profile, theme and interaction components |
-| `POST /api/assignments/:id/approve/:learnerId` | `AssignmentsController.approve` | Instructor / Shared profile, theme and interaction components |
-| `POST /api/sessions` | `SessionsController.create` | Instructor / Shared profile, theme and interaction components |
-| `POST /api/notifications/send` | `NotificationsController.send` | Instructor / Shared profile, theme and interaction components |
-| `PATCH /api/account/profile` | `AccountController.profile` | Instructor / Shared profile, theme and interaction components |
-| `GET /api/reports/platform` | `ReportsController.platform` | Super Admin, Payment Admin / Authorization, commercial administration and platform reporting |
-| `POST /api/superuser/approvals/:userId/approve` | `SuperuserController.approve` | Super Admin, Payment Admin / Authorization, commercial administration and platform reporting |
-| `PATCH /api/admin/config` | `AdminController.updateConfig` | Super Admin, Payment Admin / Authorization, commercial administration and platform reporting |
-| `POST /api/commercial/courses/:id/approve` | `CommercialController.approve` | Super Admin, Payment Admin / Authorization, commercial administration and platform reporting |
-| `GET /api/commercial/revenue/summary` | `CommercialController.revenue` | Super Admin, Payment Admin / Authorization, commercial administration and platform reporting |
+Quiz question types are mcq, short, and long. MCQs carry distinct options and a zero-based correct option index in author requests. Student views exclude correct answers before final grading. Every question carries a points value and required flag. Course providers choose an owned course as scope. Instructors may choose an owned course, an assignment, or an explicit list of active learners. Final submission is unique per learner and quiz.
 
-## Learning and media routes
+The member permissions route requires Super Admin and records a reason. Admin can view all roles and manage ordinary accounts. Funding awards require a current instructor relationship, reviewed submission evidence, and the rolling weekly allowance.
 
-| Method and route | Purpose |
-|---|---|
-| GET /api/courses | Course records available through authenticated course APIs |
-| GET /api/courses/:courseId/modules | Present permitted lesson records/signed access links |
-| POST /api/courses/:courseId/modules | Add a course module |
-| PATCH /api/course-modules/:id | Edit lesson metadata |
-| POST /api/course-modules/upload-pdf | Upload a PDF lesson |
-| POST /api/quizzes/upload-pdf | Create/update a PDF question paper |
-| POST /api/quizzes/:id/submit | Submit MCQ indexes or written PDF answers |
-| GET /api/notifications/user/:userId | Saved user notifications |
-| POST /api/assignments/:id/submit | Learner assignment submission |
 
-CourseModulesController is in back-end/src/modules/course-modules/course-modules.controller.ts; QuizzesController is in back-end/src/modules/quizzes/quizzes.controller.ts. Learner presentation strips MCQ correct-answer fields; written PDF answers are manually graded. Publication, enrollment, tier and ownership checks apply to the relevant course actions.
-
-Signed upload URLs expire and require reopening content to renew access. Bare upload URLs are rejected. Video/PDF transport support does not guarantee an arbitrary codec or malformed PDF will render in the browser.
-
-## Virtual trading
-
-AlgoController in back-end/src/modules/algo/algo.module.ts uses an authenticated wildcard route and delegates to routes in back-end/algo/server.mjs within a per-user context. This keeps manual orders, account state, quotes/history and portfolio valuation aligned with the verified identity. The engine is a virtual-account simulator; it does not execute broker orders.
-
-## Provider integrations
-
-Razorpay order/signature/capture/webhook handling is implemented in the payment module. Account activation depends on verified backend data. Upstox is an optional read-only market-data provider. SMTP delivery is used for configured institution mail; the in-app notification API is a different workflow.
-
-Use Swagger and the actual DTO/controller source for complete parameters and role restrictions. Never include access tokens, JWT secrets or payment/mail private keys in public API examples.
+When the exchange is closed, Upstox quotes can include mode=replay, status=replay, recordedTime, replayDay, replayIndex, replayCount, replayCycle and replayBar. time remains the current refresh timestamp. Intraday candle responses use the visible prefix of that stock's recorded session. Orders expose feed_mode and replay_day; these are server-controlled and are not accepted as client order fields. Replay sessions never execute live orders or orders from another recorded day.

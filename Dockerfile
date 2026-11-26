@@ -1,17 +1,22 @@
 FROM node:24-bookworm-slim AS build
 WORKDIR /app
-COPY frontend/package*.json ./frontend/
-COPY back-end/package*.json ./back-end/
-RUN npm --prefix frontend ci && npm --prefix back-end ci
+COPY package.json package-lock.json ./
+COPY frontend/package.json ./frontend/
+COPY back-end/package.json ./back-end/
+RUN npm ci
 COPY frontend ./frontend
 COPY back-end ./back-end
-RUN npm --prefix frontend run build && npm --prefix back-end run build && npm --prefix back-end prune --omit=dev
+RUN npm run build && npm prune --omit=dev
+
 FROM node:24-bookworm-slim
-ENV NODE_ENV=production PORT=3000 DATA_DIR=/app/back-end/persistent-data DEMO_MODE=false
-WORKDIR /app/back-end
-COPY --from=build --chown=node:node /app/back-end ./
-COPY --from=build --chown=node:node /app/frontend/dist /app/frontend/dist
-RUN mkdir -p persistent-data && chown -R node:node /app
+WORKDIR /app
+ENV NODE_ENV=production PORT=3000 DATA_DIR=/app/data DEMO_MODE=false
+COPY --from=build --chown=node:node /app/package.json /app/package-lock.json ./
+COPY --from=build --chown=node:node /app/node_modules ./node_modules
+COPY --from=build --chown=node:node /app/back-end ./back-end
+COPY --from=build --chown=node:node /app/frontend/dist ./frontend/dist
+RUN mkdir -p data && chown -R node:node data
 USER node
 EXPOSE 3000
-CMD ["node","dist/main.js"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s CMD node -e "fetch('http://127.0.0.1:'+process.env.PORT+'/api/ready').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+CMD ["node","back-end/server.js","--serve"]

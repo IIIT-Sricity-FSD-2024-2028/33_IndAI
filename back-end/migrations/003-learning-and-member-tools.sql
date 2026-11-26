@@ -1,0 +1,17 @@
+ALTER TABLE accounts ADD COLUMN funded INTEGER NOT NULL DEFAULT 0;
+UPDATE accounts SET funded=coalesce((SELECT max(delta) FROM ledger WHERE ledger.user_id=accounts.user_id AND reason='Initial paper cash'),10000000);
+CREATE TABLE capital_awards(id INTEGER PRIMARY KEY,student INTEGER NOT NULL REFERENCES users(id),instructor INTEGER NOT NULL REFERENCES users(id),submission INTEGER NOT NULL UNIQUE REFERENCES submissions(id),amount INTEGER NOT NULL CHECK(amount>0 AND amount<=1000000),reason TEXT NOT NULL,created INTEGER NOT NULL);
+CREATE INDEX awards_window ON capital_awards(student,created);
+CREATE TABLE resources(id INTEGER PRIMARY KEY,owner INTEGER NOT NULL REFERENCES users(id),name TEXT NOT NULL,mime TEXT NOT NULL,size INTEGER NOT NULL CHECK(size>0 AND size<=104857600),bytes BLOB NOT NULL,created INTEGER NOT NULL);
+CREATE TABLE resource_links(id INTEGER PRIMARY KEY,resource INTEGER NOT NULL REFERENCES resources(id),kind TEXT NOT NULL CHECK(kind IN ('course','lesson','assignment','submission','quiz')),target INTEGER NOT NULL,UNIQUE(resource,kind,target));
+CREATE INDEX resource_targets ON resource_links(kind,target);
+CREATE TABLE quizzes(id INTEGER PRIMARY KEY,owner INTEGER NOT NULL REFERENCES users(id),course INTEGER REFERENCES courses(id),assignment INTEGER REFERENCES assignments(id),title TEXT NOT NULL,description TEXT NOT NULL,state TEXT NOT NULL CHECK(state IN ('draft','published','archived')),due INTEGER,created INTEGER NOT NULL,CHECK(course IS NULL OR assignment IS NULL));
+CREATE TABLE quiz_questions(id INTEGER PRIMARY KEY,quiz INTEGER NOT NULL REFERENCES quizzes(id) ON DELETE CASCADE,position INTEGER NOT NULL,kind TEXT NOT NULL CHECK(kind IN ('mcq','short','long')),prompt TEXT NOT NULL,options TEXT,correct INTEGER,points INTEGER NOT NULL CHECK(points>0),required INTEGER NOT NULL DEFAULT 1,UNIQUE(quiz,position));
+CREATE TABLE quiz_recipients(quiz INTEGER REFERENCES quizzes(id),student INTEGER REFERENCES users(id),PRIMARY KEY(quiz,student));
+CREATE TABLE quiz_drafts(quiz INTEGER REFERENCES quizzes(id),student INTEGER REFERENCES users(id),answers TEXT NOT NULL,updated INTEGER NOT NULL,PRIMARY KEY(quiz,student));
+CREATE TABLE quiz_attempts(id INTEGER PRIMARY KEY,quiz INTEGER NOT NULL REFERENCES quizzes(id),student INTEGER NOT NULL REFERENCES users(id),state TEXT NOT NULL CHECK(state IN ('submitted','graded')),score INTEGER,maximum INTEGER NOT NULL,created INTEGER NOT NULL,graded INTEGER,UNIQUE(quiz,student));
+CREATE TABLE quiz_answers(attempt INTEGER REFERENCES quiz_attempts(id),question INTEGER REFERENCES quiz_questions(id),answer TEXT NOT NULL,score INTEGER,feedback TEXT,PRIMARY KEY(attempt,question));
+CREATE TABLE course_terms(course INTEGER PRIMARY KEY REFERENCES courses(id),requested INTEGER NOT NULL CHECK(requested>=0),offered INTEGER CHECK(offered>=0),state TEXT NOT NULL CHECK(state IN ('submitted','countered','agreed','rejected')),note TEXT NOT NULL,updated INTEGER NOT NULL);
+CREATE TABLE provider_settlements(id INTEGER PRIMARY KEY,course INTEGER NOT NULL REFERENCES courses(id),provider INTEGER NOT NULL REFERENCES users(id),amount INTEGER NOT NULL CHECK(amount>0),state TEXT NOT NULL CHECK(state IN ('earned','paid')),reference TEXT,created INTEGER NOT NULL,paid INTEGER);
+CREATE UNIQUE INDEX one_course_earning ON provider_settlements(course);
+CREATE TABLE admin_notes(id INTEGER PRIMARY KEY,member INTEGER NOT NULL REFERENCES users(id),author INTEGER NOT NULL REFERENCES users(id),body TEXT NOT NULL,created INTEGER NOT NULL);

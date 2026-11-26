@@ -1,34 +1,14 @@
-# Team responsibilities
+# Team module ownership
 
-The implementation is organized by actor with coordinated shared-component boundaries. Learner and Course Provider each form a dedicated work package because trading/charts and content/media/assessments are substantial workflows. Public onboarding balances the User Admin package; shared account UI balances Instructor; Super Admin and Payment Admin are combined into one administrative package.
+| Account | Module | Backend import |
+| --- | --- | --- |
+| Jeswanth09052007 | Learner | `a742bf187d1c8193c0a6e21d66b9918db3e0cdb0` |
+| me-coder7 | Instructor | `770eed9e14efcc49f28e823b0afad93454b8bcda` |
+| Purvaj-P22 | Course Provider | `cae74427a7da476ffa4a0d0db2b2650934fbe6e2` |
+| BharanRajP | User Admin + Super Admin | `ec31fcc5e90c705fb329eeaa0ddbe2ac309ab939` |
+| gurwinder-s24 | Payment Admin | `42e271bb30c9c4cc193ca84a23691cc0ddaaac4a` |
 
-| Member | Roll number | Primary actor(s) | Additional integration scope |
-|---|---|---|---|
-| Bharan | S20240010176 | User Admin | Public pages, authentication and registration |
-| Jeswanth | S20240010202 | Learner | Learner-facing trading and learning integration |
-| Purvaj | S20240010178 | Course Provider | Provider-facing content and assessment lifecycle |
-| Praneeth | S20240010179 | Instructor | Shared profile, theme and interaction components |
-| Gurwinder | S20240010082 | Super Admin, Payment Admin | Authorization, commercial administration and platform reporting |
-
-## Shared boundaries
-
-| Boundary | Coordination |
-|---|---|
-| Identity, onboarding and role/division permissions | Bharan and Gurwinder |
-| Provider publication and learner enrollment/access | Purvaj, Gurwinder and Jeswanth |
-| Instructor assignments/sessions and learner participation | Praneeth and Jeswanth |
-| Provider-owned assignments and common assessment controls | Purvaj and Praneeth |
-| Profile/theme/forms/dialogs used in every portal | Praneeth coordinates with all actor leads |
-| Dashboard/Management/Learning/Commerce shared files | Edits are coordinated by component/function and actor branch |
-
-Allocation reflects workflow complexity rather than equal numbers of actors or files. Shared infrastructure, API contracts and cross-actor integration are team responsibilities. Contribution records describe these module responsibilities and the actual implementation interfaces; Git history records specific committed changes.
-
-## Individual records
-
-- [Bharan — S20240010176](../individual-contributions/Bharan.md)
-- [Jeswanth — S20240010202](../individual-contributions/Jeswanth.md)
-- [Purvaj — S20240010178](../individual-contributions/Purvaj.md)
-- [Praneeth — S20240010179](../individual-contributions/Praneeth.md)
-- [Gurwinder — S20240010082](../individual-contributions/Gurwinder.md)
-
-The [machine-readable scope](team-responsibilities.json) supports source-path and symbol validation.
+Shared runtime, package, archival, documentation and verification changes are
+recorded separately by coordinator Praneeth. The files above are factual import
+records, not an assertion of future work or equal line counts. Existing frontend
+commits and all earlier repository history are preserved.

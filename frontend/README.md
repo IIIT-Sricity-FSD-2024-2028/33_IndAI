@@ -55,3 +55,13 @@ from each commit's author. No existing history is rewritten or force-pushed.
 
 The standalone frontend installation reported zero dependency advisories at
 verification time. This is not an audit of the unchanged backend dependencies.
+
+
+## Full-stack integration branch update
+
+The sections above record the earlier frontend-only upload and its original
+verification boundary. This branch now adds the matching Express/session API.
+For the integrated application use root `npm run setup`, `npm run dev`,
+`npm run build` and `npm start`. The root workspace lockfile controls the full
+installation. See root README and docs/VERIFICATION.md for current results and
+docs/DATA_MIGRATION.md for the remaining legacy data/feature limitations.

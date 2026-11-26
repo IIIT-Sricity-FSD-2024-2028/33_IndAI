@@ -1,13 +1,15 @@
-# Quick start
+# Start IndAI
 
-Install Node.js 24 LTS. Extract the complete project and open a terminal in the IndAI_React directory containing package.json.
+1. Install Node 24, open a terminal at the repository root, and run `npm run setup`.
+2. Run `npm run dev` and open http://localhost:5173.
+3. Use a demo account from [README](README.md), with `IndAI-Demo-2026`.
+4. For a built demo, run `npm run build` then `npm start` and open port 3000.
 
-```powershell
-npm run setup
-npm run build
-npm start
-```
+Windows users can run `START_WINDOWS.bat`; macOS/Linux users can run
+`bash start_mac_linux.sh`. Both install/setup before starting development.
+Keep the terminal open. Stop both development processes with Ctrl+C.
 
-Open http://localhost:3000. Keep the terminal running and stop with Ctrl+C. For development after setup, use npm run dev and open http://localhost:5173 instead. Run one launch mode at a time.
-
-The local learner account is learner@indai.com / Learn@1234. These are public sample credentials for DEMO_MODE=true. Other accounts, configuration and troubleshooting are in [README](README.md).
+`npm ci` uses the root workspace lock. Environment settings belong in the root
+`.env`. Do not use the historical NestJS `.env` or start its old compiled entry.
+If a port is occupied, change root `.env` PORT/PUBLIC_URL together and restart.
+See [deployment](DEPLOYMENT.md) and [migration limits](docs/DATA_MIGRATION.md).

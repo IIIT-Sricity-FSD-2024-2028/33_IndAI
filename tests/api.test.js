@@ -1,0 +1,328 @@
+import { randomUUID } from 'node:crypto';
+import { spawnSync } from 'node:child_process';
+import { expect,test,beforeAll,afterAll } from 'vitest';
+import request from 'supertest';
+import { createApp } from '../back-end/app.js';
+import { config } from '../back-end/config.js';
+import { DAY,openDatabase } from '../back-end/db.js';
+import { installInstruments } from '../back-end/seed.js';
+import { passwordHash } from '../back-end/services/auth.js';
+import { plan,reconcileGuidance } from '../back-end/services/access.js';
+import { signature } from '../back-end/services/payments.js';
+import { matchOrder } from '../back-end/services/trading.js';
+
+const db=openDatabase(':memory:');
+const app=createApp(db);
+const password='IndAI-Integration-2026';
+const clients={};
+const add=(name,role='student',status='approved')=>db.run('INSERT INTO users(email,name,password,role,status) VALUES (?,?,?,?,?)',
+  name.toLowerCase()+'@indai.test',name,passwordHash(password),role,status).lastInsertRowid;
+const post=(client,path,body={})=>client.post('/api'+path).set('X-IndAI-Request','1').send(body);
+async function login(name,server=app) {
+  const client=request.agent(server);
+  await post(client,'/auth/login',{email:name+'@indai.test',password}).expect(200);
+  return client;
+}
+function subscribe(id,key,starts=Date.now()-100,ends=Date.now()+DAY) {
+  db.run("INSERT INTO subscriptions(student,plan,starts,ends,state) VALUES (?,?,?,?,'active')",id,key,starts,ends);
+}
+const market = overrides => ({ symbol:'RELIANCE',clientKey:randomUUID(),side:'buy',type:'market',qty:1,validity:'DAY',...overrides });
+const ids={};
+beforeAll(async () => {
+  installInstruments(db);
+  ids.admin=add('admin','admin');
+  ids.super=add('super','superadmin');
+  ids.otherInstructor=add('otherInstructor','instructor');
+  for(const name of ['basic','other','pro','plus','race','payer','refund','paper','protection','expiring']) ids[name]=add(name);
+  ids.instructor=add('instructor','instructor');
+  ids.provider=add('provider','provider');
+  db.run("INSERT INTO staff VALUES (?,1,'Paper execution','English')",ids.instructor);
+  db.run("INSERT INTO staff VALUES (?,2,'Course planning','English')",ids.provider);
+  for(const name of ['pro','expiring']) subscribe(ids[name],'pro');
+  for(const name of ['plus','race']) subscribe(ids[name],'plus');
+  for(const name of Object.keys(ids)) clients[name]=await login(name);
+});
+afterAll(()=>db.close());
+test('self-service password changes require confirmation and current password, with privileged roles excluded',async()=>{
+  const profileApp=createApp(db);
+  const replacement='Changed-Profile-Secret-2026';
+  const body={currentPassword:password,password:replacement,confirmation:replacement};
+  for(const key of ['admin','super']) await post(await login(key,profileApp),'/auth/change-password',body).expect(403);
+  for(const [key,role] of [['profilelearner','student'],['profileinstructor','instructor'],['profileprovider','provider']]) {
+    add(key,role);
+    const current=await login(key,profileApp);
+    const previous=await login(key,profileApp);
+    await post(current,'/auth/change-password',{...body,currentPassword:'incorrect'}).expect(422);
+    await post(current,'/auth/change-password',{...body,confirmation:'Different-Profile-Secret-2026'}).expect(422);
+    await post(current,'/auth/change-password',body).expect(200);
+    await current.get('/api/me').expect(200);
+    await previous.get('/api/me').expect(401);
+    await post(request(profileApp),'/auth/login',{email:key+'@indai.test',password}).expect(401);
+    await post(request(profileApp),'/auth/login',{email:key+'@indai.test',password:replacement}).expect(200);
+  }
+});
+test('only Super Admin can see and suspend a regular Admin through the staff queue',async()=>{
+  const account=add('suspendadmin','admin');
+  const target=await login('suspendadmin');
+  const query='/api/admin?queue=staff&search=suspendadmin';
+  await clients.admin.get(query).expect(200,[]);
+  expect((await clients.super.get(query).expect(200)).body.map(row=>row.id)).toEqual([account]);
+  const path='/admin/users/'+account+'/suspend';
+  await post(clients.admin,path,{reason:'Suspension permission check.'}).expect(403);
+  await post(clients.super,path,{reason:'Suspend the test administrator.'}).expect(200);
+  await target.get('/api/me').expect(401);
+  await post(request(app),'/auth/login',{email:'suspendadmin@indai.test',password}).expect(403);
+  await post(clients.super,'/admin/users/'+ids.super+'/suspend',{reason:'Protect the Super Admin account.'}).expect(409);
+});
+test('registration validates role, verifies an external-looking test email, creates one pending application and enforces approval',async()=>{
+  const client=request.agent(app);
+  const body={name:'Élodie D’Silva',email:'New@example.test',password,confirmation:password};
+  await post(client,'/auth/register',{...body,role:'superadmin'}).expect(422);
+  await post(client,'/auth/register',{...body,email:'invalid'}).expect(422);
+  const {body:registered}=await post(client,'/auth/register',body).expect(201);
+  const otp=registered.demoCode;
+  expect(otp).toMatch(/^\d{6}$/);
+  await post(client,'/auth/verify',{email:body.email,code:otp==='100000'?'100001':'100000'}).expect(422);
+  await post(client,'/auth/verify',{email:body.email,code:otp}).expect(200);
+  await post(client,'/auth/verify',{email:body.email,code:otp}).expect(422);
+  const {body:me}=await client.get('/api/me').expect(200);
+  expect(me.status).toBe('pending');
+  await client.get('/api/trading/account').expect(403);
+  await client.get('/api/courses').expect(403);
+  await post(client,'/payments',{plan:'pro',provider:'demo'}).expect(403);
+  await post(clients.other,'/admin/applications/'+me.application.id,{decision:'approved'}).expect(403);
+  await post(clients.admin,'/admin/applications/'+me.application.id,{decision:'rejected'}).expect(422);
+  await post(clients.admin,'/admin/applications/'+me.application.id,{decision:'approved'}).expect(200);
+  await post(clients.admin,'/admin/applications/'+me.application.id,{decision:'approved'}).expect(409);
+  expect((await client.get('/api/me')).body.plan).toBe('basic');
+  await client.get('/api/trading/account').expect(200);
+});
+test('CSRF and object ownership are enforced',async()=>{
+  await clients.basic.post('/api/support').send({subject:'Help',body:'An example support request.'}).expect(403);
+  await post(clients.basic,'/support',{subject:'Help',body:'An example support request.'}).set('Origin','https://example.test').expect(403);
+  const {body:{id}}=await post(clients.basic,'/support',{subject:'Help',body:'An example support request.'}).expect(201);
+  await clients.other.get('/api/support/'+id).expect(403);
+  await post(clients.admin,'/support/'+id+'/reply',{body:'Here is your reply.'}).expect(200);
+  const {body}=await clients.basic.get('/api/support/'+id).expect(200);
+  expect(body.replies.map(r=>r.body)).toEqual(['An example support request.','Here is your reply.']);
+});
+test('password reset revokes every previously issued session',async()=>{
+  const client=await login('other');
+  const {body}=await post(client,'/auth/recovery',{email:'other@indai.test'}).expect(200);
+  const next='Correct horse battery 2026';
+  await post(client,'/auth/reset',{email:'other@indai.test',code:body.demoCode,password:next,confirmation:next}).expect(200);
+  await client.get('/api/me').expect(401);
+  await clients.other.get('/api/me').expect(401);
+  clients.other=request.agent(app);
+  await post(clients.other,'/auth/login',{email:'other@indai.test',password:next}).expect(200);
+});
+let relation;
+test('one active learner at capacity, no duplicate requests, and role-specific provider checks',async()=>{
+  const guidance=kind=>({kind,staff:ids[kind],goal:'Learn to size paper positions.'});
+  await post(clients.basic,'/guidance',guidance('instructor')).expect(403);
+  await post(clients.basic,'/guidance',guidance('provider')).expect(403);
+  await clients.basic.get('/api/staff?kind=provider').expect(403);
+  await clients.pro.get('/api/staff?kind=instructor').expect(403);
+  await clients.pro.get('/api/staff?kind=provider').expect(200);
+  await clients.plus.get('/api/staff?kind=instructor').expect(200);
+  await clients.plus.get('/api/staff?kind=provider').expect(200);
+  await post(clients.pro,'/guidance',guidance('instructor')).expect(403);
+  const providerRequest=(await post(clients.pro,'/guidance',guidance('provider')).expect(201)).body.id;
+  await post(clients.provider,'/guidance/'+providerRequest+'/decision',{action:'accept'}).expect(200);
+  await post(clients.pro,'/guidance/'+providerRequest+'/decision',{action:'end'}).expect(200);
+  const a=(await post(clients.plus,'/guidance',guidance('instructor')).expect(201)).body.id;
+  const b=(await post(clients.race,'/guidance',guidance('instructor')).expect(201)).body.id;
+  await post(clients.plus,'/guidance',guidance('instructor')).expect(409);
+  await post(clients.basic,'/guidance/'+a+'/decision',{action:'accept'}).expect(404);
+  const outcomes=await Promise.all([a,b].map(id=>post(clients.instructor,'/guidance/'+id+'/decision',{action:'accept'})));
+  expect(outcomes.map(r=>r.status).sort()).toEqual([200,409]);
+  relation=outcomes[0].status===200?a:b;
+  const plus=(await post(clients.plus,'/guidance',guidance('provider')).expect(201)).body.id;
+  await post(clients.provider,'/guidance/'+plus+'/decision',{action:'accept'}).expect(200);
+  await clients.provider.put('/api/learning-plans/'+plus).set('X-IndAI-Request','1').send({title:'Portfolio routine',body:'Review trade history each Friday.'}).expect(200);
+  expect((await clients.plus.get('/api/tasks')).body.learningPlans[0].title).toBe('Portfolio routine');
+});
+test('cancel and decline release slots, expiry ends pending and active access',async()=>{
+  const data={kind:'provider',staff:ids.provider,goal:'Review progress every Friday.'};
+  subscribe(ids.expiring,'plus',Date.now()-100,Date.now()+DAY*2);
+  const a=(await post(clients.expiring,'/guidance',data).expect(201)).body.id;
+  await post(clients.expiring,'/guidance/'+a+'/decision',{action:'cancel'}).expect(200);
+  const b=(await post(clients.expiring,'/guidance',data).expect(201)).body.id;
+  await post(clients.provider,'/guidance/'+b+'/decision',{action:'decline'}).expect(200);
+  const c=(await post(clients.expiring,'/guidance',data).expect(201)).body.id;
+  db.run('UPDATE guidance SET expires=? WHERE id=?',Date.now()-1,c);
+  await post(clients.provider,'/guidance/'+c+'/decision',{action:'accept'}).expect(409);
+  expect(db.get('SELECT state FROM guidance WHERE id=?',c).state).toBe('expired');
+  const d=(await post(clients.expiring,'/guidance',data).expect(201)).body.id;
+  await post(clients.provider,'/guidance/'+d+'/decision',{action:'accept'}).expect(200);
+  const pending=db.run(`INSERT INTO guidance(student,staff,kind,state,goal,created,expires)
+    VALUES (?,?,'instructor','pending','Review order decisions.',?,?)`,ids.expiring,ids.instructor,Date.now(),Date.now()+DAY).lastInsertRowid;
+  subscribe(ids.expiring,'pro',Date.now(),Date.now()+2*DAY);
+  await post(clients.instructor,'/guidance/'+pending+'/decision',{action:'accept'}).expect(409);
+  expect(db.get('SELECT state FROM guidance WHERE id=?',pending).state).toBe('ended');
+  expect(db.get('SELECT state FROM guidance WHERE id=?',d).state).toBe('active');
+  db.tx(()=>reconcileGuidance(db,Date.now()+3*DAY));
+  expect(db.get('SELECT state FROM guidance WHERE id=?',d).state).toBe('ended');
+});
+test('course approval, enrollment, progress, assignment versions and feedback enforce scope',async()=>{
+  const course=(await post(clients.instructor,'/courses',{title:'Order basics',description:'Learn common paper order types.',outcomes:'Pick the appropriate paper order.',difficulty:'introductory',prerequisites:'',policy:'basic'}).expect(201)).body.id;
+  const lesson=(await post(clients.instructor,'/courses/'+course+'/lessons',{module:'Order entry',title:'Market order',body:'A market order attempts an immediate fill.'}).expect(201)).body.id;
+  await clients.basic.get('/api/courses/'+course).expect(404);
+  await post(clients.instructor,'/courses/'+course+'/submit').expect(200);
+  await clients.admin.get('/api/admin?queue=courses').expect(403);
+  await clients.admin.get('/api/courses').expect(403);
+  await clients.admin.get('/api/courses/'+course).expect(403);
+  await clients.admin.get('/api/resources/course/'+course).expect(403);
+  await clients.super.get('/api/admin?queue=courses').expect(200);
+  await clients.super.get('/api/courses/'+course).expect(200);
+  await post(clients.admin,'/courses/'+course+'/review',{action:'publish'}).expect(403);
+  await post(clients.super,'/courses/'+course+'/review',{action:'publish'}).expect(200);
+  expect((await clients.basic.get('/api/courses/'+course)).body.lessons[0].body).toBeNull();
+  await post(clients.basic,'/courses/'+course+'/enroll').expect(200);
+  await post(clients.basic,'/courses/'+course+'/enroll').expect(200);
+  await post(clients.basic,'/courses/'+course+'/lessons/'+lesson+'/complete').expect(200);
+  expect((await clients.basic.get('/api/courses')).body[0].complete).toBe(1);
+  const learner=db.get('SELECT student FROM guidance WHERE id=?',relation).student===ids.plus?clients.plus:clients.race;
+  db.run("UPDATE guidance SET state='active' WHERE id=?",relation);
+  db.run("UPDATE subscriptions SET ends=? WHERE student=(SELECT student FROM guidance WHERE id=?)",Date.now()+DAY,relation);
+  await post(clients.instructor,'/assignments',{relationship:relation,title:'Review order',body:'Explain the order conditions.',due:Date.now()+DAY}).expect(201);
+  const assignment=(await learner.get('/api/tasks')).body.assignments[0].id;
+  await post(clients.basic,'/assignments/'+assignment+'/submit',{body:'Irrelevant outside submission.'}).expect(404);
+  await post(learner,'/assignments/'+assignment+'/submit',{body:'The limit was below the quoted price.'}).expect(201);
+  const submission=(await clients.instructor.get('/api/tasks')).body.assignments[0].submissions[0];
+  await post(clients.instructor,'/submissions/'+submission.id+'/review',{feedback:'Good. Include the amount reserved.'}).expect(200);
+  expect((await learner.get('/api/tasks')).body.assignments[0].submissions[0].feedback).toMatch(/reserved/);
+});
+test('course authors can delete only their disposable courses and remove unshared resources',async()=>{
+  const create={title:'Disposable draft',description:'A practice course for paper trading.',outcomes:'Review order decisions.',difficulty:'introductory',prerequisites:'',policy:'basic'};
+  const {body:{id:course}}=await post(clients.instructor,'/courses',create).expect(201);
+  const {body:{id:other}}=await post(clients.otherInstructor,'/courses',create).expect(201);
+  const {body:{id:providerCourse}}=await post(clients.provider,'/courses',create).expect(201);
+  const {body:{id:lesson}}=await post(clients.instructor,'/courses/'+course+'/lessons',{module:'Basics',title:'Lesson draft',body:'Discuss order decisions.'}).expect(201);
+  const {body:{id:quiz}}=await post(clients.instructor,'/quizzes',{course,title:'Knowledge check',description:'',questions:[{kind:'short',prompt:'Explain an order.',points:1,required:true}]}).expect(201);
+  const attach=(kind,target)=>clients.instructor.post('/api/resources/'+kind+'/'+target+'/upload')
+    .set('X-IndAI-Request','1').set('X-File-Name','draft.pdf').set('Content-Type','application/pdf').send(Buffer.from('%PDF-draft')).expect(201);
+  const attachments=await Promise.all([attach('course',course),attach('lesson',lesson),attach('quiz',quiz)]);
+  const [shared,...exclusive]=attachments.map(({body})=>db.get('SELECT resource FROM resource_links WHERE id=?',body.id).resource);
+  db.run("INSERT INTO resource_links(resource,kind,target) VALUES (?,'course',?)",shared,other);
+  const remove=(client,id)=>client.delete('/api/courses/'+id).set('X-IndAI-Request','1');
+  await remove(clients.instructor,other).expect(404);
+  await remove(clients.provider,course).expect(404);
+  await remove(clients.instructor,providerCourse).expect(404);
+  await remove(clients.provider,providerCourse).expect(200,{outcome:'deleted'});
+  for(const client of [clients.admin,clients.super,clients.basic]) await remove(client,course).expect(403);
+  await remove(clients.instructor,course).expect(200,{outcome:'deleted'});
+  expect(db.get('SELECT id FROM lessons WHERE id=?',lesson)).toBeUndefined();
+  expect(db.get('SELECT id FROM quiz_questions WHERE quiz=?',quiz)).toBeUndefined();
+  for(const {body} of attachments) expect(db.get('SELECT id FROM resource_links WHERE id=?',body.id)).toBeUndefined();
+  expect(db.get('SELECT id FROM resources WHERE id=?',shared)).toBeDefined();
+  for(const id of exclusive) expect(db.get('SELECT id FROM resources WHERE id=?',id)).toBeUndefined();
+  expect(db.get("SELECT actor FROM audit WHERE action='course.delete' AND target=?",String(course)).actor).toBe(ids.instructor);
+});
+test('course deletion archives published courses and protects learner history in drafts',async()=>{
+  const {id:course}=db.get("SELECT id FROM courses WHERE title='Order basics'");
+  const {body:{id:quiz}}=await post(clients.instructor,'/quizzes',{course,title:'Course assessment',description:'',questions:[{kind:'short',prompt:'Explain an order.',points:1,required:true}]}).expect(201);
+  await post(clients.instructor,'/quizzes/'+quiz+'/publish').expect(200);
+  await post(clients.basic,'/quizzes/'+quiz+'/submit',{answers:{[db.get('SELECT id FROM quiz_questions WHERE quiz=?',quiz).id]:'Use a limit price.'}}).expect(201);
+  const remove=()=>clients.instructor.delete('/api/courses/'+course).set('X-IndAI-Request','1');
+  await remove().expect(200,{outcome:'archived'});
+  await clients.basic.get('/api/courses/'+course).expect(200);
+  await clients.other.get('/api/courses/'+course).expect(404);
+  await clients.basic.get('/api/quizzes/'+quiz).expect(200);
+  expect(db.get('SELECT 1 FROM quiz_attempts WHERE quiz=?',quiz)).toBeDefined();
+  expect(db.get('SELECT 1 FROM progress WHERE student=?',ids.basic)).toBeDefined();
+  db.run("UPDATE courses SET state='draft' WHERE id=?",course);
+  expect((await remove().expect(409)).body.code).toBe('COURSE_HISTORY');
+  expect(db.get('SELECT 1 FROM enrollments WHERE course=? AND student=?',course,ids.basic)).toBeDefined();
+});
+test('guidance search matches profile fields across eligible specialists and excludes hidden accounts',async()=>{
+  db.run("UPDATE staff SET expertise='Études de marché' WHERE user_id=?",ids.instructor);
+  const hidden=db.run("INSERT INTO users(email,name,password,role,status) VALUES ('hidden@indai.test','Hidden English specialist','fixture','provider','suspended')").lastInsertRowid;
+  db.run("INSERT INTO staff VALUES (?,1,'Course planning','English')",hidden);
+  const search=(client,kind,value)=>client.get('/api/staff?kind='+kind+'&search='+encodeURIComponent(value));
+  expect((await search(clients.plus,'instructor','ÉTUDES').expect(200)).body.map(row=>row.id)).toEqual([ids.instructor]);
+  expect((await search(clients.pro,'provider','ENGLISH').expect(200)).body.map(row=>row.id)).toEqual([ids.provider]);
+  expect((await search(clients.pro,'provider','no such person').expect(200)).body).toEqual([]);
+  await search(clients.pro,'instructor','Études').expect(403);
+});
+test('demo payment confirmation is idempotent and changes apply at paid-through time',async()=>{
+  const first=(await post(clients.payer,'/payments',{plan:'plus',provider:'demo'}).expect(201)).body;
+  await post(clients.payer,'/payments/'+first.id+'/demo').expect(200);
+  await post(clients.payer,'/payments/'+first.id+'/demo').expect(200);
+  expect(db.get('SELECT count(*) n FROM subscriptions WHERE payment=?',first.id).n).toBe(1);
+  const second=(await post(clients.payer,'/payments',{plan:'pro',provider:'demo'}).expect(201)).body;
+  await post(clients.payer,'/payments/'+second.id+'/demo').expect(200);
+  const billing=(await clients.payer.get('/api/plans')).body;
+  expect(billing.current.plan).toBe('plus');
+  expect(billing.scheduled[0].starts).toBe(billing.current.ends);
+  expect(plan(db,ids.payer,billing.current.ends).plan).toBe('pro');
+  expect(plan(db,ids.payer,billing.scheduled[0].ends)).toBeUndefined();
+});
+test('Razorpay authenticates the raw body, deduplicates and handles refund before capture',async()=>{
+  config.webhookSecret='integration-only-test-value';
+  const id=db.run("INSERT INTO payments(student,plan,amount,provider,provider_order,status,created) VALUES (?,'plus',12500,'razorpay','order_example','pending',?)",ids.refund,Date.now()).lastInsertRowid;
+  const payment={id:'pay_example',order_id:'order_example',status:'captured',amount:12500,currency:'INR'};
+  const captured={event:'payment.captured',payload:{payment:{entity:payment}}};
+  const refunded={event:'refund.processed',payload:{payment:{entity:payment},refund:{entity:{id:'rfnd_example',payment_id:payment.id,amount:payment.amount}}}};
+  const event=(eventId,body,valid=true)=>{
+    const payload=JSON.stringify(body);
+    return request(app).post('/api/payments/webhook').set('Content-Type','application/json')
+      .set('x-razorpay-event-id',eventId).set('x-razorpay-signature',valid?signature(config.webhookSecret,payload):'invalid').send(payload);
+  };
+  await event('bad',captured,false).expect(401);
+  await event('refund',refunded).expect(200);
+  await event('capture',captured).expect(200);
+  await event('capture',captured).expect(200);
+  expect(db.get('SELECT count(*) n FROM subscriptions WHERE payment=?',id).n).toBe(0);
+  expect(db.get('SELECT status FROM payments WHERE id=?',id).status).toBe('refunded');
+});
+test('concurrent buys cannot overspend, and cancellation releases reserved cash',async()=>{
+  await clients.paper.get('/api/trading/account').expect(200);
+  db.run('UPDATE accounts SET cash=120000 WHERE user_id=?',ids.paper);
+  const make=()=>market({type:'limit',price:90000});
+  const responses=await Promise.all([make(),make()].map(payload=>post(clients.paper,'/trading/orders',payload)));
+  expect(responses.map(r=>r.status).sort()).toEqual([201,409]);
+  const active=responses.find(r=>r.status===201).body;
+  expect((await clients.paper.get('/api/trading/account')).body.reservedCash).toBe(90090);
+  await post(clients.basic,'/trading/orders/'+active.id+'/cancel').expect(404);
+  await post(clients.paper,'/trading/orders/'+active.id+'/cancel').expect(200);
+  expect((await clients.paper.get('/api/trading/account')).body.reservedCash).toBe(0);
+  await post(clients.paper,'/trading/orders',market({qty:-1})).expect(422);
+});
+test('idempotent fill and linked exits prevent double-selling',async()=>{
+  const {body:{quote}}=await clients.protection.get('/api/trading/instruments/RELIANCE').expect(200);
+  const buy=market({qty:2,sl:quote.price-10000,tp:quote.price+10000});
+  const first=(await post(clients.protection,'/trading/orders',buy).expect(201)).body;
+  expect(first.state).toBe('filled');
+  expect((await post(clients.protection,'/trading/orders',buy).expect(201)).body.id).toBe(first.id);
+  await post(clients.protection,'/trading/orders',market({side:'sell'})).expect(409);
+  db.tx(()=>{
+    const exits=db.all('SELECT * FROM orders WHERE oco=? ORDER BY id DESC',first.id);
+    matchOrder(db,exits[0],{source:'demo',price:buy.tp,executable:true});
+    matchOrder(db,db.get('SELECT * FROM orders WHERE id=?',exits[1].id),{source:'demo',price:buy.sl,executable:true});
+  });
+  expect(db.get('SELECT qty FROM positions WHERE user_id=?',ids.protection).qty).toBe(0);
+  expect(db.get('SELECT count(*) n FROM executions e JOIN orders o ON o.id=e.order_id WHERE o.oco=?',first.id).n).toBe(1);
+});
+test('production config disallows demo mode and demo checkout cannot run',()=>{
+  const env={...process.env,NODE_ENV:'production',DEMO_MODE:'false',PUBLIC_URL:'https://indai.example.test',SMTP_HOST:'smtp.example.test',SMTP_FROM:'indai@example.test',MARKET_SOURCE:'upstox'};
+  const script=`
+    import request from 'supertest';
+    import {openDatabase} from './back-end/db.js';
+    import {createApp} from './back-end/app.js';
+    import {passwordHash} from './back-end/services/auth.js';
+    const db=openDatabase(':memory:');
+    db.run("INSERT INTO users(email,name,password,status) VALUES ('a@example.test','Demo',?,'approved')",passwordHash('Integration-Production-2026'));
+    const client=request.agent(createApp(db));
+    const login=await client.post('/api/auth/login').set('X-IndAI-Request','1').send({email:'a@example.test',password:'Integration-Production-2026'}).expect(200);
+    const header=login.headers['set-cookie'].findLast(value=>value.startsWith('indai_session='));
+    if (!header.includes('Secure') || !header.includes('HttpOnly')) throw Error('Cookie policy missing');
+    const cookie=header.split(';')[0];
+    await client.post('/api/payments').set('Cookie',cookie).set('X-IndAI-Request','1').send({plan:'pro',provider:'demo'}).expect(404);
+    await client.post('/api/payments/1/demo').set('Cookie',cookie).set('X-IndAI-Request','1').send({}).expect(404);
+    db.close();`;
+  const good=spawnSync(process.execPath,['--input-type=module','-e',script],{env,encoding:'utf8'});
+  expect(good.status,good.stderr).toBe(0);
+  const bad=spawnSync(process.execPath,['-e',"import('./back-end/config.js')"],{env:{...env,DEMO_MODE:'true'},encoding:'utf8'});
+  expect(bad.status).not.toBe(0);
+});
