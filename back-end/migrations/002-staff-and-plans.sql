@@ -1,0 +1,2 @@
+ALTER TABLE users ADD COLUMN mfa TEXT;
+CREATE TABLE learning_plans(relationship INTEGER PRIMARY KEY REFERENCES guidance(id),title TEXT NOT NULL,body TEXT NOT NULL,updated INTEGER NOT NULL);
