@@ -187,3 +187,178 @@ export function Provider() {
     </>
   );
 }
+export function Commerce() {
+  const [page, setPage] = useState(0);
+  const query = useResource("/commerce?page=" + page);
+  const mutation = useAction();
+  return (
+    <>
+      <Heading
+        title="Course commerce"
+        detail="Review provider proposals and reconcile recorded external settlements."
+      />
+      <Result query={query}>
+        {(data) => (
+          <>
+            <section className="panel inset">
+              <h2>Licensing proposals</h2>
+              {data.proposals.length ? (
+                data.proposals.map((p) => (
+                  <article className="record" key={p.course}>
+                    <h3>
+                      {p.title} · {p.provider}
+                    </h3>
+                    <p>
+                      Requested {rupees(p.requested)}
+                      {p.offered != null
+                        ? " · Offered " + rupees(p.offered)
+                        : ""}{" "}
+                      <Status>{p.state}</Status>
+                    </p>
+                    <p>{p.note}</p>
+                    {p.state === "submitted" && (
+                      <Form
+                        initial={{ action: "accept" }}
+                        fields={(watch) => {
+                          const decision = watch("action");
+                          return [
+                            {
+                              name: "action",
+                              label: "Decision",
+                              options: [
+                                {
+                                  value: "accept",
+                                  label: "Accept requested fee",
+                                },
+                                { value: "counter", label: "Counteroffer" },
+                                { value: "reject", label: "Reject proposal" },
+                              ],
+                            },
+                            ...(decision === "counter"
+                              ? [
+                                  {
+                                    name: "amount",
+                                    label: "Counteroffer amount (₹)",
+                                    type: "number",
+                                    min: 0,
+                                    max: 1000000,
+                                    step: 0.01,
+                                    shouldUnregister: true,
+                                  },
+                                ]
+                              : []),
+                            {
+                              name: "note",
+                              label:
+                                decision === "reject"
+                                  ? "Rejection reason"
+                                  : "Decision notes",
+                              type: "textarea",
+                              min: 5,
+                              max: 2000,
+                            },
+                          ];
+                        }}
+                        submit="Record decision"
+                        onSubmit={({ amount, ...body }) => {
+                          return mutation.mutateAsync({
+                            path: "/commerce/" + p.course + "/decision",
+                            body: {
+                              ...body,
+                              ...(body.action === "counter"
+                                ? { amount: Math.round(Number(amount) * 100) }
+                                : {}),
+                            },
+                          });
+                        }}
+                      />
+                    )}
+                    {p.state === "agreed" &&
+                      p.course_state === "published" &&
+                      !p.earning_recorded &&
+                      (p.offered ?? p.requested) > 0 && (
+                        <Action
+                          title="Record agreed course earning"
+                          path={"/commerce/" + p.course + "/earning"}
+                          confirm="Record the agreed licensing earning for this published course?"
+                        />
+                      )}
+                    {p.state === "agreed" &&
+                      ["draft", "review"].includes(p.course_state) &&
+                      (p.offered ?? p.requested) > 0 && (
+                        <p className="muted">
+                          Earnings can be recorded after the course is
+                          published.
+                        </p>
+                      )}
+                  </article>
+                ))
+              ) : (
+                <Empty>No proposals.</Empty>
+              )}
+            </section>
+            <section className="panel inset">
+              <h2>Provider settlements</h2>
+              {data.settlements.length ? (
+                data.settlements.map((s) => (
+                  <article className="record" key={s.id}>
+                    <div className="line-item">
+                      <div>
+                        <strong>{s.title}</strong>
+                        <small>{s.provider_name}</small>
+                      </div>
+                      <span>
+                        {rupees(s.amount)} <Status>{s.state}</Status>
+                      </span>
+                    </div>
+                    {s.state === "earned" ? (
+                      <Form
+                        fields={[
+                          {
+                            name: "reference",
+                            label: "Completed external payment reference",
+                            min: 5,
+                            max: 200,
+                          },
+                        ]}
+                        submit="Record payment received"
+                        onSubmit={(body) => {
+                          if (
+                            window.confirm(
+                              "Confirm this external payment has completed and the reference is correct?",
+                            )
+                          )
+                            return mutation.mutateAsync({
+                              path: "/settlements/" + s.id + "/paid",
+                              body,
+                            });
+                        }}
+                      />
+                    ) : (
+                      <p className="muted">
+                        {s.reference} · {date(s.paid)}
+                      </p>
+                    )}
+                  </article>
+                ))
+              ) : (
+                <Empty>No settlement records.</Empty>
+              )}
+            </section>
+            {(page > 0 ||
+              data.proposals.length === 25 ||
+              data.settlements.length === 25) && (
+              <Pager
+                page={page}
+                setPage={setPage}
+                more={
+                  data.proposals.length === 25 || data.settlements.length === 25
+                }
+              />
+            )}
+          </>
+        )}
+      </Result>
+    </>
+  );
+}

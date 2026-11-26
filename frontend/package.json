@@ -4,16 +4,24 @@
   "version": "3.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1 --strictPort",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "vite --config vite.config.js",
+    "build": "vite build --config vite.config.js",
+    "preview": "vite preview --config vite.config.js"
   },
   "dependencies": {
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "@reduxjs/toolkit": "2.15.0",
+    "react-redux": "9.3.1",
+    "react-router-dom": "7.18.5",
+    "react-hook-form": "7.92.0",
+    "lightweight-charts": "5.3.0"
   },
   "devDependencies": {
     "prettier": "^3.9.10",
-    "vite": "7.1.12"
+    "vite": "7.3.8"
+  },
+  "engines": {
+    "node": ">=24"
   }
 }

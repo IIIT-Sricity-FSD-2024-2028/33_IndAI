@@ -401,6 +401,31 @@ function AdminActions({ row, queue }) {
         Open ticket
       </Link>
     );
+  if (
+    queue === "payments" &&
+    row.provider === "razorpay" &&
+    row.status === "captured"
+  )
+    return (
+      <details>
+        <summary>Request refund</summary>
+        <Form
+          fields={reason}
+          submit="Request full refund"
+          onSubmit={(body) => {
+            if (
+              window.confirm(
+                "Request a full refund of " + rupees(row.amount) + "?",
+              )
+            )
+              return mutation.mutateAsync({
+                path: "/admin/payments/" + row.id + "/refund",
+                body,
+              });
+          }}
+        />
+      </details>
+    );
   return null;
 }
 const titles = {

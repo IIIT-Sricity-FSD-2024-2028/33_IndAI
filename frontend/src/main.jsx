@@ -1,172 +1,287 @@
-import React, { useEffect, useState } from "react";
+import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
-import ThemeToggle from "./components/ThemeToggle";
-import "./styles/theme.css";
-import HomeLayout from "./layouts/Home";
-import Dashboard from "./pages/Dashboard";
-import { LoginPage, RegisterPage, rolePath } from "./pages/AuthPages";
-import { InstituteIntake } from "./components/Institutes";
-import { api } from "./services/api";
-import "./styles/main.css";
-import "./styles/dashboard.css";
-import "./styles/components.css";
-import "./styles/index.css";
-import "./styles/superuser.css";
-import "./styles/react.css";
-class ErrorBoundary extends React.Component {
-  state = { error: "" };
-  static getDerivedStateFromError(e) {
-    return { error: e.message };
-  }
-  render() {
-    return this.state.error ? (
-      <main style={{ padding: 40 }}>
-        <h1>Unable to display this screen</h1>
-        <p>{this.state.error}</p>
-        <a href="/login.html">Return to sign in</a>
-      </main>
-    ) : (
-      this.props.children
-    );
-  }
-}
-function App() {
-  const path = location.pathname,
-    [user, setUser] = useState(null),
-    [error, setError] = useState(""),
-    [ready, setReady] = useState(false);
-  const isLogin = /\/login(?:\.html)?$/.test(path),
-    isRegister = /\/register(?:\.html)?$/.test(path),
-    isIntake = path.startsWith("/institute-intake/"),
-    isDashboard = path.includes("dashboard");
-  const page = isLogin
-    ? "Login"
-    : isRegister
-      ? "Register"
-      : isDashboard
-        ? "Dashboard"
-        : "Home";
-  useEffect(() => {
-    document.body.dataset.page = page;
-    if (!isDashboard) {
-      setReady(true);
-      return;
-    }
-    let active = true;
-    (async () => {
-      try {
-        // Reuse a valid access token; api() performs one shared refresh on 401.
-        const current = await api("/auth/me");
-        if (active) {
-          setUser(current);
-          const actual = rolePath(current);
-          if (path !== actual && path !== "/pages" + actual)
-            location.replace(actual);
-        }
-      } catch (e) {
-        if (active) {
-          setError(e.message);
-          location.replace("/login.html");
-        }
-      } finally {
-        if (active) setReady(true);
-      }
-    })();
-    return () => {
-      active = false;
-    };
-  }, []);
-  if (isIntake) return <InstituteIntake token={path.split("/").pop()} />;
-  if (isLogin) return <LoginPage />;
-  if (isRegister) return <RegisterPage />;
-  if (isDashboard)
-    return ready && user ? (
-      <Dashboard user={user} onUser={setUser} />
-    ) : (
-      <div style={{ padding: 40 }}>{error || "Loading your workspace…"}</div>
-    );
-  return <Home />;
-}
-function Home() {
-  const [faq, setFaq] = useState(null),
-    [mobileOpen, setMobileOpen] = useState(false),
-    [form, setForm] = useState({}),
-    [busy, setBusy] = useState(false),
-    [status, setStatus] = useState(""),
-    [error, setError] = useState("");
-  async function action(code) {
-    if (code === "toggleMobileMenu()") return setMobileOpen((v) => !v);
-    if (code === "closeMobileMenu()") return setMobileOpen(false);
-    if (code.includes("toggleFaq")) {
-      const n = Number(code.match(/\d+/)[0]);
-      setFaq(faq === n ? null : n);
-      return;
-    }
-    if (!code.includes("submitContact") || busy) return;
-    setError("");
-    setStatus("");
-    if ((form["c-name"] || "").trim().length < 3) {
-      setError("Enter your full name (at least 3 characters).");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form["c-email"] || "")) {
-      setError("Enter a valid email address.");
-      return;
-    }
-    if ((form["c-message"] || "").trim().length < 10) {
-      setError("Write a message of at least 10 characters.");
-      return;
-    }
-    setBusy(true);
-    try {
-      await api("/contact", "POST", {
-        name: form["c-name"].trim(),
-        email: form["c-email"].trim(),
-        message: form["c-message"].trim(),
-      });
-      setStatus("Thank you. Your message has been received.");
-      setForm({});
-    } catch (e) {
-      setError(e.message);
-    } finally {
-      setBusy(false);
-    }
-  }
-  return (
-    <HomeLayout
-      faq={faq}
-      mobileOpen={mobileOpen}
-      busy={busy}
-      form={form}
-      onField={(k, v) => {
-        setForm((f) => ({ ...f, [k]: v }));
-        setError("");
-        setStatus("");
-      }}
-      onAction={action}
-      slots={{
-        "contact-status": (
-          <>
-            {busy && <p role="status">Sending…</p>}
-            {error && (
-              <p role="alert" className="alert alert-red">
-                {error}
-              </p>
-            )}
-            {status && (
-              <p role="status" className="alert alert-blue">
-                {status}
-              </p>
-            )}
-          </>
-        ),
-      }}
-    />
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useOutletContext,
+} from "react-router-dom";
+import { Provider as ReduxProvider } from "react-redux";
+import { store } from "./redux/store.js";
+import { useResource } from "./hooks/api.js";
+import { Shell } from "./components/Shell.jsx";
+import { Empty, ErrorText } from "./components/Common.jsx";
+import { Auth } from "./pages/Auth.jsx";
+import { Overview } from "./pages/Overview.jsx";
+import { Home } from "./pages/Home.jsx";
+const Trading = lazy(() =>
+  import("./pages/Trading.jsx").then((module) => ({ default: module.Trading })),
+);
+import { Portfolio, Journal } from "./pages/Portfolio.jsx";
+import { Plans } from "./pages/Plans.jsx";
+import { Guidance } from "./pages/Guidance.jsx";
+import { Courses, Course } from "./pages/Courses.jsx";
+import { Tasks } from "./pages/Tasks.jsx";
+const Members = lazy(() =>
+  import("./pages/Members.jsx").then((module) => ({ default: module.Members })),
+);
+const Member = lazy(() =>
+  import("./pages/Members.jsx").then((module) => ({ default: module.Member })),
+);
+const Quizzes = lazy(() =>
+  import("./pages/Quizzes.jsx").then((module) => ({ default: module.Quizzes })),
+);
+const Quiz = lazy(() =>
+  import("./pages/Quizzes.jsx").then((module) => ({ default: module.Quiz })),
+);
+const QuizBuilder = lazy(() =>
+  import("./pages/Quizzes.jsx").then((module) => ({
+    default: module.QuizBuilder,
+  })),
+);
+import { Learners } from "./pages/Learners.jsx";
+const Provider = lazy(() =>
+  import("./pages/Provider.jsx").then((module) => ({
+    default: module.Provider,
+  })),
+);
+const Commerce = lazy(() =>
+  import("./pages/Provider.jsx").then((module) => ({
+    default: module.Commerce,
+  })),
+);
+import { Notifications, Support, Ticket, Admin } from "./pages/Operations.jsx";
+import "./style.css";
+import { ThemeProvider } from "./hooks/useTheme.jsx";
+
+function Gate({ children, roles }) {
+  const user = useOutletContext();
+  return user.status !== "approved" ? (
+    <Navigate to="/overview" replace />
+  ) : roles && !roles.includes(user.role) ? (
+    <Empty>This page is unavailable for your role.</Empty>
+  ) : (
+    children
   );
 }
-createRoot(document.getElementById("root")).render(
-  <ErrorBoundary>
-    <App />
-    <ThemeToggle />
-  </ErrorBoundary>,
+function Workspace() {
+  const session = useResource("/me", { refetchInterval: 30000 });
+  if (session.isPending) return <main className="center">Opening IndAI…</main>;
+  if (session.error?.status === 401) return <Navigate to="/login" replace />;
+  if (session.isError)
+    return (
+      <main className="center">
+        <ErrorText error={session.error} />
+        <button onClick={() => session.refetch()} className="button">
+          Retry
+        </button>
+      </main>
+    );
+  return <Shell user={session.data} />;
+}
+const student = ["student"];
+createRoot(document.querySelector("#root")).render(
+  <StrictMode>
+    <ReduxProvider store={store}>
+      <ThemeProvider>
+        <BrowserRouter>
+          <Suspense
+            fallback={
+              <main className="center" role="status">
+                Opening workspace…
+              </main>
+            }
+          >
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route
+                path="/login"
+                element={<Auth key="login" mode="login" />}
+              />
+              <Route
+                path="/register"
+                element={<Auth key="register" mode="register" />}
+              />
+              <Route
+                path="/recovery"
+                element={<Auth key="recovery" mode="recovery" />}
+              />
+              <Route element={<Workspace />}>
+                <Route path="overview" element={<Overview />} />
+                <Route
+                  path="trading"
+                  element={
+                    <Gate roles={["student", "instructor"]}>
+                      <Suspense
+                        fallback={
+                          <p role="status">Loading trading workspace…</p>
+                        }
+                      >
+                        <Trading />
+                      </Suspense>
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="portfolio"
+                  element={
+                    <Gate roles={["student", "instructor"]}>
+                      <Portfolio />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="journal"
+                  element={
+                    <Gate roles={["student", "instructor"]}>
+                      <Journal />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="plans"
+                  element={
+                    <Gate roles={student}>
+                      <Plans />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="guidance"
+                  element={
+                    <Gate roles={["student", "instructor", "provider"]}>
+                      <Guidance />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="tasks"
+                  element={
+                    <Gate roles={["student", "instructor", "provider"]}>
+                      <Tasks />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="courses"
+                  element={
+                    <Gate
+                      roles={[
+                        "student",
+                        "instructor",
+                        "provider",
+                        "superadmin",
+                      ]}
+                    >
+                      <Courses />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="courses/:id"
+                  element={
+                    <Gate
+                      roles={[
+                        "student",
+                        "instructor",
+                        "provider",
+                        "superadmin",
+                      ]}
+                    >
+                      <Course />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="members"
+                  element={
+                    <Gate roles={["admin", "superadmin"]}>
+                      <Members />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="members/:id"
+                  element={
+                    <Gate roles={["admin", "superadmin"]}>
+                      <Member />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="learners"
+                  element={
+                    <Gate roles={["instructor"]}>
+                      <Learners />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="provider"
+                  element={
+                    <Gate roles={["provider"]}>
+                      <Provider />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="commerce"
+                  element={
+                    <Gate roles={["admin", "superadmin"]}>
+                      <Commerce />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="quizzes"
+                  element={
+                    <Gate>
+                      <Quizzes />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="quizzes/new"
+                  element={
+                    <Gate roles={["instructor", "provider"]}>
+                      <QuizBuilder />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="quizzes/:id/edit"
+                  element={
+                    <Gate roles={["instructor", "provider"]}>
+                      <QuizBuilder />
+                    </Gate>
+                  }
+                />
+                <Route
+                  path="quizzes/:id"
+                  element={
+                    <Gate>
+                      <Quiz />
+                    </Gate>
+                  }
+                />
+                <Route path="notifications" element={<Notifications />} />
+                <Route path="support" element={<Support />} />
+                <Route path="support/:id" element={<Ticket />} />
+                <Route
+                  path="admin"
+                  element={
+                    <Gate roles={["admin", "superadmin"]}>
+                      <Admin />
+                    </Gate>
+                  }
+                />
+                <Route path="*" element={<Empty>Page not found.</Empty>} />
+              </Route>
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+      </ThemeProvider>
+    </ReduxProvider>
+  </StrictMode>,
 );
