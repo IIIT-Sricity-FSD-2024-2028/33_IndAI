@@ -1,0 +1,158 @@
+import { Link, useOutletContext } from "react-router-dom";
+import { useResource, rupees, shortDate } from "../hooks/api.js";
+import {
+  Action,
+  Empty,
+  Heading,
+  PrimaryLink,
+  Result,
+  Status,
+} from "../components/Common.jsx";
+import { Icon } from "../components/Icon.jsx";
+
+const allTiles = [
+  {
+    to: "/trading",
+    icon: "trade",
+    title: "Paper trading",
+    copy: "Explore NSE equities and practice order execution.",
+  },
+  {
+    to: "/courses",
+    icon: "book",
+    title: "Learning center",
+    copy: "Work through courses at your own pace.",
+  },
+  {
+    to: "/guidance",
+    icon: "people",
+    title: "Guidance",
+    copy: "Browse specialists and track your requests.",
+  },
+  {
+    to: "/tasks",
+    icon: "tasks",
+    title: "Learning tasks",
+    copy: "Review assignments, submissions, and milestones.",
+  },
+  {
+    to: "/admin",
+    icon: "admin",
+    title: "Operations",
+    copy: "Review the queue and manage platform activity.",
+  },
+];
+function Tile({ tile }) {
+  return (
+    <Link className="tile" to={tile.to}>
+      <span className="tile-icon">
+        <Icon name={tile.icon} />
+      </span>
+      <span>
+        <strong>{tile.title}</strong>
+        <small>{tile.copy}</small>
+      </span>
+      <Icon name="arrow" size={18} />
+    </Link>
+  );
+}
+function LearnerOverview({ user }) {
+  const rawAccount = useResource("/trading/account", { refetchInterval: 2000 });
+  const account = rawAccount;
+  const courses = useResource("/courses");
+  const guide = useResource("/guidance");
+  const a = account.data;
+  const priced = a?.positions.every((position) =>
+    ["live", "demo"].includes(position.quote?.status),
+  );
+  const value = priced
+    ? a.cash + a.positions.reduce((sum, p) => sum + p.qty * p.quote.price, 0)
+    : null;
+  return (
+    <>
+      <div className="overview-banner">
+        <div>
+          <span className="eyebrow">PAPER TRADING ACCOUNT</span>
+          <div className="hero-value">{rupees(value, 0)}</div>
+          <p>
+            {value == null && !account.isPending
+              ? "Current equity needs fresh quotes."
+              : "Estimated account equity"}
+          </p>
+        </div>
+        <PrimaryLink to="/trading">Open trading workspace</PrimaryLink>
+      </div>
+      <div className="stats">
+        <div>
+          <small>Available paper cash</small>
+          <strong>{rupees(a?.available, 0)}</strong>
+        </div>
+        <div>
+          <small>Open positions</small>
+          <strong>{a?.positions.length ?? "—"}</strong>
+        </div>
+        <div>
+          <small>Courses enrolled</small>
+          <strong>
+            {courses.data ? courses.data.filter((c) => c.enrolled).length : "—"}
+          </strong>
+        </div>
+        <div>
+          <small>Current access</small>
+          <strong className="capitalize">
+            {user.plan === "basic" ? "Free" : user.plan}
+          </strong>
+        </div>
+      </div>
+      <div className="overview-grid">
+        <section>
+          <h2>Your workspace</h2>
+          <div className="tile-list">
+            {allTiles.slice(0, 4).map((tile) => (
+              <Tile key={tile.to} tile={tile} />
+            ))}
+          </div>
+        </section>
+        <section>
+          <h2>Guidance status</h2>
+          <div className="panel inset">
+            <Result query={guide}>
+              {(rows) => (
+                <>
+                  {["instructor", "provider"].map((kind) => {
+                    const row = rows.find((r) => r.kind === kind);
+                    const locked =
+                      kind === "instructor"
+                        ? user.plan !== "plus"
+                        : !["pro", "plus"].includes(user.plan);
+                    return (
+                      <div className="line-item" key={kind}>
+                        <div>
+                          <strong className="capitalize">{kind}</strong>
+                          <p>
+                            {row?.staff_name ||
+                              (locked
+                                ? kind === "instructor"
+                                  ? "Included with Plus"
+                                  : "Included with Pro and Plus"
+                                : "Choose a specialist")}
+                          </p>
+                        </div>
+                        <Status>
+                          {row?.state || (locked ? "locked" : "available")}
+                        </Status>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
+            </Result>
+            <Link className="text-link" to="/guidance">
+              View guidance <Icon name="arrow" size={15} />
+            </Link>
+          </div>
+        </section>
+      </div>
+    </>
+  );
+}
